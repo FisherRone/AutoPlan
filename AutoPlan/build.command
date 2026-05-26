@@ -51,7 +51,7 @@ fi
 
 rm -rf "$OUTPUT_DIR"
 mkdir -p "$OUTPUT_DIR"
-cp -R "$APP_BUNDLE" "$OUTPUT_DIR/"
+mv "$APP_BUNDLE" "$OUTPUT_DIR/"
 echo "✅ .app moved to: $OUTPUT_DIR/$(basename "$APP_BUNDLE")"
 
 # 设置复制后的 app 路径
@@ -76,15 +76,17 @@ README_PATH="${APP_BUNDLE}/Contents/Resources/README.txt"
 echo "✅ README.txt created in Resources."
 
 # 进行 Ad-hoc 签名
-echo "5️⃣ Ad-hoc signing..."
+#echo "5️⃣ Ad-hoc signing..."
 #codesign -s - -f --deep --entitlements "$ENTITLEMENTS_PATH" "$APP_BUNDLE"
-codesign -s - -f --deep "$APP_BUNDLE"
+#codesign -s - -f --deep "$APP_BUNDLE"
+#codesign -s "FishDevCertificate" -f --deep "$APP_BUNDLE"
 
-if [ $? -ne 0 ]; then
-    echo "❌ 签名失败"
+
+#if [ $? -ne 0 ]; then
+#    echo "❌ 签名失败"
     exit 1
-fi
-echo "✅ Ad-hoc signed."
+#fi
+#echo "✅ Ad-hoc signed."
 
 # 打包为 zip 文件
 echo "6️⃣ packaging as .zip ..."
