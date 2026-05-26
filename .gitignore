@@ -22,9 +22,10 @@ AutoPlanCore/.swiftpm/xcuserdata/
 # Keychain & credentials
 .netrc
 
-# Personal Docs
+# Personal Files
 AI 聊天记录/
 TODO.md
+resign.command
 
 # IconDesign
 AutoPlan/IconDesign/
