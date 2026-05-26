@@ -8,21 +8,16 @@
 import SwiftUI
 import AppIntents
 import AutoPlanCore
-import OSLog
-
-private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "AutoPlan", category: "URLScheme")
 
 @main
 struct AutoPlanAppApp: App {
-    @NSApplicationDelegateAdaptor(URLSchemeDelegate.self) var urlSchemeDelegate
-
     init() {
         PromptBuilder.ensureCustomPromptFileExists()
-        NotificationManager.shared.setup()
     }
 
     var body: some Scene {
         WindowGroup {
+            
             TabView {
                 Tab("通用", systemImage: "gearshape") {
                     ModelConfigView()
@@ -42,13 +37,24 @@ struct AutoPlanAppApp: App {
             }
             .frame(minWidth: 540, idealWidth: 540, minHeight: 500, idealHeight: 600)
         }
-        .handlesExternalEvents(matching: [])  // 主窗口不响应 URL scheme
-        
-        // autoplan:// → 单独弹出预览窗口，不经过主界面
-        Window("日程预览", id: "clipboard-preview") {
-            ClipboardPreviewView()
-        }
-        .windowResizability(.contentSize)
-        .handlesExternalEvents(matching: Set(arrayLiteral: "autoplan"))
+    }
+}
+
+
+
+
+struct MyAppShortcuts: AppShortcutsProvider {
+    @AppShortcutsBuilder
+    static var appShortcuts: [AppShortcut] {
+        AppShortcut(
+            intent: AutoPlanHelloWorldIntent(),
+            phrases: [
+                "\(.applicationName) say hello",
+                "Say hello in \(.applicationName)",
+                "Hello from \(.applicationName)"
+            ],
+            shortTitle: "Say Hello",
+            systemImageName: "hand.wave"
+        )
     }
 }

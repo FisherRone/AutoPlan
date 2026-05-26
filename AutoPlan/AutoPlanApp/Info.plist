@@ -26,6 +26,8 @@
 		</dict>
 	</array>
 	<key>INIntentsSupported</key>
-	<array/>
+	<array>
+		<string>Intent</string>
+	</array>
 </dict>
 </plist>
