@@ -61,6 +61,7 @@ public final class AppSettings {
     var selectedModelName: String = UserDefaults.standard.string(forKey: "selectedModelName") ?? "" {
         didSet {
             UserDefaults.standard.set(selectedModelName, forKey: "selectedModelName")
+            UserDefaults.standard.synchronize()
         }
     }
 
@@ -75,6 +76,7 @@ public final class AppSettings {
     var weeklyReportModelName: String = UserDefaults.standard.string(forKey: "weeklyReportModelName") ?? "" {
         didSet {
             UserDefaults.standard.set(weeklyReportModelName, forKey: "weeklyReportModelName")
+            UserDefaults.standard.synchronize()
         }
     }
 

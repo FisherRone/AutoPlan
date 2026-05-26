@@ -97,10 +97,13 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 - **禁止自行清理**，需要时提醒用户手动清理。
 1. Xcode: cmd + shift + K
 2. Xcode: File -> Packages -> Reset Package Caches
-3. rm -rf ~/Library/Preferences/io.github.FisherRone.AutoPlanApp.plist
-4. rm -rf ~/Library/Application Support/AutoPlan
-5. rm -rf ~/Library/Developer/Xcode/DerivedData/AutoPlan*
-6. 钥匙串.app 删除钥匙串
+3. 
+```bash
+rm -rf ~/Library/Preferences/io.github.FisherRone.AutoPlanApp.plist
+rm -rf ~/Library/Application Support/AutoPlan
+rm -rf ~/Library/Developer/Xcode/DerivedData/AutoPlan*
+```
+4. 钥匙串.app 删除钥匙串
 
 
 ### UI

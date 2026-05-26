@@ -15,7 +15,7 @@
 
 /* Begin PBXFileReference section */
 		C00B7D882FB421FF00669DD5 /* 提取日程.shortcut */ = {isa = PBXFileReference; lastKnownFileType = file; path = "提取日程.shortcut"; sourceTree = "<group>"; };
-		C0983ABB2FC5ACE70072925C /* AutoPlan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoPlan.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0983ABB2FC5ACE70072925C /* AutoPlan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = AutoPlan.app; path = "/Users/rongziyu/Documents/📝projects/AutoPlan/AutoPlan/build/Debug/AutoPlan.app"; sourceTree = "<absolute>"; };
 		C0B963792FB3827E0033B675 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -67,7 +67,6 @@
 		C00E223C2FB0360A008CAB38 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C0983ABB2FC5ACE70072925C /* AutoPlan.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
