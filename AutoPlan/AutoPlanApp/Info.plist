@@ -27,7 +27,12 @@
 	</array>
 	<key>INIntentsSupported</key>
 	<array>
-		<string>Intent</string>
+		<string>AutoPlanIntent</string>
+		<string>GenerateWeeklyReportIntent</string>
+		<string>EventPreviewSnippetIntent</string>
+		<string>EventSnippetIntent</string>
+		<string>OpenAutoPlanIntent</string>
+		<string>AutoPlanHelloWorldIntent</string>
 	</array>
 </dict>
 </plist>

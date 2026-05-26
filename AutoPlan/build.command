@@ -77,7 +77,9 @@ echo "✅ README.txt created in Resources."
 
 # 进行 Ad-hoc 签名
 echo "5️⃣ Ad-hoc signing..."
-codesign -s - -f --deep --entitlements "$ENTITLEMENTS_PATH" "$APP_BUNDLE"
+#codesign -s - -f --deep --entitlements "$ENTITLEMENTS_PATH" "$APP_BUNDLE"
+codesign -s - -f --deep "$APP_BUNDLE"
+
 if [ $? -ne 0 ]; then
     echo "❌ 签名失败"
     exit 1
@@ -109,5 +111,7 @@ else
     zip -ry "$APP_NAME_ZIP" "$(basename "$APP_BUNDLE")" -x "*.DS_Store"
     echo "✅ packaging as .zip"
 fi
+
+pkill -f "AutoPlan"
 
 echo "🎉 All finished! Distribution package: $OUTPUT_DIR/$APP_NAME_ZIP"
