@@ -15,7 +15,7 @@
 
 /* Begin PBXFileReference section */
 		C00B7D882FB421FF00669DD5 /* 提取日程.shortcut */ = {isa = PBXFileReference; lastKnownFileType = file; path = "提取日程.shortcut"; sourceTree = "<group>"; };
-		C00E223B2FB0360A008CAB38 /* AutoPlan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoPlan.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0983ABB2FC5ACE70072925C /* AutoPlan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoPlan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0B963792FB3827E0033B675 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -67,7 +67,7 @@
 		C00E223C2FB0360A008CAB38 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C00E223B2FB0360A008CAB38 /* AutoPlan.app */,
+				C0983ABB2FC5ACE70072925C /* AutoPlan.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -103,7 +103,7 @@
 				C0311C942FB18AD200E7DD64 /* SymbolPicker */,
 			);
 			productName = AutoPlanApp;
-			productReference = C00E223B2FB0360A008CAB38 /* AutoPlan.app */;
+			productReference = C0983ABB2FC5ACE70072925C /* AutoPlan.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -322,8 +322,8 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 0.2;
-				PRODUCT_BUNDLE_IDENTIFIER = io.github.FisherRone.AutoPlanApp;
+				MARKETING_VERSION = 0.3;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.FisherRone.AutoPlan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				RUNTIME_EXCEPTION_ALLOW_DYLD_ENVIRONMENT_VARIABLES = NO;
@@ -373,8 +373,8 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 0.2;
-				PRODUCT_BUNDLE_IDENTIFIER = io.github.FisherRone.AutoPlanApp;
+				MARKETING_VERSION = 0.3;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.FisherRone.AutoPlan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				RUNTIME_EXCEPTION_ALLOW_DYLD_ENVIRONMENT_VARIABLES = NO;

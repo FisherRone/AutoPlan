@@ -13,7 +13,6 @@ import SwiftUI
 
 nonisolated private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "AutoPlan", category: "Shortcuts")
 
-#if !DEBUG
 /// 快捷指令：处理日程内容
 /// 支持从共享菜单传入文本、图片，提取日程信息
 /// 两种模式：「确认后保存」（默认）和「直接保存」
@@ -127,7 +126,6 @@ struct AutoPlanIntent: AppIntent {
         #endif
     }
 }
-#endif
 
 // MARK: - 错误展示视图（简单示例）
 /// 用于展示错误信息的 Snippet View
