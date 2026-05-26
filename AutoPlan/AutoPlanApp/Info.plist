@@ -32,7 +32,6 @@
 		<string>EventPreviewSnippetIntent</string>
 		<string>EventSnippetIntent</string>
 		<string>OpenAutoPlanIntent</string>
-		<string>AutoPlanHelloWorldIntent</string>
 	</array>
 </dict>
 </plist>

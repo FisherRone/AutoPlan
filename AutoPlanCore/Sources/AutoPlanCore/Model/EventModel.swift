@@ -285,15 +285,23 @@ extension TempEventItem {
     /// 阶段 1：纯数据转换 (String -> Date)
     /// 这个方法只负责解析时间，不负责查找系统日历，保持同步和高效
     nonisolated func toInitialEventItem() -> EventItem {
-        // 时间解析逻辑 (复用你原有的 Date.parse)
-        let start = Date.parse(self.startTime) ?? Date()
-        
-        // 结束时间计算逻辑
-        let end: Date
+        // 提醒事项没有 start_time/end_time，保持 nil；日程事件兜底当前时间
+        let start: Date?
+        if self.type == .reminder {
+            start = Date.parse(self.startTime)   // reminder 无 startTime → nil
+        } else {
+            start = Date.parse(self.startTime) ?? Date()
+        }
+
+        let end: Date?
         if let e = Date.parse(self.endTime) {
             end = e
+        } else if let s = start {
+            end = (self.type == .allDay)
+                ? Calendar.current.date(byAdding: .day, value: 1, to: s) ?? s
+                : s.addingTimeInterval(3600)
         } else {
-            end = (self.type == .allDay) ? Calendar.current.date(byAdding: .day, value: 1, to: start) ?? start : start.addingTimeInterval(3600)
+            end = nil
         }
         
         return EventItem(

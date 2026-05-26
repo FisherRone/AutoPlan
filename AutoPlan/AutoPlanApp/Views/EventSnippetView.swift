@@ -8,6 +8,7 @@
 import SwiftUI
 import AutoPlanCore
 import AppIntents
+import OSLog
 
 // MARK: - Preview Snippet View
 
@@ -18,12 +19,9 @@ struct EventPreviewSnippetView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             
-            
             // Events List
             ForEach(Array(events.enumerated()), id: \.element.id) { index, _ in
-                SnippetEventRow(event: events[index], isEditable: true) {
-                    events[index].isSelected.toggle()
-                }
+                SnippetEventRow(event: events[index])
             }
         }
         .padding()
@@ -85,7 +83,6 @@ struct EventSavedSnippetView: View {
 /// 日程行视图，根据类型使用对应的 InfoCard 展示
 struct SnippetEventRow: View {
     let event: EventItem
-    var isEditable: Bool = false
     var onRemove: (() -> Void)? = nil
     
     var body: some View {
@@ -102,18 +99,6 @@ struct SnippetEventRow: View {
                 }
             }
             .opacity(event.isSelected ? 1 : 0.4)
-            
-            // 右侧：红色减号按钮（仅在可编辑模式下显示）
-            if isEditable {
-                Button {
-                    onRemove?()
-                } label: {
-                    Image(systemName: "minus.circle.fill")
-                        .foregroundStyle(.red)
-                        .font(.title2)
-                }
-                .buttonStyle(.plain)
-            }
         }
     }
 }

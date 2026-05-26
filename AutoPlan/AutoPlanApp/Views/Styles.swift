@@ -71,12 +71,7 @@ struct GroupedPopupSelector: NSViewRepresentable {
             menu.addItem(sectionItem)
 
             for entry in group.items {
-                let item = NSMenuItem(
-                    title: entry.label,
-                    action: #selector(Coordinator.selectionChanged(_:)),
-                    keyEquivalent: ""
-                )
-                item.target = coordinator
+                let item = NSMenuItem(title: entry.label, action: nil, keyEquivalent: "")
                 item.representedObject = entry.key
                 item.isEnabled = true
                 menu.addItem(item)

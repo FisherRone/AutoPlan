@@ -12,10 +12,40 @@ import os.log
 
 
 
-struct InfoCardConfigs {
-    let iconSize: Int = 17
-    let iconBackgroundSize: Int = 8
-    let inLineIconSize: Int = 10
+enum InfoCardStyle {
+    // 原有间距和尺寸
+    static let spacing: CGFloat = 6
+    static let innerSpacing: CGFloat = 4
+    static let capsuleWidth: CGFloat = 3
+    static let indicatorSize: CGFloat = 16
+    static let indicatorIconSize: CGFloat = 9
+
+    // 新增：文字样式
+    static let titleFont: Font = .system(.caption2, weight: .medium)
+
+    static let secondaryFont: Font = .caption2
+
+    static let timeFont: Font = .caption2
+    static let timeWeight: Font.Weight? = nil   // .regular
+
+    static let primaryColor: Color = .primary
+    static let secondaryColor: Color = .secondary
+
+    // 是否使用等宽数字 (时间)
+    static let useMonospacedDigit: Bool = true
+}
+
+// MARK: - MonospacedDigit Conditional Helper
+
+extension View {
+    @ViewBuilder
+    fileprivate func monospacedDigitIf(_ active: Bool) -> some View {
+        if active {
+            monospacedDigit()
+        } else {
+            self
+        }
+    }
 }
 
 // MARK: - 1. Event Component
@@ -31,72 +61,69 @@ struct EventCard: View {
     let bottomRightText: String
     
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: InfoCardStyle.spacing) {
             // 1. 左侧垂直细条
             Capsule()
                 .fill(categoryColor)
-                .frame(width: 3)
+                .frame(width: InfoCardStyle.capsuleWidth)
                 .frame(maxHeight: .infinity)
             
             // 2. 左侧信息区 (左对齐)
-            VStack(alignment: .leading, spacing: 4) {
-                // 第 1 行：标题 (黑色/Primary)
+            VStack(alignment: .leading, spacing: InfoCardStyle.innerSpacing) {
+                // 第 1 行：标题
                 Text(title)
-                    .font(.body)
-                    .fontWeight(.medium)
-                    .foregroundStyle(.primary)
+                    .font(InfoCardStyle.titleFont)
+                    .foregroundStyle(InfoCardStyle.primaryColor)
                     .lineLimit(1)
                 
                 // 第 2 行：图标和信息
-                HStack(spacing: 4) {
+                HStack(spacing: InfoCardStyle.innerSpacing) {
                     // 列表名称
                     if let list = listName {
                         let icon = iconName
                         Image(systemName: icon)
-                            .font(.caption)
+                            .font(InfoCardStyle.secondaryFont)
                         Text(list)
-                            .font(.caption)
+                            .font(InfoCardStyle.secondaryFont)
                     }
                     
                     // 优先展示地点
                     if !location.isEmpty {
                         Image(systemName: "location.fill")
-                            .font(.caption)
+                            .font(InfoCardStyle.secondaryFont)
                         Text(location)
-                            .font(.caption)
+                            .font(InfoCardStyle.secondaryFont)
                     }
                     // 没有地点再展示 url 或视频会议
                     if location.isEmpty && !url.isEmpty {
                         HStack(spacing: 4) {
                             Image(systemName: url.isMeetingLink() ? "video.fill" : "link")
-                                .font(.caption)
+                                .font(InfoCardStyle.secondaryFont)
                             Text(url)
-                                .font(.caption)
+                                .font(InfoCardStyle.secondaryFont)
                         }
                     }
                 }
-                .foregroundStyle(.secondary)
+                .foregroundStyle(InfoCardStyle.secondaryColor)
                 .lineLimit(1)
-                
-                
-                
             }
             
             Spacer()
             
             // 3. 右侧信息区 (右对齐)
-            VStack(alignment: .trailing, spacing: 4) {
-                // 第一行：开始时间 (黑色/Primary)
+            VStack(alignment: .trailing, spacing: InfoCardStyle.innerSpacing) {
+                // 第一行：开始时间
                 Text(topRightText)
-                    .font(.caption)
-                    .foregroundStyle(.primary)
-                    .monospacedDigit()  // 数字等宽，防止时间跳动
+                    .font(InfoCardStyle.timeFont)
+                    .fontWeight(InfoCardStyle.timeWeight)
+                    .foregroundStyle(InfoCardStyle.primaryColor)
+                    .monospacedDigitIf(InfoCardStyle.useMonospacedDigit)
                 
-                // 第二行：结束时间 (灰色/Secondary)
+                // 第二行：结束时间
                 Text(bottomRightText)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .monospacedDigit()
+                    .font(InfoCardStyle.timeFont)
+                    .foregroundStyle(InfoCardStyle.secondaryColor)
+                    .monospacedDigitIf(InfoCardStyle.useMonospacedDigit)
             }
         }
         .fixedSize(horizontal: false, vertical: true)
@@ -114,30 +141,30 @@ struct ReminderCard: View {
     
     
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: InfoCardStyle.spacing) {
             // 1. 左侧圆圈 (静态视觉元素)
             ZStack {
                 Circle()
                     .fill(categoryColor)
-                    .frame(width: 17, height: 17)
+                    .frame(width: InfoCardStyle.indicatorSize, height: InfoCardStyle.indicatorSize)
                 
                 Image(systemName: iconName)
-                    .font(.system(size: 8, weight: .bold))
+                    .font(.system(size: InfoCardStyle.indicatorIconSize, weight: .bold))
                     .foregroundStyle(Color(nsColor: .windowBackgroundColor))
             }
             
             Text(title)
-                .font(.body)
-                .fontWeight(.medium)
-                .foregroundStyle(.primary)
+                .font(InfoCardStyle.titleFont)
+                .foregroundStyle(InfoCardStyle.primaryColor)
                 .lineLimit(1)
             
             Spacer()
             
             Text(rightText)
-                .font(.caption)
-                .foregroundStyle(.primary)
-                .monospacedDigit()
+                .font(InfoCardStyle.timeFont)
+                .fontWeight(InfoCardStyle.timeWeight)
+                .foregroundStyle(InfoCardStyle.primaryColor)
+                .monospacedDigitIf(InfoCardStyle.useMonospacedDigit)
         }
     }
 }
@@ -151,31 +178,32 @@ struct AllDayCard: View {
     
     
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: InfoCardStyle.spacing) {
             // 1. 左侧实心圆 + 图标
             ZStack {
                 Circle()
                     .fill(categoryColor)
-                    .frame(width: 17, height: 17)
+                    .frame(width: InfoCardStyle.indicatorSize, height: InfoCardStyle.indicatorSize)
                 let icon = iconName
                 Image(systemName: icon)
-                    .font(.system(size: 8, weight: .bold))
+                    .font(.system(size: InfoCardStyle.indicatorIconSize, weight: .bold))
                     .foregroundStyle(Color(nsColor: .windowBackgroundColor))
             }
             
-            // 2. 标题 (黑色/Primary)
+            // 2. 标题
             Text(title)
-                .font(.body)
-                .fontWeight(.medium)
-                .foregroundStyle(.primary)
+                .font(InfoCardStyle.titleFont)
+                .foregroundStyle(InfoCardStyle.primaryColor)
                 .lineLimit(1)
             
             Spacer()
             
-            // 3. 右侧文本 (黑色/Primary)
+            // 3. 右侧文本
             Text(rightText)
-                .font(.caption)
-                .foregroundStyle(.primary)
+                .font(InfoCardStyle.timeFont)
+                .fontWeight(InfoCardStyle.timeWeight)
+                .foregroundStyle(InfoCardStyle.primaryColor)
+                .monospacedDigitIf(InfoCardStyle.useMonospacedDigit)
         }
     }
 }
@@ -201,7 +229,7 @@ extension EventCard {
                 
         let formatter = DateFormatter()
         if let start = event.startTime {
-            formatter.dateFormat = "HH:mm"
+            formatter.dateFormat = "MM/dd HH:mm"
             self.topRightText = formatter.string(from: start)
         } else {
             self.topRightText = "日程"
@@ -229,8 +257,14 @@ extension ReminderCard {
         self.iconName = event.listInfo?.iconName ?? "checkmark"
         
         let formatter = DateFormatter()
-        formatter.dateFormat = "MM/dd HH:mm"
         if let time = event.reminderTime ?? event.startTime {
+            let calendar = Calendar.current
+            let comps = calendar.dateComponents([.hour, .minute], from: time)
+            if comps.hour == 0 && comps.minute == 0 {
+                formatter.dateFormat = "MM/dd"
+            } else {
+                formatter.dateFormat = "MM/dd HH:mm"
+            }
             self.rightText = formatter.string(from: time)
         } else {
             self.rightText = "提醒"
@@ -247,14 +281,18 @@ extension AllDayCard {
             }
             return .blue
         }()
-        self.rightText = "全天"
-        if let list = event.listInfo {
-            self.iconName = list.iconName
+        if let start = event.startTime {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "M/dd"
+            self.rightText = formatter.string(from: start)
+        } else {
+            self.rightText = "全天"
         }
         self.iconName = event.listInfo?.iconName ?? "calendar"
     }
 }
 
+// MARK: - Preview
 #Preview("Layout Check") {
     VStack(spacing: 8) {
         
@@ -337,6 +375,4 @@ extension AllDayCard {
         }
     }
     .padding()
-    // 模拟一个常见的卡片背景容器
-    .background(Color("ChatBackground")) // macOS/iOS 适配背景
 }
