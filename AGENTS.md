@@ -105,9 +105,10 @@ rm -rf ~/Library/Developer/Xcode/DerivedData/AutoPlan*
 ```
 4. 钥匙串.app 删除钥匙串
 
-
-### UI
-- 设置深色模式下背景颜色切换，用 Color("ChatBackground")，深色模式下是黑色，否则是白色。
+### git 使用
+- 什么时候 git commit？当你进行了一些更改，并且觉得不会有 bug 了，此时你可使用 xcode mcp 进行 build，如果真的无任何 bug，即可 commit。
+- ⚠️警告：任何 commit 之前必须使用 xcode mcp 进行 build，确认无任何 bug 再进行 commit！有任何 bug 都禁止 commit。
+- commit 时需写说明。
 
 ## 【重要】Xcode MCP 工具使用
 - XcodeListWindows：列出当前 Xcode 窗口信息，可获取 `tabIdentifier`
