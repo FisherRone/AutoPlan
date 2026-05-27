@@ -102,3 +102,73 @@ struct MenuBarEventPopoverView: View {
         }
     }
 }
+
+// MARK: - Preview
+
+#Preview("Popover Preview") {
+    let allDayEvent = {
+        var e = TempEventItem(
+            title: "去交大一日游",
+            type: .allDay,
+            startTime: "2026-05-28"
+        ).toInitialEventItem()
+        e.listInfo = ListInfo(id: "preview", name: "个人", colorHex: "#FF9500", available: true, source: .calendar, neglected: false, iconName: "house.fill")
+        return e
+    }()
+
+    let eventItem = {
+        var e = TempEventItem(
+            title: "上利息论课程",
+            type: .event,
+            startTime: "2026-05-29 10:00",
+            endTime: "2026-05-29 12:00"
+        ).toInitialEventItem()
+        e.listInfo = ListInfo(id: "preview", name: "学习", colorHex: "#007AFF", available: true, source: .calendar, neglected: false, iconName: "book.fill")
+        return e
+    }()
+
+    let reminderItem = {
+        var e = TempEventItem(
+            title: "准备生日礼物",
+            type: .reminder,
+            reminderTime: "2026-06-01"
+        ).toInitialEventItem()
+        e.listInfo = ListInfo(id: "preview", name: "个人", colorHex: "#FF2D55", available: true, source: .reminders, neglected: false, iconName: "heart.fill")
+        return e
+    }()
+
+    let events = [allDayEvent, eventItem, reminderItem]
+
+    VStack(spacing: 20) {
+        MenuBarEventPopoverView(
+            mode: .preview(events: events),
+            onDismiss: {},
+            onSave: { _ in }
+        )
+        .border(.separator)
+
+        MenuBarEventPopoverView(
+            mode: .saved(events.map {
+                var e = $0
+                e.status = .saved
+                return e
+            }),
+            onDismiss: {}
+        )
+        .border(.separator)
+
+        MenuBarEventPopoverView(
+            mode: .error("LLM 服务连接失败，请检查网络和 API Key 配置。"),
+            onDismiss: {}
+        )
+        .border(.separator)
+
+        MenuBarEventPopoverView(
+            mode: .weeklyReportGenerated(directoryPath: "/Users/username/Documents/AutoPlan/周报/2026-05-27"),
+            onDismiss: {}
+        )
+        .border(.separator)
+    }
+    .padding()
+    .frame(width: 400)
+}

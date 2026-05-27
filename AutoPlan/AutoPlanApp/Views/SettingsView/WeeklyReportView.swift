@@ -5,14 +5,6 @@
 
 import SwiftUI
 import AutoPlanCore
-import CoreTransferable
-import UniformTypeIdentifiers
-
-extension ListInfo: Transferable {
-    public static var transferRepresentation: some TransferRepresentation {
-        CodableRepresentation(contentType: .data)
-    }
-}
 
 @MainActor
 @Observable
@@ -129,6 +121,7 @@ struct WeeklyReportView: View {
                         ))
                         .toggleStyle(.switch)
                         .labelsHidden()
+                        .controlSize(.small)
                     }
                     .alert("无法打开文件", isPresented: $openFailed) {
                         Button("好", role: .cancel) {}
@@ -141,7 +134,7 @@ struct WeeklyReportView: View {
 
                     VStack(alignment: .leading) {
                         Text("关注的列表").subtitle()
-                        Text("在周报中，关注的列表将被重点分析和展示。")
+                        Text("在周报中，关注的列表将被重点分析和展示。\n你可以在“关注”方框和“不关注”方框之间拖动列表。")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }

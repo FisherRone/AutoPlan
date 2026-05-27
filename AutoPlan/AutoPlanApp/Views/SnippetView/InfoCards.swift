@@ -19,13 +19,14 @@ enum InfoCardStyle {
     static let capsuleWidth: CGFloat = 3
     static let indicatorSize: CGFloat = 16
     static let indicatorIconSize: CGFloat = 9
+    static let circleLineWidth: CGFloat = 2.5
 
     // 新增：文字样式
-    static let titleFont: Font = .system(.caption2, weight: .medium)
+    static let titleFont: Font = .system(.body, weight: .medium)
 
-    static let secondaryFont: Font = .caption2
+    static let secondaryFont: Font = .body
 
-    static let timeFont: Font = .caption2
+    static let timeFont: Font = .body
     static let timeWeight: Font.Weight? = nil   // .regular
 
     static let primaryColor: Color = .primary
@@ -63,10 +64,15 @@ struct EventCard: View {
     var body: some View {
         HStack(spacing: InfoCardStyle.spacing) {
             // 1. 左侧垂直细条
-            Capsule()
-                .fill(categoryColor)
-                .frame(width: InfoCardStyle.capsuleWidth)
-                .frame(maxHeight: .infinity)
+            Color.clear
+                .frame(width: 16)
+                .frame(maxHeight: .infinity)   // 透明容器，宽度固定16，高度随父视图填满
+                .overlay(
+                    Capsule()
+                        .fill(categoryColor)
+                        .frame(width: InfoCardStyle.capsuleWidth)
+                        .frame(maxHeight: .infinity)
+                )
             
             // 2. 左侧信息区 (左对齐)
             VStack(alignment: .leading, spacing: InfoCardStyle.innerSpacing) {
@@ -145,7 +151,7 @@ struct ReminderCard: View {
             // 1. 左侧圆圈 (静态视觉元素)
             ZStack {
                 Circle()
-                    .fill(categoryColor)
+                    .strokeBorder(categoryColor, lineWidth: InfoCardStyle.circleLineWidth)
                     .frame(width: InfoCardStyle.indicatorSize, height: InfoCardStyle.indicatorSize)
                 
                 Image(systemName: iconName)

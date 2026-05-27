@@ -134,18 +134,20 @@ struct ExtractorView: View {
                     ))
                     .toggleStyle(.switch)
                     .labelsHidden()
+                    .controlSize(.small)
                 }
                 .alert("无法打开文件", isPresented: $openFailed) {
                     Button("好", role: .cancel) {}
                 } message: {
                     Text("无法用默认应用打开自定义提示词文件。")
                 }
+                
+                
+                Text("工作模式").subtitle()
 
                 // 直接保存开关
                 HStack {
                     Text("从菜单栏提取时跳过确认，直接保存")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
                     Spacer()
                     Toggle("", isOn: Binding(
                         get: { AppSettings.shared.directSave },

@@ -8,6 +8,8 @@
 import Foundation
 import SwiftUI
 import EventKit
+import CoreTransferable
+import UniformTypeIdentifiers
 
 // MARK: - Definitions
 /// 计划类型枚举
@@ -62,6 +64,14 @@ public struct ListInfo: Codable, Hashable, Identifiable, Sendable {
         self.prompt = prompt
         self.neglected = neglected
         self.iconName = iconName
+    }
+}
+
+// MARK: - Transferable (Drag & Drop)
+
+extension ListInfo: Transferable {
+    public static var transferRepresentation: some TransferRepresentation {
+        CodableRepresentation(contentType: .data)
     }
 }
 
@@ -284,7 +294,7 @@ public struct EventEntry: Identifiable, Sendable {
 extension TempEventItem {
     /// 阶段 1：纯数据转换 (String -> Date)
     /// 这个方法只负责解析时间，不负责查找系统日历，保持同步和高效
-    nonisolated func toInitialEventItem() -> EventItem {
+    public nonisolated func toInitialEventItem() -> EventItem {
         // 提醒事项没有 start_time/end_time，保持 nil；日程事件兜底当前时间
         let start: Date?
         if self.type == .reminder {

@@ -78,39 +78,39 @@ echo "✅ README.txt created in Resources."
 # 进行 Ad-hoc 签名
 #echo "5️⃣ Ad-hoc signing..."
 #codesign -s - -f --deep --entitlements "$ENTITLEMENTS_PATH" "$APP_BUNDLE"
-#codesign -s - -f --deep "$APP_BUNDLE"
+codesign -s - -f --deep "$APP_BUNDLE"
 #codesign -s "FishDevCertificate" -f --deep "$APP_BUNDLE"
 
 
-#if [ $? -ne 0 ]; then
-#    echo "❌ 签名失败"
+if [ $? -ne 0 ]; then
+    echo "❌ 签名失败"
     exit 1
-#fi
-#echo "✅ Ad-hoc signed."
+fi
+echo "✅ Ad-hoc signed."
 
 # 打包为 zip 文件
 echo "6️⃣ packaging as .zip ..."
 # 获取脚本所在目录（即项目根目录），保证无论从哪执行都能找到文件
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-INSTALL_GUIDE="$SCRIPT_DIR/安装说明.txt"
+DOCS_DIR="$SCRIPT_DIR/docs"
 
-# 检查安装说明文件是否存在，然后复制到输出目录
-if [ -f "$INSTALL_GUIDE" ]; then
-    cp "$INSTALL_GUIDE" "$OUTPUT_DIR/"
-    echo "✅ moved 安装说明.txt to output directory."
-else
-    echo "⚠️ file not found: $INSTALL_GUIDE"
-fi
 cd "$OUTPUT_DIR"
 APP_NAME_ZIP="${APP_NAME}.zip"
+rm -f "$APP_NAME_ZIP"
 
 # 优先使用 7z，如果没有则退回系统 zip
 if command -v 7z &> /dev/null; then
+    # 打包 .app
     7z a -tzip -mcu "$APP_NAME_ZIP" . -xr!.DS_Store
+    # 直接加入 docs 下的 txt 文件（平铺，不带目录路径）
+    cd "$DOCS_DIR" && 7z a -tzip "$OLDPWD/$APP_NAME_ZIP" "*.txt" && cd "$OLDPWD"
     echo "✅ packaged as .zip (using 7z)"
 else
-    rm -f "$APP_NAME_ZIP"
-    zip -ry "$APP_NAME_ZIP" "$(basename "$APP_BUNDLE")" -x "*.DS_Store"
+    zip -ry "$APP_NAME_ZIP" . -x "*.DS_Store" "*.zip"
+    # 直接加入 docs 下的 txt 文件（-j 去除目录路径）
+    for doc_file in "$DOCS_DIR"/*.txt; do
+        [ -f "$doc_file" ] && zip -rj "$APP_NAME_ZIP" "$doc_file"
+    done
     echo "✅ packaging as .zip"
 fi
 

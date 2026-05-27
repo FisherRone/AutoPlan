@@ -66,7 +66,7 @@ final class MenuBarController: NSObject {
         menu.addItem(.separator())
 
         let reportItem = NSMenuItem(
-            title: "生成周报...",
+            title: "生成周报",
             action: #selector(generateWeeklyReport),
             keyEquivalent: ""
         )
@@ -90,9 +90,22 @@ final class MenuBarController: NSObject {
         popover.behavior = .applicationDefined
     }
 
+    // MARK: - Icon State
+
+    private func updateIcon(isLoading: Bool) {
+        guard let button = statusItem.button else { return }
+
+        if isLoading {
+            button.image = NSImage(systemSymbolName: "arrow.triangle.2.circlepath", accessibilityDescription: "处理中...")
+        } else {
+            button.image = NSImage(systemSymbolName: Self.menuIcon, accessibilityDescription: "AutoPlan")
+        }
+    }
+
     // MARK: - Actions
 
     @objc private func openSettings() {
+        statusItem.menu?.cancelTracking()
         settingsWindowController.show()
     }
 
@@ -113,6 +126,8 @@ final class MenuBarController: NSObject {
         }
 
         Task {
+            await MainActor.run { updateIcon(isLoading: true) }
+
             do {
                 let events = try await AutoPlanEngine.process(
                     clipboardText,
@@ -125,7 +140,10 @@ final class MenuBarController: NSObject {
 
                 if AppSettings.shared.directSave {
                     let selected = events.filter(\.isSelected)
-                    guard !selected.isEmpty else { return }
+                    guard !selected.isEmpty else {
+                        await MainActor.run { updateIcon(isLoading: false) }
+                        return
+                    }
                     do {
                         let (_, savedEvents) = try await AutoPlanEngine.saveItems(selected)
                         showSavedPopover(events: savedEvents)
@@ -196,6 +214,7 @@ final class MenuBarController: NSObject {
     }
 
     private func showPopover(behavior: NSPopover.Behavior, autoDismissAfter seconds: TimeInterval? = nil) {
+        updateIcon(isLoading: false)
         guard let button = statusItem.button else { return }
 
         if popover.isShown {
@@ -222,6 +241,8 @@ final class MenuBarController: NSObject {
         statusItem.menu?.cancelTracking()
 
         Task {
+            await MainActor.run { updateIcon(isLoading: true) }
+
             do {
                 let config = try await ListStore.refresh()
                 try await ReportWriter.writeWeeklyReport(

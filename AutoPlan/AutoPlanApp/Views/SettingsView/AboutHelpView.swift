@@ -65,30 +65,33 @@ struct AboutHelpView: View {
             Form {
                 Section(header: Text("使用帮助")) {
                     LabeledContent("本 App 的作用") {
-                        Text("通过快捷指令从文本或图片中提取日程，并保存到系统日历。")
+                        Text("从文本或图片中提取日程，并保存到系统日历。")
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    
+                    /*
                     LabeledContent("安装快捷指令") {
                         HStack(spacing: 4) {
                             InstallShortcutButton(shortcutName: "安装提取日程")
                             InstallShortcutButton(shortcutName: "安装撰写周报")
                         }
                     }
+                    */
                     
                     LabeledContent("如何提取日程") {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("1. 截图保存至剪贴板，或复制文本到剪贴板")
-                            Text("2. 点击菜单栏上的 App 名称")
-                            Text("3. 点击【服务】->【提取日程】")
+                            Text("2. 点击菜单栏上的 App 图标")
+                            Text("3. 点击“从剪贴板提取日程”")
                         }
                         .font(.callout)
                     }
                     
                     LabeledContent("如何撰写周报") {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("1. 运行“撰写周报”快捷指令，即可撰写并保存到指定目录")
-                            Text("2. 您可以创建一个快捷指令自动化，实现每周自动撰写")
+                            //Text("1. 运行“撰写周报”快捷指令，即可撰写并保存到指定目录")
+                            //Text("2. 您可以创建一个快捷指令自动化，实现每周自动撰写")
+                            Text("1. 点击菜单栏上的 App 图标")
+                            Text("2. 点击“生成周报”")
                         }
                         .font(.callout)
                     }
