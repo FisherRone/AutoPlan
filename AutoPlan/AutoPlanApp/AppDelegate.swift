@@ -221,16 +221,20 @@ final class MenuBarController: NSObject {
             popover.performClose(nil)
         }
 
-        popover.behavior = behavior
-        popover.show(
-            relativeTo: button.bounds,
-            of: button,
-            preferredEdge: .maxY
-        )
+        // 推迟到下一个运行循环执行，避免在现有布局周期中触发布局递归
+        DispatchQueue.main.async { [weak self] in
+            guard let self, let button = self.statusItem.button else { return }
+            self.popover.behavior = behavior
+            self.popover.show(
+                relativeTo: button.bounds,
+                of: button,
+                preferredEdge: .maxY
+            )
 
-        if let seconds {
-            DispatchQueue.main.asyncAfter(deadline: .now() + seconds) { [weak self] in
-                self?.popover.performClose(nil)
+            if let seconds {
+                DispatchQueue.main.asyncAfter(deadline: .now() + seconds) { [weak self] in
+                    self?.popover.performClose(nil)
+                }
             }
         }
     }
