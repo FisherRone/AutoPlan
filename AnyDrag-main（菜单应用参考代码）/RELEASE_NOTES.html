@@ -1,0 +1,61 @@
+<h3>What's New in 1.4.1</h3>
+<ul>
+  <li><b>Refreshed app icon</b> — The icon artwork now uses the correct safe-area padding inside the macOS rounded-square mask, so it sits properly aligned in the Dock, Finder, and Launchpad instead of running edge-to-edge. No functional changes.</li>
+</ul>
+
+<h3>1.4.1 更新内容</h3>
+<ul>
+  <li><b>更新应用图标</b> — 图标素材现在按 macOS 圆角方形遮罩的安全区留出了正确的内边距,在程序坞、访达和启动台中显示更规范,不再顶到边缘。无功能性改动。</li>
+</ul>
+
+<h3>What's New in 1.4.0</h3>
+<ul>
+  <li><b>Fix: Accessibility permission row stuck on "Granted" after revoke</b> — In Settings → General, the Accessibility row continued to display "🟢 Granted" indefinitely after the permission was toggled off in System Settings. AnyDrag now correctly reflects the current permission state shortly after each toggle. (Thanks to <a href="https://github.com/FisherRone">@FisherRone</a> for the careful reproduction and reporting in <a href="https://github.com/XueshiQiao/AnyDrag/issues/7">#7</a>.)</li>
+  <li><b>Fix: revoking Accessibility could freeze every mouse click system-wide</b> — The protection shipped in 1.3.0 regressed in 1.3.2: after a revoke, AnyDrag's recovery path was inadvertently resurrecting the unauthorized event tap instead of tearing it down, leaving it at the head of the system event chain swallowing every click. AnyDrag now detects the revoke reliably and removes the tap cleanly.</li>
+  <li><b>Fix: launch permission alert could be silently skipped</b> — On macOS 14/15, AnyDrag's internal trust probe (a listen-only mouse event tap) would succeed even when Accessibility was actually denied, so the launch flow concluded "permissions OK" and never showed the request alert — the app appeared running but the event tap never started. The launch flow now uses the documented <code>AXIsProcessTrusted()</code> API as the single source of truth, so the alert appears when needed.</li>
+</ul>
+
+<h3>1.4.0 更新内容</h3>
+<ul>
+  <li><b>修复:撤销辅助功能权限后,设置页里依然显示「已授权」</b> — 在「设置 → 通用」中,即便已在系统设置里关掉 AnyDrag 的辅助功能权限,「辅助功能」一行还是会长时间显示「🟢 已授权」。现在切换权限后界面会快速同步到正确状态。(感谢 <a href="https://github.com/FisherRone">@FisherRone</a> 在 <a href="https://github.com/XueshiQiao/AnyDrag/issues/7">#7</a> 仔细复现并提交反馈)</li>
+  <li><b>修复:撤销辅助功能权限可能导致全系统鼠标点击被吞掉</b> — 1.3.0 修过的这个问题在 1.3.2 中悄悄回归:撤销权限后,引擎的恢复路径会反过来「复活」已经失去授权的事件 tap,把它留在系统事件链顶端吞掉所有点击事件。现在 AnyDrag 能可靠识别权限撤销并干净拆除 tap。</li>
+  <li><b>修复:权限未授予时,启动权限请求弹窗可能被静默跳过</b> — 在 macOS 14/15 上,AnyDrag 之前用来探测权限的内部探针(一个 listen-only 鼠标事件 tap)在没有权限时也会创建成功,导致启动流程错误地认为「权限 OK」,既不弹请求也不报错——看起来 app 已经在运行,实际 event tap 根本没起来。启动流程现在改用文档化的 <code>AXIsProcessTrusted()</code> API 作为唯一权限事实,该弹的时候就会弹。</li>
+</ul>
+
+<h3>What's New in 1.3.3</h3>
+<ul>
+  <li><b>Improved diagnostics for "no reaction" reports</b> — When a click with the configured modifier doesn't engage AnyDrag, the log now records the observed vs. expected modifier so reports can be triaged in one round-trip. The app name of the window under the cursor is also captured at engagement points (drag start, maximize toggle, tile commit), so reports like "AnyDrag doesn't work in app X" can be matched to log evidence at a glance. Logs live at <code>~/Library/Logs/AnyDrag/AnyDrag.log</code>.</li>
+</ul>
+
+<h3>1.3.3 更新内容</h3>
+<ul>
+  <li><b>诊断日志增强,方便定位「按了没反应」类问题</b> — 当带修饰键的点击没能触发 AnyDrag 时,日志现在会记录实际按下的修饰键和配置的修饰键,反馈问题时不需要再来回追问。同时在拖动、最大化、平铺等触发点会记录目标 App 的名字,「在某某 App 里不工作」的反馈可以直接对照日志定位。日志位置:<code>~/Library/Logs/AnyDrag/AnyDrag.log</code>。</li>
+</ul>
+
+<h3>What's New in 1.3.2</h3>
+<ul>
+  <li><b>Fix: spurious Input Monitoring permission prompt</b> — A trust probe added in 1.3.0 was listening for keyboard events with a throwaway tap, which made macOS prompt users for Input Monitoring even though AnyDrag never reads keyboard input. The probe now uses a mouse event, so only Accessibility is requested.</li>
+  <li><b>Fix: drag broken on a secondary display positioned above the primary</b> — A long-standing menu-bar-skip check was treating every click with negative CG Y as a menu-bar click, which silently swallowed all clicks on a display arranged above the primary. AnyDrag now works correctly regardless of the display's position relative to the primary. (Thanks to <a href="https://github.com/cpan-NS1">@cpan-NS1</a> for reporting in <a href="https://github.com/XueshiQiao/AnyDrag/issues/4">#4</a>.)</li>
+  <li><b>In-app language picker</b> — Switch the AnyDrag UI between Follow System, English, and 简体中文 from Settings → General. Takes effect immediately, no relaunch.</li>
+  <li><b>Settings reorganized into three tabs</b> — General (language, accessibility permission, launch at login, diagnostics), Advanced (modifier keys, feature toggles, middle-click action), and About. Window width stays stable while you switch tabs.</li>
+  <li><b>Accessibility permission visible in Settings</b> — General tab shows a green dot when authorized, or a one-click Authorize button that opens System Settings when not. The status updates live as you toggle the permission.</li>
+  <li><b>Revoking AX permission no longer freezes the system</b> — In earlier versions, toggling off AnyDrag's Accessibility permission in System Settings would lock the entire macOS input pipeline (no mouse, no keyboard, hard reboot required). AnyDrag now detects the revocation and tears the event tap down cleanly. When permission is granted again it restarts on its own.</li>
+  <li><b>More Apps by Author</b> — New menu-bar item linking to xueshi.dev for quick access to other apps.</li>
+  <li><b>Middle-button tile drag is cancellable</b> — During a middle-button tile-by-direction gesture, drag back into the small dot at the press origin to cancel — even after passing the trigger threshold.</li>
+  <li><b>Diagnostics always visible</b> — The "title-bar Y offset" knob (useful for apps like WeChat with non-standard top bars) and the synthesized-click marker now live under Settings → General → Diagnostics by default. Values persist across launches, with a Reset button to restore the default 3 px.</li>
+  <li><b>Bug fixes and stability improvements</b></li>
+</ul>
+
+<h3>1.3.2 更新内容</h3>
+<ul>
+  <li><b>修复:错误提示需要"输入监控"权限</b> — 1.3.0 引入的权限探测在创建临时 tap 时把 keyDown 加进了事件 mask,导致 macOS 误以为 AnyDrag 想读键盘,从而弹出"输入监控"权限请求。AnyDrag 实际上从不读键盘——已改成探测鼠标事件,现在只会请求"辅助功能"。</li>
+  <li><b>修复:副屏摆放在主屏正上方时,副屏上无法触发拖动</b> — 历史遗留的菜单栏跳过逻辑只判 Y < 25,而 CG 全屏坐标里副屏位于主屏上方时 Y 为负数,会被误判为"主屏菜单栏点击"而透传,导致 AnyDrag 在该副屏上完全无响应。现在不论副屏摆放方位都能正常工作。(感谢 <a href="https://github.com/cpan-NS1">@cpan-NS1</a> 在 <a href="https://github.com/XueshiQiao/AnyDrag/issues/4">#4</a> 提交反馈)</li>
+  <li><b>应用内语言切换</b> — 在「设置 → 通用」中可在「跟随系统 / English / 简体中文」之间切换 AnyDrag 界面语言,切换立即生效,无需重启。</li>
+  <li><b>设置页重新组织为三个标签页</b> — 通用(语言、辅助功能权限、登录时启动、诊断)、高级(修饰键、功能开关、鼠标中键动作)、关于。切换标签时窗体宽度不再变化。</li>
+  <li><b>设置页中可直接看到辅助功能权限状态</b> — 通用页显示绿点 + 「已授权」,未授权时显示「授权」按钮一键跳转系统设置;权限变化实时刷新。</li>
+  <li><b>撤销辅助功能权限不再导致系统冻结</b> — 之前在系统设置里关闭 AnyDrag 的辅助功能权限会让整个 macOS 输入管道死锁,鼠标键盘全部失灵,只能强制重启。现在 AnyDrag 会立刻检测到权限撤销并干净地拆除事件 tap;重新授权时会自动恢复。</li>
+  <li><b>菜单栏新增「作者的更多应用」入口</b> — 跳转至 xueshi.dev,方便查看作者的其他应用。</li>
+  <li><b>中键平铺手势可取消</b> — 按住中键进行方向平铺时,即使已经越过触发阈值,把光标拖回起点附近的小圆点上即可取消本次平铺。</li>
+  <li><b>诊断设置默认可见</b> — 「标题栏 Y 偏移」(对微信等顶栏非标准的应用有用)和「模拟点击标记」现在默认显示在「设置 → 通用 → 诊断」中,设置会持久保存,并新增「重置」按钮可还原为默认的 3 px。</li>
+  <li><b>Bug 修复与稳定性改进</b></li>
+</ul>

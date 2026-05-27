@@ -141,6 +141,21 @@ struct ExtractorView: View {
                     Text("无法用默认应用打开自定义提示词文件。")
                 }
 
+                // 直接保存开关
+                HStack {
+                    Text("从菜单栏提取时跳过确认，直接保存")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Toggle("", isOn: Binding(
+                        get: { AppSettings.shared.directSave },
+                        set: { AppSettings.shared.directSave = $0 }
+                    ))
+                    .toggleStyle(.switch)
+                    .labelsHidden()
+                    .controlSize(.small)
+                }
+
                 Divider()
                     .padding(.vertical, 4)
 

@@ -55,6 +55,15 @@ public final class AppSettings {
         }
     }
     
+    // MARK: - 弹窗提取
+    
+    /// 从菜单栏提取日程时，是否跳过确认直接保存
+    var directSave: Bool = UserDefaults.standard.bool(forKey: "directSave") {
+        didSet {
+            UserDefaults.standard.set(directSave, forKey: "directSave")
+        }
+    }
+    
     // MARK: - LLM 模型选择
 
     /// 日程提取模型：当前选中的模型 name
