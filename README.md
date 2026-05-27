@@ -1,12 +1,12 @@
 # AutoPlan
 
-Extract calendar events and reminders from text or images using LLM — right from macOS Shortcuts.
+Extract calendar events and reminders from text or images using LLM — right from the menu bar.
 
 ## Features
 
-- **Event Extraction** — Paste text or screenshot, let LLM parse it into calendar events / reminders
+- **Clipboard Extraction** — Copy any text or screenshot, click "从剪贴板提取日程" in the menu bar, and get parsed calendar events / reminders saved automatically
+- **Smart Recognition** — Supports both plain text and images (via OCR)
 - **Weekly Report** — Auto-generate weekly summaries from your calendar data
-- **Shortcuts Integration** — Trigger everything via macOS Shortcuts (Services menu or automation)
 - **Multi-Model** — Configurable LLM backends (OpenAI-compatible APIs)
 
 ## Requirements
@@ -17,25 +17,12 @@ Extract calendar events and reminders from text or images using LLM — right fr
 ## Quick Start
 
 1. Download the latest build or clone and build with Xcode
-2. Launch the app, go to the **General** tab and configure your LLM
-3. Install the bundled shortcut via **About** tab → "安装提取日程"
-4. Copy text / screenshot to clipboard → **Services** → **提取日程** in the menu bar
+2. Launch the app — it lives in the menu bar
+3. Open **Settings** → **Model Config** and configure your LLM
+4. Copy text or a screenshot to clipboard, then click **从剪贴板提取日程** in the menu bar
+5. Review the extracted events and click **保存** to save to Calendar / Reminders
 
-## Project Structure
-
-```
-AutoPlan/
-├── AutoPlan/              # macOS SwiftUI App
-│   └── AutoPlanApp/
-│       ├── Intents/       # App Intents (Shortcuts integration)
-│       └── Views/         # SwiftUI views
-├── AutoPlanCore/          # Core logic (SPM package)
-│   └── Sources/AutoPlanCore/
-│       ├── Service/       # LLM, EventKit, OCR services
-│       ├── Model/         # Data models & config
-│       └── Statistics/    # Weekly report & charts
-└── AI 聊天记录/            # Design & planning notes (Chinese)
-```
+You can also enable **直接保存** in Settings to skip the confirmation step.
 
 ## Build
 
