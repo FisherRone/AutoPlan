@@ -221,7 +221,7 @@ final class MenuBarController: NSObject {
             popover.performClose(nil)
         }
 
-        // 推迟到下一个运行循环执行，避免在现有布局周期中触发布局递归
+        // Defer to next run loop to avoid calling popover.show during an active layout pass, which triggers AppKit layout recursion
         DispatchQueue.main.async { [weak self] in
             guard let self, let button = self.statusItem.button else { return }
             self.popover.behavior = behavior
