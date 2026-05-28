@@ -34,20 +34,7 @@ public final class ModelConfigViewModel {
         }
     }
 
-    // 周报撰写模型
-    var weeklyReportModelName: String {
-        didSet {
-            if let model = models.first(where: { $0.name == weeklyReportModelName }) {
-                weeklyReportProviderID = model.providerID ?? ""
-            }
-            AppSettings.shared.weeklyReportModelName = weeklyReportModelName
-        }
-    }
-    var weeklyReportProviderID: String {
-        didSet {
-            AppSettings.shared.weeklyReportProviderID = weeklyReportProviderID
-        }
-    }
+
 
     // 连通性测试
     var testResults: [String: ConnectionTestResult] = [:]  // key: providerID
@@ -58,8 +45,6 @@ public final class ModelConfigViewModel {
         models = SystemLLMConfig.models
         selectedModelName = AppSettings.shared.selectedModelName
         selectedProviderID = AppSettings.shared.selectedProviderID
-        weeklyReportModelName = AppSettings.shared.weeklyReportModelName
-        weeklyReportProviderID = AppSettings.shared.weeklyReportProviderID
 
         for provider in providers {
             let savedKey = readAPIKey(for: provider.name)
@@ -96,15 +81,9 @@ public final class ModelConfigViewModel {
         }
     }
     
-    func selectModel(_ model: LLMConfiguration, purpose: ModelPurpose) {
-        switch purpose {
-        case .extraction:
-            selectedModelName = model.name
-            if let pid = model.providerID { selectedProviderID = pid }
-        case .weeklyReport:
-            weeklyReportModelName = model.name
-            if let pid = model.providerID { weeklyReportProviderID = pid }
-        }
+    func selectModel(_ model: LLMConfiguration) {
+        selectedModelName = model.name
+        if let pid = model.providerID { selectedProviderID = pid }
     }
     
     var selectedProvider: LLMServiceProvider? {
@@ -115,13 +94,6 @@ public final class ModelConfigViewModel {
         models.first(where: { $0.name == selectedModelName })
     }
     
-    var weeklyReportProvider: LLMServiceProvider? {
-        providers.first(where: { $0.name == weeklyReportProviderID })
-    }
-    
-    var currentWeeklyReportModel: LLMConfiguration? {
-        models.first(where: { $0.name == weeklyReportModelName })
-    }
     
     func testResult(for providerID: String) -> ConnectionTestResult? {
         testResults[providerID]
@@ -173,13 +145,6 @@ public final class ModelConfigViewModel {
     }
 }
 
-// MARK: - Model Purpose
-
-enum ModelPurpose: String, CaseIterable {
-    case extraction = "日程提取"
-    case weeklyReport = "周报撰写"
-}
-
 // MARK: - View
 
 struct ModelConfigView: View {
@@ -201,26 +166,12 @@ struct ModelConfigView: View {
                         selectedKey: viewModel.selectedModelName,
                         onSelect: { name in
                             if let model = viewModel.models.first(where: { $0.name == name }) {
-                                viewModel.selectModel(model, purpose: .extraction)
+                                viewModel.selectModel(model)
                             }
                         }
                     )
                 }
-                HStack {
-                    Text("周报撰写模型")
-                    Spacer(minLength: 200)
-                    GroupedPopupSelector(
-                        groups: viewModel.providers.map { provider in
-                            (title: provider.displayName, items: viewModel.models(for: provider).map { ($0.name, $0.uiDisplayName) })
-                        },
-                        selectedKey: viewModel.weeklyReportModelName,
-                        onSelect: { name in
-                            if let model = viewModel.models.first(where: { $0.name == name }) {
-                                viewModel.selectModel(model, purpose: .weeklyReport)
-                            }
-                        }
-                    )
-                }
+                
                 
                 Divider()
                     .padding(.vertical, 4)

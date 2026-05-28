@@ -65,13 +65,7 @@ final class MenuBarController: NSObject {
 
         menu.addItem(.separator())
 
-        let reportItem = NSMenuItem(
-            title: "生成周报",
-            action: #selector(generateWeeklyReport),
-            keyEquivalent: ""
-        )
-        reportItem.target = self
-        menu.addItem(reportItem)
+        
 
         menu.addItem(.separator())
 
@@ -239,47 +233,8 @@ final class MenuBarController: NSObject {
         }
     }
 
-    // MARK: - Weekly Report
 
-    @objc private func generateWeeklyReport() {
-        statusItem.menu?.cancelTracking()
 
-        Task {
-            await MainActor.run { updateIcon(isLoading: true) }
-
-            do {
-                let config = try await ListStore.refresh()
-                try await ReportWriter.writeWeeklyReport(
-                    date: Date(),
-                    config: config
-                )
-
-                let appSupport = NSSearchPathForDirectoriesInDomains(
-                    .applicationSupportDirectory, .userDomainMask, true
-                ).first ?? "/tmp"
-                let dirPath = (appSupport as NSString).appendingPathComponent("AutoPlan/Reports")
-
-                await MainActor.run {
-                    showWeeklyReportGeneratedPopover(directoryPath: dirPath)
-                }
-            } catch {
-                appLogger.error("❌ 周报生成失败: \(error.localizedDescription)")
-                await MainActor.run {
-                    showErrorPopover(message: "周报生成失败: \(error.localizedDescription)")
-                }
-            }
-        }
-    }
-
-    private func showWeeklyReportGeneratedPopover(directoryPath: String) {
-        popover.contentViewController = NSHostingController(
-            rootView: MenuBarEventPopoverView(
-                mode: .weeklyReportGenerated(directoryPath: directoryPath),
-                onDismiss: { [weak self] in self?.popover.performClose(nil) }
-            )
-        )
-        showPopover(behavior: .applicationDefined)
-    }
 
     @objc private func quitApp() {
         NSApp.terminate(nil)

@@ -37,12 +37,6 @@ public final class AppSettings {
         }
     }
     
-    var useCustomWeeklyReportPrompt: Bool = UserDefaults.standard.bool(forKey: "useCustomWeeklyReportPrompt") {
-        didSet {
-            UserDefaults.standard.set(useCustomWeeklyReportPrompt, forKey: "useCustomWeeklyReportPrompt")
-        }
-    }
-    
     var userPrompt: String = UserDefaults.standard.string(forKey: "userPrompt") ?? "" {
         didSet {
             UserDefaults.standard.set(userPrompt, forKey: "userPrompt")
@@ -80,21 +74,6 @@ public final class AppSettings {
             UserDefaults.standard.set(selectedProviderID, forKey: "selectedProviderID")
         }
     }
-
-    /// 周报撰写模型：当前选中的模型 name
-    var weeklyReportModelName: String = UserDefaults.standard.string(forKey: "weeklyReportModelName") ?? "" {
-        didSet {
-            UserDefaults.standard.set(weeklyReportModelName, forKey: "weeklyReportModelName")
-            UserDefaults.standard.synchronize()
-        }
-    }
-
-    /// 周报撰写模型：当前选中模型对应的 providerID
-    var weeklyReportProviderID: String = UserDefaults.standard.string(forKey: "weeklyReportProviderID") ?? "" {
-        didSet {
-            UserDefaults.standard.set(weeklyReportProviderID, forKey: "weeklyReportProviderID")
-        }
-    }
     
     public var userCalendarLists: [ListInfo] {
             get { getList(forKey: "userCalendarLists") }
@@ -119,18 +98,7 @@ public final class AppSettings {
     }
     
     
-    // MARK: - 周报
 
-    private static var sandboxReportDirectory: String {
-        (NSSearchPathForDirectoriesInDomains(.applicationSupportDirectory, .userDomainMask, true).first ?? "/tmp")
-            .appending("/AutoPlan/Reports")
-    }
-
-    var reportDirectory: String = UserDefaults.standard.string(forKey: "reportDirectory") ?? AppSettings.sandboxReportDirectory {
-        didSet {
-            UserDefaults.standard.set(reportDirectory, forKey: "reportDirectory")
-        }
-    }
 
     /// 一周的第一天：1=Sunday, 2=Monday（默认周一）
     var firstWeekday: Int = UserDefaults.standard.object(forKey: "firstWeekday") as? Int ?? 2 {
@@ -139,19 +107,6 @@ public final class AppSettings {
         }
     }
 
-    /// 周报关注的日历列表 ID（有序）
-    var reportFocusedEventList: [String] = UserDefaults.standard.stringArray(forKey: "reportFocusedEventList") ?? [] {
-        didSet {
-            UserDefaults.standard.set(reportFocusedEventList, forKey: "reportFocusedEventList")
-        }
-    }
-
-    /// 周报关注的提醒事项列表 ID（有序）
-    var reportFocusedReminderList: [String] = UserDefaults.standard.stringArray(forKey: "reportFocusedReminderList") ?? [] {
-        didSet {
-            UserDefaults.standard.set(reportFocusedReminderList, forKey: "reportFocusedReminderList")
-        }
-    }
 
     // MARK: - 复杂类型 (Enum)
     enum AppTheme: String, CaseIterable, Identifiable {

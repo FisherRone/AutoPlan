@@ -11,24 +11,13 @@ import AutoPlanCore
 struct TemplatePreviewView: View {
     @Environment(\.dismiss) private var dismiss
 
-    var purpose: ModelPurpose = .extraction
 
     private var templateContent: String {
-        switch purpose {
-        case .extraction:
-            return PromptBuilder.templatePrompt
-        case .weeklyReport:
-            return PromptBuilder.templateWeeklyReportPrompt
-        }
+        return PromptBuilder.templatePrompt
     }
 
     private var title: String {
-        switch purpose {
-        case .extraction:
-            return "日程提取提示词模板"
-        case .weeklyReport:
-            return "周报撰写提示词模板"
-        }
+        return "日程提取提示词模板"
     }
 
     var body: some View {

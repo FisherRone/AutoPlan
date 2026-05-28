@@ -9,22 +9,11 @@ import SwiftUI
 
 struct PromptTutorialView: View {
     @Environment(\.dismiss) private var dismiss
-
-    /// 控制显示哪些功能的占位符，nil 表示全部
-    var purpose: ModelPurpose? = nil
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
-            if purpose == nil || purpose == .extraction {
-                mainPromptVariables
-                if purpose == nil {
-                    Divider()
-                        .padding(.vertical, 8)
-                }
-            }
-            if purpose == nil || purpose == .weeklyReport {
-                weeklyReportVariables
-            }
+            mainPromptVariables
+            Divider().padding(.vertical, 8)
         }
         .padding(24)
     }
@@ -151,97 +140,6 @@ struct PromptTutorialView: View {
             )
         }
     }
-
-    // MARK: - Weekly Report Variables
-
-    private var weeklyReportVariables: some View {
-        VStack(alignment: .leading, spacing: 16) {
-
-            VariableRow(
-                variable: "WEEKLY_REPORT_INSTRUCTION",
-                description: "周报撰写指令内容",
-                detail: """
-                    从 WeeklyReportInstruction.txt 或用户自定义周报提示词文件读取。定义周报撰写的核心角色和任务说明。
-
-                    **实际填充内容示例**：
-                    ```
-                    你是一个周报撰写助手。
-                    根据提供的本周日历和提醒事项数据，撰写一份结构清晰的周报简报。
-                    ```
-                    """
-            )
-
-            VariableRow(
-                variable: "TIME_RANGE",
-                description: "周报的时间范围",
-                detail: """
-                    格式："YYYY-MM-DD 至 YYYY-MM-DD"
-
-                    **实际填充内容示例**：
-                    ```
-                    2026-05-18 至 2026-05-24
-                    ```
-                    """
-            )
-
-            VariableRow(
-                variable: "STATISTICS",
-                description: "本周统计数据摘要",
-                detail: """
-                    由 Statistics 模块生成的汇总统计信息，包括日程总数、提醒事项总数。
-
-                    **实际填充内容示例**：
-                    ```
-                    本周日程数: 12，本周提醒事项数: 5
-                    ```
-                    """
-            )
-
-            VariableRow(
-                variable: "CALENDAR_DATA",
-                description: "本周日历 Markdown 数据",
-                detail: """
-                    本周所有日程事项的结构化 Markdown 文本，按日期组织，包含标题、时间、位置等信息。
-
-                    **实际填充内容示例**：
-                    ```
-                    ## 2026-05-18 (星期一)
-                    ### 工作日历
-                    - **09:00 - 10:00** | 团队周会 | 地点: 会议室A
-                    - **14:00 - 16:00** | 产品评审 | 地点: 线上
-
-                    ## 2026-05-19 (星期二)
-                    ### 个人日历
-                    - 全天 | 行业峰会
-
-                    ## 2026-05-20 (星期三)
-                    ### 工作日历
-                    - **10:00 - 11:30** | 客户演示
-                    ```
-                    """
-            )
-
-            VariableRow(
-                variable: "UNTIMED_REMINDERS",
-                description: "未指定时间的提醒事项",
-                detail: """
-                    没有具体时间的提醒事项文本，如待办任务、截止日期类事项。
-
-                    **实际填充内容示例**：
-                    ```
-                    ### 待办
-                    - [ ] 提交季度报告（截止: 本周五）
-                    - [ ] 预订机票
-                    - [x] 完成代码审查
-
-                    ### 购物清单
-                    - 牛奶
-                    - 打印纸
-                    ```
-                    """
-            )
-        }
-    }
 }
 
 // MARK: - Variable Row Component
@@ -319,18 +217,7 @@ private struct PopoverContent: View {
 struct PromptVariablesSheet: View {
     @Environment(\.dismiss) private var dismiss
 
-    var purpose: ModelPurpose? = nil
-
-    private var title: String {
-        switch purpose {
-        case .extraction:
-            return "日程提取提示词占位符说明"
-        case .weeklyReport:
-            return "周报撰写提示词占位符说明"
-        case nil:
-            return "提示词占位符说明"
-        }
-    }
+    private var title: String = "日程提取提示词占位符说明"
 
     var body: some View {
         VStack(spacing: 0) {
@@ -352,7 +239,7 @@ struct PromptVariablesSheet: View {
                 .padding(.horizontal, 20)
 
             ScrollView {
-                PromptTutorialView(purpose: purpose)
+                PromptTutorialView()
                     .padding(20)
             }
         }

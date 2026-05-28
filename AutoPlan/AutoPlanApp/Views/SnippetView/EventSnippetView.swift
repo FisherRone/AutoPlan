@@ -12,7 +12,7 @@ import OSLog
 
 // MARK: - Preview Snippet View
 
-/// 快捷指令预览卡片：确认前展示
+/// 待保存日程预览卡片：确认前展示
 struct EventPreviewSnippetView: View {
     @State var events: [EventItem]
     
@@ -30,7 +30,7 @@ struct EventPreviewSnippetView: View {
 
 // MARK: - Saved Snippet View
 
-/// 快捷指令结果卡片：保存后展示
+/// 日程提取结果卡片：保存后展示
 struct EventSavedSnippetView: View {
     let events: [EventItem]
     

@@ -50,10 +50,6 @@ struct SettingsTabView: View {
                 ExtractorView()
             }
 
-            Tab("周报", systemImage: "doc.text") {
-                WeeklyReportView()
-            }
-
             Tab("关于", systemImage: "info.circle") {
                 AboutHelpView()
             }

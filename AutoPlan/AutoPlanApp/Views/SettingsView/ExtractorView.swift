@@ -238,10 +238,10 @@ struct ExtractorView: View {
             SymbolPicker(symbol: $iconPickerSymbol)
         }
         .sheet(isPresented: $showTemplate) {
-            TemplatePreviewView(purpose: .extraction)
+            TemplatePreviewView()
         }
         .sheet(isPresented: $showPromptVariables) {
-            PromptVariablesSheet(purpose: .extraction)
+            PromptVariablesSheet()
         }
         .task {await viewModel.refresh()}
     }

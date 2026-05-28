@@ -327,7 +327,6 @@
 				INFOPLIST_KEY_CFBundleDisplayName = AutoPlan;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_LSUIElement = YES;
-				INFOPLIST_KEY_NSAppleEventsUsageDescription = "本 App 需要使用 Apple Events 已提供后台自动化服务。";
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "本 App 需要日历 App 权限以添加日程。";
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "本 App 需要日历 App 权限以添加日程。";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -337,7 +336,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.FisherRone.AutoPlan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -380,7 +379,6 @@
 				INFOPLIST_KEY_CFBundleDisplayName = AutoPlan;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_LSUIElement = YES;
-				INFOPLIST_KEY_NSAppleEventsUsageDescription = "本 App 需要使用 Apple Events 已提供后台自动化服务。";
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "本 App 需要日历 App 权限以添加日程。";
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "本 App 需要日历 App 权限以添加日程。";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -390,7 +388,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.FisherRone.AutoPlan;
 				PRODUCT_NAME = "$(TARGET_NAME)";

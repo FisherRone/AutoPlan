@@ -7,7 +7,6 @@ enum PopoverMode {
     case preview(events: [EventItem])
     case saved([EventItem])
     case error(String)
-    case weeklyReportGenerated(directoryPath: String)
 }
 
 // MARK: - Clipboard Extraction Popover
@@ -17,7 +16,7 @@ struct MenuBarEventPopoverView: View {
     let mode: PopoverMode
     var onDismiss: () -> Void
     var onSave: (([EventItem]) async -> Void)? = nil
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             switch mode {
@@ -27,77 +26,34 @@ struct MenuBarEventPopoverView: View {
                 EventSavedSnippetView(events: events)
             case .error(let message):
                 ErrorSnippetView(message: message)
-            case .weeklyReportGenerated(let directoryPath):
-                weeklyReportGeneratedContent(directoryPath: directoryPath)
             }
         }
         .frame(minWidth: 290, idealWidth: 340)
         .padding()
     }
-
+    
     // MARK: - Preview
-
-    private func previewContent(events: [EventItem]) -> some View {
+    
+    func previewContent(events: [EventItem]) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("找到 \(events.count) 条日程")
                 .font(.headline)
-
+            
             EventPreviewSnippetView(events: events)
-
+            
             Divider()
-
+            
             HStack(spacing: 12) {
                 Button("取消") { onDismiss() }
                     .keyboardShortcut(.cancelAction)
-
+                
                 Spacer()
-
+                
                 Button("保存") {
                     Task { await onSave?(events) }
                 }
                 .keyboardShortcut(.defaultAction)
                 .buttonStyle(.borderedProminent)
-            }
-        }
-    }
-
-    // MARK: - Weekly Report Generated
-
-    private func weeklyReportGeneratedContent(directoryPath: String) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(spacing: 10) {
-                Image(systemName: "doc.text.fill")
-                    .font(.title2)
-                    .foregroundStyle(Color.accentColor)
-                Text("周报已生成")
-                    .font(.headline)
-            }
-
-            Divider()
-
-            Text("周报已保存至：")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-
-            Text(directoryPath)
-                .font(.caption.monospaced())
-                .foregroundStyle(.secondary)
-                .lineLimit(1)
-                .truncationMode(.middle)
-
-            Divider()
-
-            HStack(spacing: 12) {
-                Button("打开目录") {
-                    NSWorkspace.shared.open(URL(fileURLWithPath: directoryPath))
-                    onDismiss()
-                }
-
-                Spacer()
-
-                Button("好") { onDismiss() }
-                    .keyboardShortcut(.defaultAction)
-                    .buttonStyle(.borderedProminent)
             }
         }
     }
@@ -115,7 +71,7 @@ struct MenuBarEventPopoverView: View {
         e.listInfo = ListInfo(id: "preview", name: "个人", colorHex: "#FF9500", available: true, source: .calendar, neglected: false, iconName: "house.fill")
         return e
     }()
-
+    
     let eventItem = {
         var e = TempEventItem(
             title: "上利息论课程",
@@ -126,7 +82,7 @@ struct MenuBarEventPopoverView: View {
         e.listInfo = ListInfo(id: "preview", name: "学习", colorHex: "#007AFF", available: true, source: .calendar, neglected: false, iconName: "book.fill")
         return e
     }()
-
+    
     let reminderItem = {
         var e = TempEventItem(
             title: "准备生日礼物",
@@ -136,9 +92,9 @@ struct MenuBarEventPopoverView: View {
         e.listInfo = ListInfo(id: "preview", name: "个人", colorHex: "#FF2D55", available: true, source: .reminders, neglected: false, iconName: "heart.fill")
         return e
     }()
-
+    
     let events = [allDayEvent, eventItem, reminderItem]
-
+    
     VStack(spacing: 20) {
         MenuBarEventPopoverView(
             mode: .preview(events: events),
@@ -146,7 +102,7 @@ struct MenuBarEventPopoverView: View {
             onSave: { _ in }
         )
         .border(.separator)
-
+        
         MenuBarEventPopoverView(
             mode: .saved(events.map {
                 var e = $0
@@ -156,19 +112,15 @@ struct MenuBarEventPopoverView: View {
             onDismiss: {}
         )
         .border(.separator)
-
+        
         MenuBarEventPopoverView(
             mode: .error("LLM 服务连接失败，请检查网络和 API Key 配置。"),
             onDismiss: {}
         )
         .border(.separator)
-
-        MenuBarEventPopoverView(
-            mode: .weeklyReportGenerated(directoryPath: "/Users/username/Documents/AutoPlan/周报/2026-05-27"),
-            onDismiss: {}
-        )
-        .border(.separator)
+        
     }
     .padding()
     .frame(width: 400)
 }
+

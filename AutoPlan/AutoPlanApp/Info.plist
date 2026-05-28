@@ -20,18 +20,8 @@
 			<key>CFBundleURLName</key>
 			<string>io.github.FisherRone.AutoPlanApp</string>
 			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>autoplan-weekly-report</string>
-			</array>
+			<array/>
 		</dict>
-	</array>
-	<key>INIntentsSupported</key>
-	<array>
-		<string>AutoPlanIntent</string>
-		<string>GenerateWeeklyReportIntent</string>
-		<string>EventPreviewSnippetIntent</string>
-		<string>EventSnippetIntent</string>
-		<string>OpenAutoPlanIntent</string>
 	</array>
 </dict>
 </plist>
