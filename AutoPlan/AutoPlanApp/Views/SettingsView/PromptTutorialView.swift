@@ -59,7 +59,7 @@ struct PromptTutorialView: View {
             )
 
             VariableRow(
-                variable: "USER_IDENTITY",
+                variable: "USER_INSTRUCTION",
                 description: "用户身份信息",
                 detail: """
                     暂未使用（值为空）。预留用于注入用户个性化信息。

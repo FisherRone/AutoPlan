@@ -9,9 +9,19 @@
 /* Begin PBXBuildFile section */
 		C00B7D892FB421FF00669DD5 /* 提取日程.shortcut in Resources */ = {isa = PBXBuildFile; fileRef = C00B7D882FB421FF00669DD5 /* 提取日程.shortcut */; };
 		C0311C952FB18AD200E7DD64 /* SymbolPicker in Frameworks */ = {isa = PBXBuildFile; productRef = C0311C942FB18AD200E7DD64 /* SymbolPicker */; };
+		C0616B9A2FC9327F00A3533C /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = C0616B992FC9327F00A3533C /* Localizable.xcstrings */; };
 		C0B9637A2FB3827E0033B675 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = C0B963792FB3827E0033B675 /* AppIcon.icon */; };
-		C0DF5E1D2FB06BD900D8D35E /* AutoPlanCore in Frameworks */ = {isa = PBXBuildFile; productRef = C0DF5E1C2FB06BD900D8D35E /* AutoPlanCore */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C0616BFE2FC988F900A3533C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C00E22332FB0360A008CAB38 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C00E223A2FB0360A008CAB38;
+			remoteInfo = AutoPlan;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		C0BBF23B2FC5EF7F00578868 /* Embed ExtensionKit Extensions */ = {
@@ -28,6 +38,8 @@
 
 /* Begin PBXFileReference section */
 		C00B7D882FB421FF00669DD5 /* 提取日程.shortcut */ = {isa = PBXFileReference; lastKnownFileType = file; path = "提取日程.shortcut"; sourceTree = "<group>"; };
+		C0616B992FC9327F00A3533C /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		C0616BFA2FC988F900A3533C /* AutoPlanTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AutoPlanTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0B963792FB3827E0033B675 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		C0D0248D2FC6081400EF888C /* AutoPlan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoPlan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -51,6 +63,16 @@
 			path = AutoPlanApp;
 			sourceTree = "<group>";
 		};
+		C0616B9E2FC987B500A3533C /* AutoPlanCore */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = AutoPlanCore;
+			sourceTree = "<group>";
+		};
+		C0616BFB2FC988F900A3533C /* AutoPlanTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = AutoPlanTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,7 +81,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0311C952FB18AD200E7DD64 /* SymbolPicker in Frameworks */,
-				C0DF5E1D2FB06BD900D8D35E /* AutoPlanCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0616BF72FC988F900A3533C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,7 +97,10 @@
 		C00E22322FB0360A008CAB38 = {
 			isa = PBXGroup;
 			children = (
+				C0616B9E2FC987B500A3533C /* AutoPlanCore */,
+				C0616B992FC9327F00A3533C /* Localizable.xcstrings */,
 				C00E223D2FB0360A008CAB38 /* AutoPlanApp */,
+				C0616BFB2FC988F900A3533C /* AutoPlanTests */,
 				C00E226B2FB06960008CAB38 /* Frameworks */,
 				C00E223C2FB0360A008CAB38 /* Products */,
 				C0B963792FB3827E0033B675 /* AppIcon.icon */,
@@ -81,6 +112,7 @@
 			isa = PBXGroup;
 			children = (
 				C0D0248D2FC6081400EF888C /* AutoPlan.app */,
+				C0616BFA2FC988F900A3533C /* AutoPlanTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -110,15 +142,38 @@
 			);
 			fileSystemSynchronizedGroups = (
 				C00E223D2FB0360A008CAB38 /* AutoPlanApp */,
+				C0616B9E2FC987B500A3533C /* AutoPlanCore */,
 			);
 			name = AutoPlan;
 			packageProductDependencies = (
-				C0DF5E1C2FB06BD900D8D35E /* AutoPlanCore */,
 				C0311C942FB18AD200E7DD64 /* SymbolPicker */,
 			);
 			productName = AutoPlanApp;
 			productReference = C0D0248D2FC6081400EF888C /* AutoPlan.app */;
 			productType = "com.apple.product-type.application";
+		};
+		C0616BF92FC988F900A3533C /* AutoPlanTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0616C002FC988F900A3533C /* Build configuration list for PBXNativeTarget "AutoPlanTests" */;
+			buildPhases = (
+				C0616BF62FC988F900A3533C /* Sources */,
+				C0616BF72FC988F900A3533C /* Frameworks */,
+				C0616BF82FC988F900A3533C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C0616BFF2FC988F900A3533C /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				C0616BFB2FC988F900A3533C /* AutoPlanTests */,
+			);
+			name = AutoPlanTests;
+			packageProductDependencies = (
+			);
+			productName = AutoPlanTests;
+			productReference = C0616BFA2FC988F900A3533C /* AutoPlanTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -133,6 +188,10 @@
 					C00E223A2FB0360A008CAB38 = {
 						CreatedOnToolsVersion = 26.4;
 					};
+					C0616BF92FC988F900A3533C = {
+						CreatedOnToolsVersion = 26.5;
+						TestTargetID = C00E223A2FB0360A008CAB38;
+					};
 				};
 			};
 			buildConfigurationList = C00E22362FB0360A008CAB38 /* Build configuration list for PBXProject "AutoPlan" */;
@@ -140,12 +199,13 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				"zh-Hans",
+				"zh-Hant",
 				Base,
 			);
 			mainGroup = C00E22322FB0360A008CAB38;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				C0DF5E1B2FB06BD900D8D35E /* XCLocalSwiftPackageReference "../AutoPlanCore" */,
 				C0311C932FB18AD200E7DD64 /* XCLocalSwiftPackageReference "Packages/SymbolPicker" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -154,6 +214,7 @@
 			projectRoot = "";
 			targets = (
 				C00E223A2FB0360A008CAB38 /* AutoPlan */,
+				C0616BF92FC988F900A3533C /* AutoPlanTests */,
 			);
 		};
 /* End PBXProject section */
@@ -164,7 +225,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				C00B7D892FB421FF00669DD5 /* 提取日程.shortcut in Resources */,
+				C0616B9A2FC9327F00A3533C /* Localizable.xcstrings in Resources */,
 				C0B9637A2FB3827E0033B675 /* AppIcon.icon in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0616BF82FC988F900A3533C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -178,7 +247,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C0616BF62FC988F900A3533C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C0616BFF2FC988F900A3533C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C00E223A2FB0360A008CAB38 /* AutoPlan */;
+			targetProxy = C0616BFE2FC988F900A3533C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		C00E22442FB0360C008CAB38 /* Debug */ = {
@@ -243,6 +327,7 @@
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -302,6 +387,7 @@
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
 			name = Release;
 		};
@@ -321,6 +407,11 @@
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = YES;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
 				ENABLE_RESOURCE_ACCESS_PHOTO_LIBRARY = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AutoPlanApp/Info.plist;
@@ -373,6 +464,11 @@
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = YES;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
 				ENABLE_RESOURCE_ACCESS_PHOTO_LIBRARY = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AutoPlanApp/Info.plist;
@@ -408,6 +504,48 @@
 			};
 			name = Release;
 		};
+		C0616C012FC988F900A3533C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SG82NS7FSZ;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.FisherRone.AutoPlanTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AutoPlan.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AutoPlan";
+			};
+			name = Debug;
+		};
+		C0616C022FC988F900A3533C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SG82NS7FSZ;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.FisherRone.AutoPlanTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AutoPlan.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AutoPlan";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -429,6 +567,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		C0616C002FC988F900A3533C /* Build configuration list for PBXNativeTarget "AutoPlanTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0616C012FC988F900A3533C /* Debug */,
+				C0616C022FC988F900A3533C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
@@ -436,20 +583,12 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/SymbolPicker;
 		};
-		C0DF5E1B2FB06BD900D8D35E /* XCLocalSwiftPackageReference "../AutoPlanCore" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../AutoPlanCore;
-		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		C0311C942FB18AD200E7DD64 /* SymbolPicker */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SymbolPicker;
-		};
-		C0DF5E1C2FB06BD900D8D35E /* AutoPlanCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AutoPlanCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

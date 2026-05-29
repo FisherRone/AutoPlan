@@ -1,6 +1,5 @@
 import Cocoa
 import SwiftUI
-import AutoPlanCore
 import OSLog
 
 nonisolated private let appLogger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "AutoPlan", category: "AppDelegate")
@@ -100,7 +99,10 @@ final class MenuBarController: NSObject {
 
     @objc private func openSettings() {
         statusItem.menu?.cancelTracking()
-        settingsWindowController.show()
+        // 延迟到下一个 run loop，确保菜单跟踪完全结束后再显示窗口
+        DispatchQueue.main.async { [weak self] in
+            self?.settingsWindowController.show()
+        }
     }
 
     @objc private func extractFromClipboard() {
@@ -132,7 +134,7 @@ final class MenuBarController: NSObject {
                     return
                 }
 
-                if AppSettings.shared.directSave {
+                if !AppSettings.shared.needsConfirmation {
                     let selected = events.filter(\.isSelected)
                     guard !selected.isEmpty else {
                         await MainActor.run { updateIcon(isLoading: false) }

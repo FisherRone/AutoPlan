@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import AutoPlanCore
 import Combine
 import Observation
 
@@ -43,6 +42,12 @@ public final class AppSettings {
         }
     }
     
+    var userInstruction: String = UserDefaults.standard.string(forKey: "userInstruction") ?? "" {
+        didSet {
+            UserDefaults.standard.set(userInstruction, forKey: "userInstruction")
+        }
+    }
+    
     var useTags: Bool = UserDefaults.standard.bool(forKey: "useTags") {
         didSet {
             UserDefaults.standard.set(useTags, forKey: "useTags")
@@ -51,10 +56,10 @@ public final class AppSettings {
     
     // MARK: - 弹窗提取
     
-    /// 从菜单栏提取日程时，是否跳过确认直接保存
-    var directSave: Bool = UserDefaults.standard.bool(forKey: "directSave") {
+    /// 从菜单栏提取日程时，是否需要确认后再保存
+    var needsConfirmation: Bool = UserDefaults.standard.object(forKey: "needsConfirmation") as? Bool ?? true {
         didSet {
-            UserDefaults.standard.set(directSave, forKey: "directSave")
+            UserDefaults.standard.set(needsConfirmation, forKey: "needsConfirmation")
         }
     }
     

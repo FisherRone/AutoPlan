@@ -6,7 +6,6 @@
 //
 import SwiftUI
 import AppKit
-import AutoPlanCore
 
 struct TemplatePreviewView: View {
     @Environment(\.dismiss) private var dismiss

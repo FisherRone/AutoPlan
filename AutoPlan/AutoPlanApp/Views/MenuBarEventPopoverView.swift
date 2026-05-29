@@ -1,5 +1,4 @@
 import SwiftUI
-import AutoPlanCore
 
 // MARK: - Popover Content Mode
 

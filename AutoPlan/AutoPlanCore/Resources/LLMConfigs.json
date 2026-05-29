@@ -1,0 +1,29 @@
+{
+    "LLMProviders": [
+        {
+            "name": "deepseek",
+            "displayName": "DeepSeek",
+            "logoName": "deepseekLogo.svg",
+            "defaultBaseURL": "https://api.deepseek.com/chat/completions",
+            "defaultModel": "deepseek-v4-lite",
+            "models": ["deepseek-v4-flash", "deepseek-v4-pro"]
+        },
+        {
+            "name": "xiaomi",
+            "displayName": "Xiaomi",
+            "logoName": "xiaomiLogo.svg",
+            "defaultBaseURL": "https://api.xiaomimimo.com/v1/chat/completions",
+            "defaultModel": "mimo-v2.5",
+            "models": ["mimo-v2.5"]
+        },
+        {
+            "name": "openai",
+            "displayName": "OpenAI",
+            "logoName": "OpenAILogoBlack.svg",
+            "darkModeLogoName": "OpenAILogoWhite.svg",
+            "defaultBaseURL": "https://api.openai.com/v1/chat/completions",
+            "defaultModel": "gpt-5.4-mini",
+            "models": ["gpt-5.4-mini", "gpt-5.5", "gpt-5.4"]
+        }
+    ]
+}

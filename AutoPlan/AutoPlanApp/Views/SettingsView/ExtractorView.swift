@@ -6,8 +6,41 @@
 //
 
 import SwiftUI
-import AutoPlanCore
 import SymbolPicker
+
+// MARK: - List Managing Protocol
+
+@MainActor
+protocol ListManaging {
+    func fetchLists() async throws -> (calendarLists: [ListInfo], reminderLists: [ListInfo])
+    func setNeglected(for listID: String, neglected: Bool, source: ListSource)
+    func updatePrompt(for listID: String, prompt: String, source: ListSource)
+    func setUserIcon(keyword: String, iconName: String)
+}
+
+// MARK: - Real List Manager
+
+@MainActor
+final class RealListManager: ListManaging {
+    func fetchLists() async throws -> (calendarLists: [ListInfo], reminderLists: [ListInfo]) {
+        let config = try await ListStore.refresh()
+        return (config.userCalendarLists, config.userReminderLists)
+    }
+
+    func setNeglected(for listID: String, neglected: Bool, source: ListSource) {
+        ListStore.updateSettings(for: listID, neglected: neglected, source: source)
+    }
+
+    func updatePrompt(for listID: String, prompt: String, source: ListSource) {
+        ListStore.updateSettings(for: listID, prompt: prompt, source: source)
+    }
+
+    func setUserIcon(keyword: String, iconName: String) {
+        ListStore.setUserIcon(keyword: keyword, iconName: iconName)
+    }
+}
+
+
 
 // MARK: - ViewModel
 
@@ -17,14 +50,20 @@ final class ExtractorViewModel {
     var calendarLists: [ListInfo] = []
     var reminderLists: [ListInfo] = []
     var isLoading = false
+
+    private let service: ListManaging
+
+    init(service: ListManaging) {
+        self.service = service
+    }
     
     func refresh() async {
         isLoading = true
         defer { isLoading = false }
         do {
-            let config = try await ListStore.refresh()
-            calendarLists = config.userCalendarLists
-            reminderLists = config.userReminderLists
+            let result = try await service.fetchLists()
+            calendarLists = result.calendarLists
+            reminderLists = result.reminderLists
         } catch {
             // 静默失败，保持现有列表
         }
@@ -32,18 +71,18 @@ final class ExtractorViewModel {
     
     /// 设置列表的忽略状态
     func setNeglected(for list: ListInfo, neglected: Bool) {
-        ListStore.updateSettings(for: list.id, neglected: neglected, source: list.source)
+        service.setNeglected(for: list.id, neglected: neglected, source: list.source)
         updateLocal(list.id, neglected: neglected)
     }
     
     func updatePrompt(_ list: ListInfo, prompt: String) {
-        ListStore.updateSettings(for: list.id, prompt: prompt, source: list.source)
+        service.updatePrompt(for: list.id, prompt: prompt, source: list.source)
         updateLocal(list.id, prompt: prompt)
     }
     
     func setUserIcon(for list: ListInfo, iconName: String) {
         let keyword = list.name.lowercased()
-        ListStore.setUserIcon(keyword: keyword, iconName: iconName)
+        service.setUserIcon(keyword: keyword, iconName: iconName)
         updateLocal(list.id, iconName: iconName)
     }
     
@@ -86,13 +125,18 @@ final class ExtractorViewModel {
 // MARK: - View
 
 struct ExtractorView: View {
-    @State private var viewModel = ExtractorViewModel()
+    let viewModel: ExtractorViewModel
     @State private var iconPickerPresented = false
     @State private var iconPickerTarget: ListInfo?
     @State private var iconPickerSymbol = "star"
     @State private var openFailed = false
     @State private var showTemplate = false
     @State private var showPromptVariables = false
+    @State private var userInstruction: String = AppSettings.shared.userInstruction
+
+    init(viewModel: ExtractorViewModel) {
+        self.viewModel = viewModel
+    }
     
     var body: some View {
         ScrollView {
@@ -100,7 +144,7 @@ struct ExtractorView: View {
                 Text("提示词").subtitle()
                 // 自定义提示词开关
                 HStack {
-                    Text("自定义日程提取提示词")
+                    Text("自定义提示词")
                         .font(.body)
 
                     Button("编辑...") {
@@ -141,17 +185,29 @@ struct ExtractorView: View {
                 } message: {
                     Text("无法用默认应用打开自定义提示词文件。")
                 }
-                
-                
+
+                Text("用户规则").subtitle()
+
+                TextEditor(text: $userInstruction)
+                    .font(.body)
+                    .frame(minHeight: 80)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 6)
+                            .stroke(Color.secondary.opacity(0.3), lineWidth: 1)
+                    )
+                    .onChange(of: userInstruction) { _, newValue in
+                        AppSettings.shared.userInstruction = newValue
+                    }
+
                 Text("工作模式").subtitle()
 
-                // 直接保存开关
+                // 需要确认开关
                 HStack {
-                    Text("从菜单栏提取时跳过确认，直接保存")
+                    Text("需要确认")
                     Spacer()
                     Toggle("", isOn: Binding(
-                        get: { AppSettings.shared.directSave },
-                        set: { AppSettings.shared.directSave = $0 }
+                        get: { AppSettings.shared.needsConfirmation },
+                        set: { AppSettings.shared.needsConfirmation = $0 }
                     ))
                     .toggleStyle(.switch)
                     .labelsHidden()
@@ -336,10 +392,13 @@ struct ListRowView: View {
             
             // 同名警告
             if isDuplicate && list.available {
-                Image(systemName: "exclamationmark.triangle.fill")
-                    .foregroundColor(.yellow)
-                    .font(.caption)
-                    .help("存在同名列表（不区分大小写），保存时将自动选择其中一个。")
+                HStack(spacing: 4) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.yellow)
+                        .font(.caption)
+                        .help("存在同名列表，保存时将自动选择其中一个。")
+                    Text("同名列表").font(.caption).foregroundStyle(.secondary)
+                }
             }
             
             Spacer()
@@ -386,5 +445,11 @@ struct ListRowView: View {
 }
 
 #Preview {
-    ExtractorView()
+    let mockData = ListMockData()
+    let mockService = MockListManager(
+        calendarLists: mockData.calendarLists,
+        reminderLists: mockData.reminderLists
+    )
+    let viewModel = ExtractorViewModel(service: mockService)
+    return ExtractorView(viewModel: viewModel)
 }

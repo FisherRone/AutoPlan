@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import AutoPlanCore
 import OSLog
 import os.log
 
