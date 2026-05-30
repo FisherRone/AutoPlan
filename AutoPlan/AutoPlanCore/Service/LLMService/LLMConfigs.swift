@@ -49,8 +49,8 @@ enum LLMConfigs {
         LLMServiceProvider(
             name: "anthropic",
             displayName: "Anthropic",
-            logoName: nil,
-            darkModeLogoName: nil,
+            logoName: "AnthropicLogoBlack.svg",
+            darkModeLogoName: "AnthropicLogoWhite.svg",
             baseURL: "https://api.anthropic.com/v1/messages",
             defaultModel: "claude-sonnet-4-6",
             models: ["claude-opus-4-8", "claude-sonnet-4-6", "claude-haiku-4-5"],
