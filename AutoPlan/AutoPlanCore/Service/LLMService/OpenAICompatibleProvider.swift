@@ -18,7 +18,8 @@ struct OpenAICompatibleProvider: LLMAPIProvider {
     }
 
     func generate(prompt: String, context: LLMRequestContext) async throws -> String {
-        guard let url = URL(string: context.baseURL) else {
+        let urlString = context.baseURL.hasSuffix("/chat/completions") ? context.baseURL : context.baseURL + "/chat/completions"
+        guard let url = URL(string: urlString) else {
             throw LLMError.networkError(URLError(.badURL))
         }
 

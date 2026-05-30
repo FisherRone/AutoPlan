@@ -1,0 +1,18 @@
+{
+    "NOTE": "UserModel's providerName should match the name of the LLM provider.",
+    "NOTE2": "LLM provider names are case-sensitive.",
+    "NOTE3": "Your LLM provider name must not be 'anthropic', 'openai', 'deepseek', or 'xiaomi'.",
+    "UserModels": [
+        {
+            "name": "example",
+            "providerName": "example"
+        }
+    ],
+    "UserLLMProviders": [
+        {
+            "name": "example",
+            "displayName": "Example",
+            "baseURL": "example"
+        }
+    ]
+}

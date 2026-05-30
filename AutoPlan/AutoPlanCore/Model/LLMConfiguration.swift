@@ -30,7 +30,7 @@ public struct LLMConfiguration: Codable, Sendable, Identifiable {
 
     /// 获得最终请求用的 baseURL
     public func resolvedBaseURL(using provider: LLMServiceProvider?) -> String {
-        baseURL ?? provider?.defaultBaseURL ?? ""
+        baseURL ?? provider?.baseURL ?? ""
     }
 }
 
@@ -65,18 +65,18 @@ public enum LLMConfigurationOrigin: String, Sendable, Codable {
 }
 
 public struct LLMServiceProvider: Codable, Sendable, Identifiable {
-    /// 唯一标识，如 "deepseek", "openai", "azure"
+    /// 唯一标识，如 "deepseek", "openai"
     public var id: String { name }
     public let name: String            // 服务商标识符
-    public let displayName: String     // 面向用户的名称，如 "DeepSeek"
+    public var displayName: String     // 面向用户的名称，如 "DeepSeek"
     public let logoName: String?       // SF Symbol 或 Assets 中的图片名（浅色模式）
     public let darkModeLogoName: String?  // 深色模式下的 Logo 图片名
-    public let defaultBaseURL: String  // 该服务商的默认 API 地址，如 "https://api.deepseek.com/v1"
+    public var baseURL: String  // 该服务商的 API 基础地址，OpenAI 兼容服务商自动拼接 /chat/completions
     public let defaultModel: String?   // 推荐默认模型，如 "deepseek-chat"
-    public let models: [String]?       // 该服务商支持的模型列表
+    public var models: [String]?       // 该服务商支持的模型列表
     public let supportedFeatures: [String]? // 可选功能标签: "streaming", "reasoning", "function_calling"
     public let description: String?    // 简介
-    public let apiPlatfromLink: String? // 该服务商 API Key 管理页面链接
+    public var apiPlatfromLink: String? // 该服务商 API Key 管理页面链接
     
     /// 从 AutoPlanCore 模块 Bundle 加载 Logo 图片
     #if os(macOS)

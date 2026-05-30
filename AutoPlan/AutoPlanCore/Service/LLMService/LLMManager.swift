@@ -51,6 +51,7 @@ public enum SystemLLMConfig {
 
 struct LLMService {
     private let systemProviders: [LLMServiceProvider]
+    //private let userProviders: [LLMServiceProvider]
     private let userModels: () -> [LLMConfiguration]
 
     init(
