@@ -90,7 +90,7 @@ extension EventService {
             return dc.hour == nil && dc.minute == nil && dc.second == nil
         }()
         return EventEntry(
-            id: reminder.calendarItemIdentifier ?? UUID().uuidString,
+            id: reminder.calendarItemIdentifier,
             title: reminder.title ?? "",
             type: .reminder,
             isAllDayReminder: isAllDay,

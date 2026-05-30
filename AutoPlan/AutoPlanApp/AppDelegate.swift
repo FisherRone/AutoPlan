@@ -211,7 +211,7 @@ final class MenuBarController: NSObject {
 
     private func showPopover(behavior: NSPopover.Behavior, autoDismissAfter seconds: TimeInterval? = nil) {
         updateIcon(isLoading: false)
-        guard let button = statusItem.button else { return }
+        guard statusItem.button != nil else { return }
 
         if popover.isShown {
             popover.performClose(nil)

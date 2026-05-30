@@ -9,7 +9,7 @@ import Foundation
 import OSLog
 import os
 
-private let logger = Logger(subsystem: "AutoPlanCore", category: "ListStore")
+nonisolated private let logger = Logger(subsystem: "AutoPlanCore", category: "ListStore")
 
 // MARK: - 用户对单个列表的设置
 
@@ -18,7 +18,7 @@ struct ListUserSettings: Codable, Sendable {
     var neglected: Bool
     var source: ListSource?
 
-    init(prompt: String? = nil, neglected: Bool = false, source: ListSource? = nil) {
+    nonisolated init(prompt: String? = nil, neglected: Bool = false, source: ListSource? = nil) {
         self.prompt = prompt
         self.neglected = neglected
         self.source = source
@@ -29,13 +29,13 @@ struct ListUserSettings: Codable, Sendable {
 
 public struct ListStore {
 
-    private static let storageKey = "ListUserSettings"
-    private static let iconMappingKey = "UserIconMapping"
+    nonisolated private static let storageKey = "ListUserSettings"
+    nonisolated private static let iconMappingKey = "UserIconMapping"
     private static let lock = OSAllocatedUnfairLock()
 
     // MARK: - 读取持久化设置
 
-    static func loadSettings() -> [String: ListUserSettings] {
+    nonisolated static func loadSettings() -> [String: ListUserSettings] {
         guard let data = UserDefaults.standard.data(forKey: storageKey),
               let decoded = try? JSONDecoder().decode([String: ListUserSettings].self, from: data)
         else {
@@ -46,7 +46,7 @@ public struct ListStore {
 
     // MARK: - 写入持久化设置
 
-    static func saveSettings(_ settings: [String: ListUserSettings]) {
+    nonisolated static func saveSettings(_ settings: [String: ListUserSettings]) {
         guard let data = try? JSONEncoder().encode(settings) else {
             logger.error("Failed to encode ListUserSettings")
             return
@@ -75,7 +75,7 @@ public struct ListStore {
 
     // MARK: - 用户图标映射（keyword → iconName）
 
-    static func loadUserIconMapping() -> [String: String] {
+    nonisolated static func loadUserIconMapping() -> [String: String] {
         guard let data = UserDefaults.standard.data(forKey: iconMappingKey),
               let decoded = try? JSONDecoder().decode([String: String].self, from: data)
         else {
@@ -84,7 +84,7 @@ public struct ListStore {
         return decoded
     }
 
-    private static func saveUserIconMapping(_ mapping: [String: String]) {
+    nonisolated private static func saveUserIconMapping(_ mapping: [String: String]) {
         guard let data = try? JSONEncoder().encode(mapping) else {
             logger.error("Failed to encode UserIconMapping")
             return

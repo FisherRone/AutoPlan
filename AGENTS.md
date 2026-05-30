@@ -105,12 +105,11 @@ rm -rf ~/Library/Developer/Xcode/DerivedData/AutoPlan*
 ```
 4. 钥匙串.app 删除钥匙串
 
-### git 使用
-- 什么时候 git commit？当你进行了一些更改，并且觉得不会有 bug 了，此时你可使用 xcode mcp 进行 build，如果真的无任何 bug，即可 commit。
-- ⚠️警告：任何 commit 之前必须使用 xcode mcp 进行 build，确认无任何 bug 再进行 commit！有任何 bug 都禁止 commit。
-- commit 时需写说明。
+## 【重要】工具使用
+1. 修改代码（增删改）必须用系统（qoder）给你的工具。
+2. 搜索代码、读代码必须用 xcode mcp 的工具，目前系统的 grep_code  有严重 bug。
 
-## 【重要】Xcode MCP 工具使用
+### 【重要】Xcode MCP 工具使用
 - XcodeListWindows：列出当前 Xcode 窗口信息，可获取 `tabIdentifier`
   - 首次使用任何 Xcode MCP 工具前，必须先调用 XcodeListWindows 获取 tabIdentifier：
   - 后续工具调用必须传入此 tabIdentifier

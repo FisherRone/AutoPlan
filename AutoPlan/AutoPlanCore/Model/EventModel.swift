@@ -66,6 +66,39 @@ public struct ListInfo: Codable, Hashable, Identifiable, Sendable {
     }
 }
 
+
+// MARK: - Codable (nonisolated)
+
+extension ListInfo {
+    enum CodingKeys: String, CodingKey {
+        case id, name, source, colorHex, available, prompt, neglected, iconName
+    }
+
+    nonisolated public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encode(source, forKey: .source)
+        try container.encode(colorHex, forKey: .colorHex)
+        try container.encode(available, forKey: .available)
+        try container.encodeIfPresent(prompt, forKey: .prompt)
+        try container.encode(neglected, forKey: .neglected)
+        try container.encode(iconName, forKey: .iconName)
+    }
+
+    nonisolated public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        source = try container.decode(ListSource.self, forKey: .source)
+        colorHex = try container.decode(String.self, forKey: .colorHex)
+        available = try container.decode(Bool.self, forKey: .available)
+        prompt = try container.decodeIfPresent(String.self, forKey: .prompt)
+        neglected = try container.decode(Bool.self, forKey: .neglected)
+        iconName = try container.decode(String.self, forKey: .iconName)
+    }
+}
+
 // MARK: - Transferable (Drag & Drop)
 
 extension ListInfo: Transferable {
@@ -256,7 +289,7 @@ public struct EventEntry: Identifiable, Sendable {
     public let location: String?
     public let url: String?
 
-    public init(
+    nonisolated public init(
         id: String,
         title: String,
         type: EventType,

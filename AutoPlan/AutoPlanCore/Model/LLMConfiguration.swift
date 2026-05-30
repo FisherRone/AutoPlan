@@ -11,7 +11,7 @@ import AppKit
 
 // 一个 OpenAI 兼容的 LLM 服务配置
 /// ⚠️ 此结构中**不包含 API Key**。
-/// Key 通过 `providerID` 从文件（Application Support 下的 api_keys.json）单独读取。
+/// Key 通过 `providerID` 从 Keychain 单独读取。
 public struct LLMConfiguration: Codable, Sendable, Identifiable {
     public var id = UUID()
     public var providerID: String?              // 对应 LLMServiceProvider.id
@@ -65,9 +65,10 @@ public struct LLMServiceProvider: Codable, Sendable, Identifiable {
     public var apiPlatfromLink: String? // 该服务商 API Key 管理页面链接
     public var userExtraModels: [String]?
     
-    /// 从 AutoPlanCore 模块 Bundle 加载 Logo 图片
+    /// 加载 Logo 图片：先查 Bundle 资源 → 再查 Application Support/logos/
     #if os(macOS)
     public func loadLogo() -> NSImage? {
+        // 1. 从 Bundle 加载（系统服务商，支持深色模式）
         let effectiveLogoName: String?
         if let darkLogo = darkModeLogoName,
            NSApp.effectiveAppearance.bestMatch(from: [.darkAqua]) == .darkAqua {
@@ -75,12 +76,29 @@ public struct LLMServiceProvider: Codable, Sendable, Identifiable {
         } else {
             effectiveLogoName = logoName
         }
+        if let effectiveLogoName, let img = Self.loadFromBundle(effectiveLogoName) { return img }
+        // 2. 从 Application Support 加载（用户服务商）
+        return Self.loadFromAppSupport(name)
+    }
 
-        guard let logoName = effectiveLogoName else { return nil }
+    private static func loadFromBundle(_ logoName: String) -> NSImage? {
         let nameWithoutExt = (logoName as NSString).deletingPathExtension
         let ext = (logoName as NSString).pathExtension
         if let url = Bundle.main.url(forResource: nameWithoutExt, withExtension: ext) {
             return NSImage(contentsOf: url)
+        }
+        return nil
+    }
+
+    private static func loadFromAppSupport(_ providerName: String) -> NSImage? {
+        guard let logoDir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?
+            .appendingPathComponent("AutoPlan/logos"),
+              let files = try? FileManager.default.contentsOfDirectory(at: logoDir, includingPropertiesForKeys: nil)
+        else { return nil }
+        for file in files {
+            if file.deletingPathExtension().lastPathComponent == providerName {
+                return NSImage(contentsOf: file)
+            }
         }
         return nil
     }

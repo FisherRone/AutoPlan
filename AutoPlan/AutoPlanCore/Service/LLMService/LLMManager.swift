@@ -51,14 +51,16 @@ public enum SystemLLMConfig {
 
 struct LLMService {
     private let systemProviders: [LLMServiceProvider]
-    //private let userProviders: [LLMServiceProvider]
+    private let userProviders: () -> [LLMServiceProvider]
     private let userModels: () -> [LLMConfiguration]
 
     init(
         systemProviders: [LLMServiceProvider],
-        userModels: @escaping () -> [LLMConfiguration]
+        userProviders: @escaping () -> [LLMServiceProvider] = { [] },
+        userModels: @escaping () -> [LLMConfiguration] = { [] }
     ) {
         self.systemProviders = systemProviders
+        self.userProviders = userProviders
         self.userModels = userModels
     }
 
@@ -68,8 +70,13 @@ struct LLMService {
         return system + userModels()
     }
 
+    /// 所有服务商：系统预置 + 用户自定义
+    var allProviders: [LLMServiceProvider] {
+        systemProviders + userProviders()
+    }
+
     func provider(for providerID: String) -> LLMServiceProvider? {
-        systemProviders.first { $0.id == providerID }
+        allProviders.first { $0.id == providerID }
     }
 
     // MARK: - 构建请求上下文

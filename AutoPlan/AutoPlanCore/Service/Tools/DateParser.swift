@@ -7,7 +7,7 @@ import Foundation
 public enum RelativeDateParser {
 
     /// 英文星期名 -> Calendar.current 的 weekday 值（1=Sunday ... 7=Saturday）
-    private static let weekdayMap: [String: Int] = [
+    nonisolated private static let weekdayMap: [String: Int] = [
         "sunday": 1, "monday": 2, "tuesday": 3, "wednesday": 4,
         "thursday": 5, "friday": 6, "saturday": 7,
         "sun": 1, "mon": 2, "tue": 3, "wed": 4,
@@ -20,7 +20,7 @@ public enum RelativeDateParser {
     //       "2026-06-01 -2week friday"
     //       "2026-06-01 wednesday 08:30"   (省略周偏移 = 本周)
     //       "2026-06-01 +0 week monday 9:00"  (数字和 week 之间有空格)
-    private static let pattern = #"""
+    nonisolated private static let pattern = #"""
     ^(\d{4}-\d{2}-\d{2})\s+(?:([+-]?\d+)\s*week\s+)?(\w+)\s*(\d{1,2}:\d{2})?$
     """#
 
@@ -28,7 +28,7 @@ public enum RelativeDateParser {
     /// - Parameters:
     ///   - string: 待解析字符串
     ///   - firstWeekday: 一周的第一天（1=Sunday, 2=Monday），nil 时从 UserDefaults 读取，默认周一
-    public static func parse(_ string: String, firstWeekday: Int? = nil) -> Date? {
+    nonisolated public static func parse(_ string: String, firstWeekday: Int? = nil) -> Date? {
         guard let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive),
               let match = regex.firstMatch(in: string, range: NSRange(string.startIndex..., in: string)),
               match.numberOfRanges == 5 else {

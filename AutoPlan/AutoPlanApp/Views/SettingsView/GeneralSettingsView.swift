@@ -12,16 +12,12 @@ import SwiftUI
 @MainActor
 @Observable
 public final class ModelConfigViewModel {
-    let providers: [LLMServiceProvider]
-    let models: [LLMConfiguration]
-
-    private var apiKeys: [String: String] = [:]
-    private var keyFieldValues: [String: String] = [:]
+    let store = UserLLMConfigStore.shared
 
     // 日程提取模型
     var selectedModelName: String {
         didSet {
-            if let model = models.first(where: { $0.name == selectedModelName }) {
+            if let model = allModels.first(where: { $0.name == selectedModelName }) {
                 selectedProviderID = model.providerID ?? ""
             }
             AppSettings.shared.selectedModelName = selectedModelName
@@ -33,27 +29,40 @@ public final class ModelConfigViewModel {
         }
     }
 
-
-
     // 连通性测试
-    var testResults: [String: ConnectionTestResult] = [:]  // key: providerID
+    var testResults: [String: ConnectionTestResult] = [:]
     var isTesting = false
 
+    // MARK: - Computed Properties
+
+    var providers: [LLMServiceProvider] {
+        SystemLLMConfig.providers + store.userProviders.map { store.toServiceProvider($0) }
+    }
+
+    var allModels: [LLMConfiguration] {
+        let systemModels = SystemLLMConfig.models
+        let userModels = store.userModels.map { store.toModelConfiguration($0) }
+        return systemModels + userModels
+    }
+
     init() {
-        providers = SystemLLMConfig.providers
-        models = SystemLLMConfig.models
         selectedModelName = AppSettings.shared.selectedModelName
         selectedProviderID = AppSettings.shared.selectedProviderID
-
-        for provider in providers {
-            let savedKey = readAPIKey(for: provider.name)
-            apiKeys[provider.name] = savedKey
-            keyFieldValues[provider.name] = savedKey ?? ""
-        }
     }
 
     func models(for provider: LLMServiceProvider) -> [LLMConfiguration] {
-        models.filter { $0.providerID == provider.name }
+        allModels.filter { $0.providerID == provider.name }
+    }
+
+    private var apiKeys: [String: String] = [:]
+    private var keyFieldValues: [String: String] = [:]
+
+    func loadAPIKeys() {
+        for provider in providers {
+            let savedKey = APIKeyStore.read(for: provider.name)
+            apiKeys[provider.name] = savedKey
+            keyFieldValues[provider.name] = savedKey ?? ""
+        }
     }
 
     func keyFieldText(for providerID: String) -> String {
@@ -67,7 +76,7 @@ public final class ModelConfigViewModel {
     func hasSavedKey(for providerID: String) -> Bool {
         apiKeys[providerID] != nil
     }
-    
+
     func saveAPIKey(for providerID: String) {
         let keyText = keyFieldValues[providerID] ?? ""
         let trimmed = keyText.trimmingCharacters(in: .whitespaces)
@@ -79,21 +88,43 @@ public final class ModelConfigViewModel {
             apiKeys[providerID] = trimmed
         }
     }
-    
+
     func selectModel(_ model: LLMConfiguration) {
         selectedModelName = model.name
         if let pid = model.providerID { selectedProviderID = pid }
     }
-    
+
     var selectedProvider: LLMServiceProvider? {
         providers.first(where: { $0.name == selectedProviderID })
     }
-    
+
     var currentModel: LLMConfiguration? {
-        models.first(where: { $0.name == selectedModelName })
+        allModels.first(where: { $0.name == selectedModelName })
     }
-    
-    
+
+    // MARK: - 用户配置管理
+
+    func isUserProvider(_ name: String) -> Bool {
+        store.userProviders.contains { $0.name == name }
+    }
+
+    func isUserModel(name: String, providerName: String) -> Bool {
+        store.userModels.contains { $0.name == name && $0.providerName == providerName }
+    }
+
+    /// 删除后检查选中状态，若失效则自动切到第一个可用模型
+    func handleSelectionAfterDeletion() {
+        guard !allModels.contains(where: { $0.name == selectedModelName }) else { return }
+        if let first = allModels.first {
+            selectModel(first)
+        } else {
+            selectedModelName = ""
+            selectedProviderID = ""
+        }
+    }
+
+    // MARK: - 连通性测试
+
     func testResult(for providerID: String) -> ConnectionTestResult? {
         testResults[providerID]
     }
@@ -115,8 +146,9 @@ public final class ModelConfigViewModel {
                     let providerModels = models(for: provider)
                     guard let firstModel = providerModels.first,
                           let context = buildRequestContext(for: firstModel, provider: provider) else {
+                        let providerID = provider.name
                         group.addTask {
-                            .failure(model: "", providerID: provider.name, error: "无法构建请求上下文")
+                            .failure(model: "", providerID: providerID, error: "无法构建请求上下文")
                         }
                         continue
                     }
@@ -138,10 +170,6 @@ public final class ModelConfigViewModel {
         guard let apiKey = APIKeyStore.read(for: model.providerID ?? model.id.uuidString) else { return nil }
         return LLMRequestContext(baseURL: baseURL, apiKey: apiKey, model: model.name)
     }
-
-    private func readAPIKey(for providerID: String) -> String? {
-        APIKeyStore.read(for: providerID)
-    }
 }
 
 // MARK: - View
@@ -149,6 +177,9 @@ public final class ModelConfigViewModel {
 struct ModelConfigView: View {
     @State private var viewModel = ModelConfigViewModel()
     @State private var firstWeekday: Int = AppSettings.shared.firstWeekday
+    @State private var showAddProvider = false
+    @State private var showAddModel = false
+    @State private var managingProvider: LLMServiceProvider?
     
     var body: some View {
         ScrollView {
@@ -164,7 +195,7 @@ struct ModelConfigView: View {
                         },
                         selectedKey: viewModel.selectedModelName,
                         onSelect: { name in
-                            if let model = viewModel.models.first(where: { $0.name == name }) {
+                            if let model = viewModel.allModels.first(where: { $0.name == name }) {
                                 viewModel.selectModel(model)
                             }
                         }
@@ -199,11 +230,41 @@ struct ModelConfigView: View {
                         onSaveKey: { viewModel.saveAPIKey(for: provider.name) }
                     )
                 }
-                
+
                 if viewModel.providers.isEmpty {
                     Text("暂无可用模型配置。")
                         .foregroundColor(.secondary)
                         .padding()
+                }
+
+                Divider()
+                    .padding(.vertical, 4)
+
+                // MARK: - 服务商管理
+                HStack {
+                    Text("服务商管理")
+                        .subtitle()
+                    Spacer()
+                    Button {
+                        showAddProvider = true
+                    } label: {
+                        Image(systemName: "plus.circle")
+                    }
+                    .buttonStyle(.borderless)
+                    .help("添加服务商")
+                    Button {
+                        showAddModel = true
+                    } label: {
+                        Image(systemName: "plus.rectangle.on.rectangle")
+                    }
+                    .buttonStyle(.borderless)
+                    .help("添加模型")
+                }
+
+                ForEach(viewModel.providers) { provider in
+                    ProviderManagementRow(provider: provider, viewModel: viewModel, onManageModels: {
+                        managingProvider = provider
+                    })
                 }
 
                 Divider()
@@ -227,6 +288,18 @@ struct ModelConfigView: View {
 
             }
             .padding(20)
+        }
+        .onAppear {
+            viewModel.loadAPIKeys()
+        }
+        .sheet(isPresented: $showAddProvider) {
+            AddProviderSheet(store: viewModel.store)
+        }
+        .sheet(isPresented: $showAddModel) {
+            AddModelSheet(store: viewModel.store, providers: viewModel.providers)
+        }
+        .sheet(item: $managingProvider) { provider in
+            ManageModelsSheet(provider: provider, viewModel: viewModel)
         }
     }
 }

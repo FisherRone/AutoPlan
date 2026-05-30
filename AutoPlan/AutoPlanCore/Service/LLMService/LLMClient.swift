@@ -43,11 +43,11 @@ public struct ConnectionTestResult: Sendable {
     public let latencyMs: Int?
     public let error: String?
 
-    public static func success(model: String, providerID: String, latencyMs: Int) -> ConnectionTestResult {
+    nonisolated public static func success(model: String, providerID: String, latencyMs: Int) -> ConnectionTestResult {
         ConnectionTestResult(model: model, providerID: providerID, success: true, latencyMs: latencyMs, error: nil)
     }
 
-    public static func failure(model: String, providerID: String, error: String) -> ConnectionTestResult {
+    nonisolated public static func failure(model: String, providerID: String, error: String) -> ConnectionTestResult {
         ConnectionTestResult(model: model, providerID: providerID, success: false, latencyMs: nil, error: error)
     }
 }
