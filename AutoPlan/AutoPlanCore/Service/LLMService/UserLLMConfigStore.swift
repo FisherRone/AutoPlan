@@ -18,15 +18,15 @@ public struct UserLLMProvider: Codable, Identifiable, Equatable {
     public var name: String           // 唯一标识
     public var displayName: String    // 显示名称
     public var baseURL: String        // API 基础地址
-    public var apiPlatfromLink: String? // API Key 管理页面链接
+    public var apiPlatfromURL: URL? // API Key 管理页面链接
 
     public var id: String { name }
 
-    public init(name: String, displayName: String, baseURL: String, apiPlatfromLink: String? = nil) {
+    public init(name: String, displayName: String, baseURL: String, apiPlatfromURL: URL? = nil) {
         self.name = name
         self.displayName = displayName
         self.baseURL = baseURL
-        self.apiPlatfromLink = apiPlatfromLink
+        self.apiPlatfromURL = apiPlatfromURL
     }
 }
 
@@ -121,11 +121,11 @@ public final class UserLLMConfigStore {
         save()
     }
 
-    public func updateProvider(name: String, displayName: String? = nil, baseURL: String? = nil, apiPlatfromLink: String? = nil) {
+    public func updateProvider(name: String, displayName: String? = nil, baseURL: String? = nil, apiPlatfromURL: URL? = nil) {
         guard let idx = userProviders.firstIndex(where: { $0.name == name }) else { return }
         if let displayName { userProviders[idx].displayName = displayName }
         if let baseURL { userProviders[idx].baseURL = baseURL }
-        if let apiPlatfromLink { userProviders[idx].apiPlatfromLink = apiPlatfromLink }
+        if let apiPlatfromURL { userProviders[idx].apiPlatfromURL = apiPlatfromURL }
         save()
     }
 
@@ -234,7 +234,7 @@ public final class UserLLMConfigStore {
             models: nil,
             supportedFeatures: nil,
             description: nil,
-            apiPlatfromLink: user.apiPlatfromLink
+            apiPlatfromURL: user.apiPlatfromURL
         )
     }
 

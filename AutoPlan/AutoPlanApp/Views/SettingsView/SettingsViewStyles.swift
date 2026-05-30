@@ -21,6 +21,14 @@ struct PageSubtitleStyle: ViewModifier {
     }
 }
 
+struct PageFootnoteStyle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.footnote)
+            .foregroundStyle(.secondary)
+    }
+}
+
 
 extension View {
     func title() -> some View  {
@@ -29,6 +37,10 @@ extension View {
     
     func subtitle() -> some View {
         modifier(PageSubtitleStyle())
+    }
+    
+    func note() -> some View {
+        modifier(PageFootnoteStyle())
     }
 }
 

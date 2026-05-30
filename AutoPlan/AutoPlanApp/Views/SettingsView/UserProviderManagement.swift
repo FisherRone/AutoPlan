@@ -14,71 +14,27 @@ extension UTType {
     }
 }
 
-// MARK: - Provider Management Row
+// MARK: - Add Provider Warning Enum
 
-struct ProviderManagementRow: View {
-    let provider: LLMServiceProvider
-    let viewModel: ModelConfigViewModel
-    let onManageModels: () -> Void
 
-    @State private var showRename = false
-    @State private var showLogoPicker = false
-    @State private var showDeleteConfirm = false
+enum AddProviderWarning {
+    case providerNameTaken
+    case urlHasChatCompletions
 
-    var body: some View {
-        HStack(spacing: 12) {
-            if let logo = provider.loadLogo() {
-                Image(nsImage: logo)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 22, height: 22)
-            } else {
-                Image(systemName: "cpu.fill")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .frame(width: 22, height: 22)
-            }
-
-            Text(provider.displayName)
-                .font(.body)
-
-            Spacer()
-        }
-        .padding(.vertical, 4)
-        .contextMenu {
-            if viewModel.isUserProvider(provider.name) {
-                Button("重命名") { showRename = true }
-                Button("更换 Logo") { showLogoPicker = true }
-                Divider()
-                Button("删除", role: .destructive) { showDeleteConfirm = true }
-                Divider()
-            }
-            Button("管理模型") { onManageModels() }
-        }
-        .sheet(isPresented: $showRename) {
-            RenameProviderSheet(store: viewModel.store, providerName: provider.name, currentDisplayName: provider.displayName)
-        }
-        .fileImporter(
-            isPresented: $showLogoPicker,
-            allowedContentTypes: [.image, .svg],
-            allowsMultipleSelection: false
-        ) { result in
-            if case .success(let urls) = result, let url = urls.first {
-                try? viewModel.store.saveLogo(for: provider.name, from: url)
-            }
-        }
-        .alert("删除服务商", isPresented: $showDeleteConfirm) {
-            Button("删除", role: .destructive) {
-                viewModel.store.deleteProvider(name: provider.name)
-                viewModel.handleSelectionAfterDeletion()
-                viewModel.loadAPIKeys()
-            }
-            Button("取消", role: .cancel) {}
-        } message: {
-            Text("确定删除「\(provider.displayName)」吗？其所有模型和 API Key 也将被删除。")
+    var uiText: Text {
+        switch self {
+        case .providerNameTaken:
+            return Text("服务商名称已存在")
+                .foregroundColor(.red)
+                .font(.caption)
+        case .urlHasChatCompletions:
+            return Text("Base URL 中不可以包含 \"/chat/completions\"")
+                .foregroundColor(.orange)
+                .font(.caption)
         }
     }
 }
+
 
 // MARK: - Add Provider Sheet
 
@@ -89,9 +45,17 @@ struct AddProviderSheet: View {
     @State private var name = ""
     @State private var displayName = ""
     @State private var baseURL = ""
-    @State private var apiPlatfromLink = ""
+    @State private var apiKey = ""
+    @State private var apiPlatfromURLString = ""
+    @State private var models: [String] = []
+    @State private var newModelName = ""
     @State private var selectedLogoURL: URL?
     @State private var showLogoPicker = false
+    @State private var showCancelConfirm = false
+
+    private var hasContent: Bool {
+        !name.isEmpty || !displayName.isEmpty || !baseURL.isEmpty || !apiKey.isEmpty || !apiPlatfromURLString.isEmpty || !models.isEmpty || selectedLogoURL != nil
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -100,20 +64,25 @@ struct AddProviderSheet: View {
                 .padding()
 
             Form {
-                TextField("标识 (唯一 ID)", text: $name)
-                TextField("显示名称", text: $displayName)
-                TextField("API 基础地址", text: $baseURL)
-
-                if let warning = urlWarning {
-                    Label(warning, systemImage: "exclamationmark.triangle")
-                        .foregroundColor(.orange)
-                        .font(.caption)
+                Section {
+                    TextField("服务商名称", text: $name, prompt: Text("必填"))
+                    TextField("Base URL", text: $baseURL, prompt: Text("必填"))
+                } header: {
+                    Text("服务商信息")
+                } footer: {
+                    if let error = currentError {
+                        error.uiText
+                    }
                 }
 
-                TextField("API Key 管理页面链接 (可选)", text: $apiPlatfromLink)
-
+                Section {
+                    TextField("服务商别名", text: $displayName)
+                    SecureField("API Key", text: $apiKey)
+                    TextField("API Key 平台网页链接", text: $apiPlatfromURLString)
+                }
+                
                 HStack {
-                    Text("Logo (可选)")
+                    Text("服务商 Logo")
                     Spacer()
                     Button(selectedLogoURL?.lastPathComponent ?? "选择图片") {
                         showLogoPicker = true
@@ -123,19 +92,40 @@ struct AddProviderSheet: View {
                             .foregroundColor(.red)
                     }
                 }
+
+                Section("添加模型") {
+                    ForEach(Array(models.enumerated()), id: \ .offset) { index, model in
+                        HStack {
+                            Text(model)
+                            Spacer()
+                            Button(role: .destructive) {
+                                models.remove(at: index)
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundStyle(.secondary)
+                            }
+                            .buttonStyle(.borderless)
+                        }
+                    }
+                    TextField("", text: $newModelName, prompt: Text("输入模型名称，按回车添加"))
+                        .onSubmit {
+                            let trimmed = newModelName.trimmingCharacters(in: .whitespaces)
+                            if !trimmed.isEmpty && !models.contains(trimmed) {
+                                models.append(trimmed)
+                                newModelName = ""
+                            }
+                        }
+                }
+
+                
             }
             .formStyle(.grouped)
 
-            if !validationMessage.isEmpty {
-                Text(validationMessage)
-                    .foregroundColor(.red)
-                    .font(.caption)
-                    .padding(.horizontal)
-            }
-
             HStack {
-                Button("取消") { dismiss() }
-                    .keyboardShortcut(.cancelAction)
+                Button("取消") {
+                    if hasContent { showCancelConfirm = true } else { dismiss() }
+                }
+                .keyboardShortcut(.cancelAction)
                 Spacer()
                 Button("保存") { save() }
                     .keyboardShortcut(.defaultAction)
@@ -143,7 +133,13 @@ struct AddProviderSheet: View {
             }
             .padding()
         }
-        .frame(width: 420, height: 440)
+        .frame(width: 420, height: 580)
+        .alert("放弃编辑？", isPresented: $showCancelConfirm) {
+            Button("放弃", role: .destructive) { dismiss() }
+            Button("继续编辑", role: .cancel) {}
+        } message: {
+            Text("已填写的内容不会被保存。")
+        }
         .fileImporter(
             isPresented: $showLogoPicker,
             allowedContentTypes: [.image, .svg],
@@ -154,43 +150,56 @@ struct AddProviderSheet: View {
             }
         }
     }
-
-    private var urlWarning: String? {
-        guard !baseURL.isEmpty else { return nil }
-        if !baseURL.hasPrefix("https://") && !baseURL.hasPrefix("http://") {
-            return "建议以 https:// 开头"
+    
+    private var currentError: AddProviderWarning? {
+        if !name.isEmpty && store.isProviderNameTaken(name) {
+            return .providerNameTaken
         }
-        if baseURL.hasSuffix("/chat/completions") {
-            return "系统会自动拼接 /chat/completions，建议只填写基础地址"
+        let trimmedBase = baseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+        if trimmedBase.lowercased().hasSuffix("/chat/completions") {
+            return .urlHasChatCompletions
         }
         return nil
     }
 
     private var isValid: Bool {
         !name.trimmingCharacters(in: .whitespaces).isEmpty &&
-        !displayName.trimmingCharacters(in: .whitespaces).isEmpty &&
-        !baseURL.trimmingCharacters(in: .whitespaces).isEmpty
-    }
-
-    private var validationMessage: String {
-        if !name.isEmpty && store.isProviderNameTaken(name) {
-            return "服务商标识已存在"
-        }
-        return ""
+        !baseURL.trimmingCharacters(in: .whitespaces).isEmpty &&
+        currentError != .providerNameTaken
     }
 
     private func save() {
         let trimmedName = name.trimmingCharacters(in: .whitespaces)
         guard !store.isProviderNameTaken(trimmedName) else { return }
 
+        // 不填写 DisplayName 时的兜底
+        let trimmedDisplayName = displayName.trimmingCharacters(in: .whitespaces)
+        let finalDisplayName = trimmedDisplayName.isEmpty ? trimmedName : trimmedDisplayName
+
         let provider = UserLLMProvider(
             name: trimmedName,
-            displayName: displayName.trimmingCharacters(in: .whitespaces),
+            displayName: finalDisplayName,
             baseURL: baseURL.trimmingCharacters(in: .whitespaces),
-            apiPlatfromLink: apiPlatfromLink.isEmpty ? nil : apiPlatfromLink
+            apiPlatfromURL: apiPlatfromURLString.isEmpty ? nil : URL(string: apiPlatfromURLString)
         )
+        
+        // 1. 保存 Provider
         store.addProvider(provider)
 
+        // 2. 保存 API Key（可选）
+        let trimmedAPIKey = apiKey.trimmingCharacters(in: .whitespaces)
+        if !trimmedAPIKey.isEmpty {
+            APIKeyStore.save(for: trimmedName, value: trimmedAPIKey)
+        }
+
+        // 3. 保存模型列表（可选，去重）
+        let uniqueModels = Array(Set(models.map { $0.trimmingCharacters(in: .whitespaces) }))
+            .filter { !$0.isEmpty }
+        for modelName in uniqueModels {
+            store.addModel(UserLLMModel(name: modelName, providerName: trimmedName))
+        }
+
+        // 4. 保存 Logo
         if let logoURL = selectedLogoURL {
             try? store.saveLogo(for: trimmedName, from: logoURL)
         }
@@ -207,6 +216,11 @@ struct AddModelSheet: View {
 
     @State private var name = ""
     @State private var selectedProviderName = ""
+    @State private var showCancelConfirm = false
+
+    private var hasContent: Bool {
+        !name.isEmpty
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -218,7 +232,6 @@ struct AddModelSheet: View {
                 TextField("模型名称 (API 请求用)", text: $name)
 
                 Picker("所属服务商", selection: $selectedProviderName) {
-                    Text("选择服务商").tag("")
                     ForEach(providers) { provider in
                         Text(provider.displayName).tag(provider.name)
                     }
@@ -239,8 +252,10 @@ struct AddModelSheet: View {
             }
 
             HStack {
-                Button("取消") { dismiss() }
-                    .keyboardShortcut(.cancelAction)
+                Button("取消") {
+                    if hasContent { showCancelConfirm = true } else { dismiss() }
+                }
+                .keyboardShortcut(.cancelAction)
                 Spacer()
                 Button("保存") { save() }
                     .keyboardShortcut(.defaultAction)
@@ -249,6 +264,12 @@ struct AddModelSheet: View {
             .padding()
         }
         .frame(width: 380, height: 280)
+        .alert("放弃编辑？", isPresented: $showCancelConfirm) {
+            Button("放弃", role: .destructive) { dismiss() }
+            Button("继续编辑", role: .cancel) {}
+        } message: {
+            Text("已填写的内容不会被保存。")
+        }
     }
 
     private var isValid: Bool {

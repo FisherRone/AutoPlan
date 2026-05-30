@@ -62,23 +62,39 @@ public struct LLMServiceProvider: Codable, Sendable, Identifiable {
     public var models: [String]?       // 该服务商支持的模型列表
     public let supportedFeatures: [String]? // 可选功能标签: "streaming", "reasoning", "function_calling"
     public let description: String?    // 简介
-    public var apiPlatfromLink: String? // 该服务商 API Key 管理页面链接
+    public var apiPlatfromURL: URL? // 该服务商 API Key 管理页面链接
     public var userExtraModels: [String]?
     
-    /// 加载 Logo 图片：先查 Bundle 资源 → 再查 Application Support/logos/
+    /// 缓存已加载的 Logo，避免 SwiftUI 重绘时重复创建 NSImage 导致 SVG 闪烁
+    nonisolated(unsafe) private static var logoCache: [String: NSImage] = [:]
+
+    /// 加载 Logo 图片：先查缓存 → 再查 Bundle 资源 → 再查 Application Support/logos/
     #if os(macOS)
     public func loadLogo() -> NSImage? {
-        // 1. 从 Bundle 加载（系统服务商，支持深色模式）
+        // 0. 根据当前外观确定缓存 key
+        let isDark = NSApp.effectiveAppearance.bestMatch(from: [.darkAqua]) == .darkAqua
         let effectiveLogoName: String?
-        if let darkLogo = darkModeLogoName,
-           NSApp.effectiveAppearance.bestMatch(from: [.darkAqua]) == .darkAqua {
+        if let darkLogo = darkModeLogoName, isDark {
             effectiveLogoName = darkLogo
         } else {
             effectiveLogoName = logoName
         }
-        if let effectiveLogoName, let img = Self.loadFromBundle(effectiveLogoName) { return img }
-        // 2. 从 Application Support 加载（用户服务商）
-        return Self.loadFromAppSupport(name)
+        let cacheKey = (effectiveLogoName ?? name) + (isDark ? "_dark" : "_light")
+
+        // 1. 命中缓存直接返回（同一 NSImage 实例，不触发 SwiftUI 重绘）
+        if let cached = Self.logoCache[cacheKey] { return cached }
+
+        // 2. 从 Bundle 加载（系统服务商，支持深色模式）
+        if let effectiveLogoName, let img = Self.loadFromBundle(effectiveLogoName) {
+            Self.logoCache[cacheKey] = img
+            return img
+        }
+        // 3. 从 Application Support 加载（用户服务商）
+        if let img = Self.loadFromAppSupport(name) {
+            Self.logoCache[cacheKey] = img
+            return img
+        }
+        return nil
     }
 
     private static func loadFromBundle(_ logoName: String) -> NSImage? {

@@ -186,19 +186,25 @@ struct ExtractorView: View {
                     Text("无法用默认应用打开自定义提示词文件。")
                 }
 
-                Text("用户规则").subtitle()
-
-                TextEditor(text: $userInstruction)
-                    .font(.body)
-                    .frame(minHeight: 80)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 6)
-                            .stroke(Color.secondary.opacity(0.3), lineWidth: 1)
-                    )
-                    .onChange(of: userInstruction) { _, newValue in
-                        AppSettings.shared.userInstruction = newValue
-                    }
-
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading) {
+                        Text("用户规则")
+                        Text("在现有提示词的基础之上").font(.footnote).foregroundStyle(.secondary)
+                        Text("施加额外的规则。").font(.footnote).foregroundStyle(.secondary)
+                    }.frame(maxWidth: 120)
+                    
+                    TextEditor(text: $userInstruction)
+                        .font(.body)
+                        .frame(minHeight: 80, maxHeight: 80)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 6)
+                                .stroke(Color.secondary.opacity(0.3), lineWidth: 1)
+                        )
+                        .onChange(of: userInstruction) { _, newValue in
+                            AppSettings.shared.userInstruction = newValue
+                        }
+                }
+                
                 Text("工作模式").subtitle()
 
                 // 需要确认开关
@@ -221,9 +227,7 @@ struct ExtractorView: View {
                 HStack {
                     VStack(alignment: .leading) {
                         Text("列表管理").subtitle()
-                        Text("提取日程时将自动使用以下列表进行分类。添加描述有助于让分类更加准确。")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
+                        Text("提取日程时将自动使用以下列表进行分类。添加描述有助于让分类更加准确。").note()
                     }
                     
                     Spacer()
@@ -291,7 +295,26 @@ struct ExtractorView: View {
             guard let target = iconPickerTarget else { return }
             viewModel.setUserIcon(for: target, iconName: iconPickerSymbol)
         }) {
-            SymbolPicker(symbol: $iconPickerSymbol)
+            VStack(spacing: 0) {
+                HStack {
+                    Text("选择图标")
+                        .font(.headline)
+                    Spacer()
+                    Button("关闭") {
+                        iconPickerPresented = false
+                    }
+                    .keyboardShortcut(.cancelAction)
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 20)
+                .padding(.bottom, 12)
+
+                Divider()
+                    .padding(.horizontal, 20)
+
+                SymbolPicker(symbol: $iconPickerSymbol)
+            }
+            .frame(width: 400, height: 480)
         }
         .sheet(isPresented: $showTemplate) {
             TemplatePreviewView()
@@ -407,7 +430,7 @@ struct ListRowView: View {
             TextField("添加描述…", text: $promptText)
                 .textFieldStyle(.roundedBorder)
                 .font(.callout)
-                .frame(width: 180)
+                .frame(width: 240)
                 .disabled(!list.available)
                 .onAppear {
                     promptText = list.prompt ?? ""

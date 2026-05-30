@@ -55,6 +55,8 @@ final class AutoPlanSettingsWindowController: NSWindowController {
 // MARK: - Settings Tab View (extracted from the original Window scene)
 
 struct SettingsTabView: View {
+    @State private var extractorViewModel = ExtractorViewModel(service: RealListManager())
+    
     var body: some View {
         TabView {
             Tab("通用", systemImage: "gearshape") {
@@ -62,7 +64,7 @@ struct SettingsTabView: View {
             }
 
             Tab("日程提取", systemImage: "list.bullet") {
-                ExtractorView(viewModel: ExtractorViewModel(service: RealListManager()))
+                ExtractorView(viewModel: extractorViewModel)
             }
 
             Tab("关于", systemImage: "info.circle") {

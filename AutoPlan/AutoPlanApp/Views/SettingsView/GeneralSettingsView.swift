@@ -177,15 +177,13 @@ public final class ModelConfigViewModel {
 struct ModelConfigView: View {
     @State private var viewModel = ModelConfigViewModel()
     @State private var firstWeekday: Int = AppSettings.shared.firstWeekday
-    @State private var showAddProvider = false
-    @State private var showAddModel = false
+    @State private var showAddLLMConfig = false
     @State private var managingProvider: LLMServiceProvider?
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Text("模型")
-                    .subtitle()
+                Text("模型").subtitle()
                 HStack {
                     Text("日程提取模型")
                     Spacer(minLength: 200)
@@ -209,7 +207,21 @@ struct ModelConfigView: View {
                 HStack {
                     Text("API Key")
                         .subtitle()
+                    
                     Spacer()
+                    
+                    Button {
+                        showAddLLMConfig = true
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
+                    .help("添加 LLM 服务商或模型")
+                    .sheet(isPresented: $showAddLLMConfig) {
+                        AddLLMConfigSheetView()
+                    }
+
                     Button(viewModel.isTesting ? "测试中..." : "测试连通性") {
                         viewModel.testAllConnections()
                     }
@@ -237,39 +249,9 @@ struct ModelConfigView: View {
                         .padding()
                 }
 
-                Divider()
-                    .padding(.vertical, 4)
+                Divider().padding(.vertical, 4)
 
-                // MARK: - 服务商管理
-                HStack {
-                    Text("服务商管理")
-                        .subtitle()
-                    Spacer()
-                    Button {
-                        showAddProvider = true
-                    } label: {
-                        Image(systemName: "plus.circle")
-                    }
-                    .buttonStyle(.borderless)
-                    .help("添加服务商")
-                    Button {
-                        showAddModel = true
-                    } label: {
-                        Image(systemName: "plus.rectangle.on.rectangle")
-                    }
-                    .buttonStyle(.borderless)
-                    .help("添加模型")
-                }
-
-                ForEach(viewModel.providers) { provider in
-                    ProviderManagementRow(provider: provider, viewModel: viewModel, onManageModels: {
-                        managingProvider = provider
-                    })
-                }
-
-                Divider()
-                    .padding(.vertical, 4)
-
+                
                 // 每周起始日
                 HStack {
                     Text("每周起始日")
@@ -292,12 +274,6 @@ struct ModelConfigView: View {
         .onAppear {
             viewModel.loadAPIKeys()
         }
-        .sheet(isPresented: $showAddProvider) {
-            AddProviderSheet(store: viewModel.store)
-        }
-        .sheet(isPresented: $showAddModel) {
-            AddModelSheet(store: viewModel.store, providers: viewModel.providers)
-        }
         .sheet(item: $managingProvider) { provider in
             ManageModelsSheet(provider: provider, viewModel: viewModel)
         }
@@ -312,32 +288,63 @@ struct ProviderAPIKeyRow: View {
     var testResult: ConnectionTestResult?
     let onSaveKey: () -> Void
 
+    // 新增：点击 logo/名称 区域时的回调（可选，保持向后兼容）
+    var onTapLogoArea: (() -> Void)? = nil
+
     @State private var showKey: Bool = false
     @FocusState private var isKeyFieldFocused: Bool
     @Environment(\.colorScheme) private var colorScheme
+    @State private var isHovering = false
 
     var body: some View {
         HStack(spacing: 12) {
-            
+            // MARK: - 可点击 + 右键菜单区域
+            HStack(spacing: 8) {
+                if let logo = provider.loadLogo() {
+                    Image(nsImage: logo)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 22, height: 22)
+                } else {
+                    Image(systemName: "cpu.fill")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .frame(width: 22, height: 22)
+                }
 
-            if let logo = provider.loadLogo() {
-                Image(nsImage: logo)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 22, height: 22)
-            } else {
-                Image(systemName: "cpu.fill")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .frame(width: 22, height: 22)
+                Text(provider.displayName)
+                    .font(.body)
+                    .frame(width: 80, alignment: .leading)
             }
+            .contentShape(Rectangle())      // 确保空白区域也响应手势
+            .onTapGesture {
+                onTapLogoArea?()            // 由外部决定点击行为
+            }
+            .contextMenu {
+                // 一些默认的右键菜单项
+                Button("复制名称") {
+                    NSPasteboard.general.clearContents()
+                    NSPasteboard.general.setString(provider.displayName, forType: .string)
+                }
+                if let url = provider.apiPlatfromURL {
+                    Button("打开文档") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }
+            }
+            .onHover { hovering in
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    isHovering = hovering
+                }
+            }
+            .background(
+                RoundedRectangle(cornerRadius: 6)
+                    .fill(isHovering ? Color.accentColor.opacity(0.12) : Color.clear)
+            )
+            
 
-            Text(provider.displayName)
-                .font(.body)
-                .frame(width: 80, alignment: .leading)
-            
             Spacer()
-            
+
             // 测试结果圆点
             if let result = testResult {
                 Circle()
@@ -377,6 +384,100 @@ struct ProviderAPIKeyRow: View {
             }
         }
         .padding(.vertical, 4)
+    }
+}
+
+// MARK: - Add LLM config sheet view
+
+struct AddLLMConfigSheetView: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var store = UserLLMConfigStore.shared
+    @State private var showAddProvider = false
+    @State private var showAddModel = false
+
+    var allProviders: [LLMServiceProvider] {
+        SystemLLMConfig.providers + store.userProviders.map { store.toServiceProvider($0) }
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Text("添加 LLM 配置")
+                    .font(.headline)
+                Spacer()
+                Button("关闭") {
+                    dismiss()
+                }
+                .keyboardShortcut(.cancelAction)
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 20)
+            .padding(.bottom, 12)
+
+            Divider()
+                .padding(.horizontal, 20)
+
+            VStack(spacing: 12) {
+                Button {
+                    showAddProvider = true
+                } label: {
+                    HStack(spacing: 14) {
+                        Image(systemName: "server.rack")
+                            .font(.title2)
+                            .frame(width: 32, height: 32)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("添加服务商")
+                                .font(.body)
+                            Text("自定义 API 地址的 LLM 服务商")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.secondary)
+                            .font(.caption)
+                    }
+                    .padding()
+                    .background(Color.secondary.opacity(0.08), in: RoundedRectangle(cornerRadius: 8))
+                }
+                .buttonStyle(.plain)
+
+                Button {
+                    showAddModel = true
+                } label: {
+                    HStack(spacing: 14) {
+                        Image(systemName: "cube.box")
+                            .font(.title2)
+                            .frame(width: 32, height: 32)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("添加模型")
+                                .font(.body)
+                            Text("为已有服务商添加新模型")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.secondary)
+                            .font(.caption)
+                    }
+                    .padding()
+                    .background(Color.secondary.opacity(0.08), in: RoundedRectangle(cornerRadius: 8))
+                }
+                .buttonStyle(.plain)
+                .disabled(allProviders.isEmpty)
+            }
+            .padding(20)
+
+            Spacer()
+        }
+        .frame(width: 400, height: 280)
+        .sheet(isPresented: $showAddProvider) {
+            AddProviderSheet(store: store)
+        }
+        .sheet(isPresented: $showAddModel) {
+            AddModelSheet(store: store, providers: allProviders)
+        }
     }
 }
 
