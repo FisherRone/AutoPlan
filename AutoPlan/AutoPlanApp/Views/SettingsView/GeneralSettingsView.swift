@@ -160,7 +160,7 @@ struct ModelConfigView: View {
                     Spacer(minLength: 200)
                     GroupedPopupSelector(
                         groups: viewModel.providers.map { provider in
-                            (title: provider.displayName, items: viewModel.models(for: provider).map { ($0.name, $0.uiDisplayName) })
+                            (title: provider.displayName, items: viewModel.models(for: provider).map { ($0.name, $0.name) })
                         },
                         selectedKey: viewModel.selectedModelName,
                         onSelect: { name in

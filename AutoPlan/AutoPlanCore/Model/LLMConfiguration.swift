@@ -8,35 +8,24 @@
 import Foundation
 import AppKit
 
-// 功能设计：
-// 1. 默认提供一些模型。
-// 2. 用户可自定义模型。必须填 modelName baseURL 和 apikey
-// 3. 用户自定义模型可填写提供商，但仅供 ui 展示，不使用服务商的默认 url
-// 4. 用户自定义模型不填写 displayName 时，UI 用modelName来替代展示。
-// 5. 用户不可以修改系统默认提供的配置。
 
 // 一个 OpenAI 兼容的 LLM 服务配置
 /// ⚠️ 此结构中**不包含 API Key**。
 /// Key 通过 `providerID` 从文件（Application Support 下的 api_keys.json）单独读取。
 public struct LLMConfiguration: Codable, Sendable, Identifiable {
     public var id = UUID()
-    public var displayName: String?                  // App 界面中展示的名字
     public var providerID: String?              // 对应 LLMServiceProvider.id
     public var name: String               // 实际请求时用的 model 值，可覆盖默认
-    public var baseURL: String?                // 自定义地址，nil 则使用 Provider 的默认值
     public var extraParameters: [String: CodableValue] = [:]
     public var origin: LLMConfigurationOrigin = .user
     public var display: Bool = true
 
     /// 获得最终请求用的 baseURL
     public func resolvedBaseURL(using provider: LLMServiceProvider?) -> String {
-        baseURL ?? provider?.baseURL ?? ""
+        provider?.baseURL ?? ""
     }
 }
 
-extension LLMConfiguration {
-    public var uiDisplayName: String { displayName ?? name }
-}
 
 extension LLMConfiguration {
     enum CommonExtraKey: String {
@@ -50,10 +39,7 @@ extension LLMConfiguration {
 extension LLMConfiguration {
     public var isValidForRequest: Bool {
         guard !name.isEmpty else { return false }
-        // 系统配置有 provider 作为回退，用户配置必须有 baseURL
-        if origin == .user && (baseURL == nil || baseURL!.isEmpty) {
-            return false
-        }
+        // ...
         return true
     }
 }
@@ -77,6 +63,7 @@ public struct LLMServiceProvider: Codable, Sendable, Identifiable {
     public let supportedFeatures: [String]? // 可选功能标签: "streaming", "reasoning", "function_calling"
     public let description: String?    // 简介
     public var apiPlatfromLink: String? // 该服务商 API Key 管理页面链接
+    public var userExtraModels: [String]?
     
     /// 从 AutoPlanCore 模块 Bundle 加载 Logo 图片
     #if os(macOS)
