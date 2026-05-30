@@ -9,63 +9,12 @@ import Foundation
 import OSLog
 
 
-// MARK: - JSON 解码模型
-
-private struct LLMProviderDTO: Decodable {
-    let name: String
-    let displayName: String
-    let logoName: String?
-    let darkModeLogoName: String?
-    let defaultBaseURL: String
-    let defaultModel: String?
-    let models: [String]?
-    let supportedFeatures: [String]?
-    let description: String?
-}
-
-private struct LLMConfigsContainer: Decodable {
-    let LLMProviders: [LLMProviderDTO]
-}
-
-
 struct LLMConfigLoader {
     private static let logger = Logger(subsystem: "com.autoplan.core", category: "LLMConfig")
     
     static func loadDefaultConfigs() -> (providers: [LLMServiceProvider], models: [LLMConfiguration])? {
-        guard let url = Bundle.main.url(forResource: "LLMConfigs", withExtension: "json") else {
-            logger.error("❌ JSON 文件未找到")
-            return nil
-        }
-        logger.info("📄 找到 JSON 文件: \(url.lastPathComponent)")
-        
-        guard let data = try? Data(contentsOf: url) else {
-            logger.error("❌ 无法读取 JSON 文件内容")
-            return nil
-        }
-        
-        let container: LLMConfigsContainer
-        do {
-            container = try JSONDecoder().decode(LLMConfigsContainer.self, from: data)
-            logger.info("✅ JSON 解析成功")
-        } catch {
-            logger.error("❌ JSON 解析失败: \(error.localizedDescription)")
-            return nil
-        }
-        
-        let providers = container.LLMProviders.map { dto in
-            LLMServiceProvider(
-                name: dto.name,
-                displayName: dto.displayName,
-                logoName: dto.logoName,
-                darkModeLogoName: dto.darkModeLogoName,
-                defaultBaseURL: dto.defaultBaseURL,
-                defaultModel: dto.defaultModel,
-                models: dto.models,
-                supportedFeatures: dto.supportedFeatures,
-                description: dto.description
-            )
-        }
-        logger.info("📦 解析到 \(providers.count) 个 Provider")
+        let providers = LLMConfigs.providers
+        logger.info("📦 使用 \(providers.count) 个预置 Provider")
 
         // 从 Provider 的 models 字段生成系统预置模型配置
         let models = providers.flatMap { provider -> [LLMConfiguration] in
@@ -79,7 +28,7 @@ struct LLMConfigLoader {
                 return config
             }
         }
-        logger.info("📦 解析到 \(models.count) 个 Model")
+        logger.info("📦 生成 \(models.count) 个系统预置 Model")
         
         return (providers, models)
     }
@@ -166,7 +115,8 @@ struct LLMService {
             apiKey: apiKey,
             model: model.name,
             temperature: temperature,
-            maxTokens: maxTokens
+            maxTokens: maxTokens,
+            providerName: provider?.name ?? ""
         )
     }
 }

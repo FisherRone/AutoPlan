@@ -76,6 +76,7 @@ public struct LLMServiceProvider: Codable, Sendable, Identifiable {
     public let models: [String]?       // 该服务商支持的模型列表
     public let supportedFeatures: [String]? // 可选功能标签: "streaming", "reasoning", "function_calling"
     public let description: String?    // 简介
+    public let apiPlatfromLink: String? // 该服务商 API Key 管理页面链接
     
     /// 从 AutoPlanCore 模块 Bundle 加载 Logo 图片
     #if os(macOS)
@@ -125,12 +126,14 @@ public struct LLMRequestContext {
     public let model: String
     public var temperature: Double? = 1.0
     public var maxTokens: Int? = 2048
+    public let providerName: String
 
-    public init(baseURL: String, apiKey: String, model: String, temperature: Double? = 1.0, maxTokens: Int? = 2048) {
+    public init(baseURL: String, apiKey: String, model: String, temperature: Double? = 1.0, maxTokens: Int? = 2048, providerName: String = "") {
         self.baseURL = baseURL
         self.apiKey = apiKey
         self.model = model
         self.temperature = temperature
         self.maxTokens = maxTokens
+        self.providerName = providerName
     }
 }
