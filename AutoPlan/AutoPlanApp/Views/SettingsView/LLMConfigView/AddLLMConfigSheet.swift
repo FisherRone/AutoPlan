@@ -225,7 +225,7 @@ struct AddProviderSheet: View {
                             .buttonStyle(.borderless)
                         }
                     }
-                    TextField("", text: $newModelName, prompt: Text("输入模型名称，按回车添加"))
+                    TextField("", text: $newModelName, prompt: Text("点击添加模型，按回车确认"))
                         .onSubmit {
                             let trimmed = newModelName.trimmingCharacters(in: .whitespaces)
                             if !trimmed.isEmpty && !models.contains(trimmed) {
@@ -353,7 +353,7 @@ struct AddModelSheet: View {
     @State private var name = ""
     @State private var selectedProviderName: String
     @State private var showCancelConfirm = false
-    @State private var isSaving = false
+    @State private var isSaving = false // 目的是防止保存后 ui 关闭前瞬间出现“重名”警告。
 
     init(store: UserLLMConfigStore, providers: [LLMServiceProvider]) {
         self.store = store

@@ -26,6 +26,7 @@ struct ManageModelsSheet: View {
     @State private var editedBaseURL: String = ""
     @State private var selectedLogoURL: URL?
     @State private var showLogoPicker = false
+    @State private var editBaseURLWarning: AddProviderWarning?
 
     struct RenameTarget: Identifiable {
         let name: String
@@ -103,6 +104,9 @@ struct ManageModelsSheet: View {
                         }
                     }
                     
+                    if let warning = editBaseURLWarning {
+                        warning.uiText
+                    }
 
                 }
             }
@@ -251,6 +255,14 @@ struct ManageModelsSheet: View {
         let trimmedName = editedDisplayName.trimmingCharacters(in: .whitespaces)
         let trimmedURL = editedBaseURL.trimmingCharacters(in: .whitespaces)
         guard !trimmedName.isEmpty, !trimmedURL.isEmpty else { return }
+        
+        let trimmedBase = trimmedURL.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+        if trimmedBase.lowercased().hasSuffix("/chat/completions") {
+            editBaseURLWarning = .urlHasChatCompletions
+            return
+        }
+        editBaseURLWarning = nil
+        
         viewModel.store.updateProvider(
             name: provider.name,
             displayName: trimmedName,
