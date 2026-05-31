@@ -117,9 +117,6 @@
         }
       }
     },
-    "AAAA" : {
-
-    },
     "AI 未返回有效内容" : {
       "localizations" : {
         "en" : {
@@ -143,7 +140,20 @@
       }
     },
     "AI 返回格式异常，请重试" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI returned abnormal format, please try again."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI 返回格式异常，请重试"
+          }
+        }
+      }
     },
     "API Key" : {
       "localizations" : {
@@ -190,7 +200,20 @@
       }
     },
     "API Key 无效或已过期" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "API Key is invalid or expired."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "API Key 无效或已过期"
+          }
+        }
+      }
     },
     "Base URL" : {
       "localizations" : {
@@ -259,13 +282,52 @@
       }
     },
     "Logo 保存失败" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to save logo."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logo 保存失败"
+          }
+        }
+      }
     },
     "Logo 文件无法保存，但服务商配置已保存成功。" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to save logo file, but service provider configuration was saved successfully."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logo 文件无法保存，但服务商配置已保存成功。"
+          }
+        }
+      }
     },
     "OCR 处理失败: %@" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OCR processing failed: %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OCR 处理失败: %@"
+          }
+        }
+      }
     },
     "为已有服务商添加新模型" : {
       "localizations" : {
@@ -357,7 +419,20 @@
       }
     },
     "保存「%@」失败" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to save:「%@」"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存「%@」失败"
+          }
+        }
+      }
     },
     "保存事项失败: %@" : {
       "localizations" : {
@@ -430,18 +505,18 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "List Management"
+            "value" : "Lists"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "列表管理"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "列表管理"
           }
         }
@@ -514,7 +589,20 @@
       }
     },
     "刷新失败，请检查日历权限" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refresh failed, please check calendar permissions."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刷新失败，请检查日历权限"
+          }
+        }
+      }
     },
     "占位符说明" : {
       "localizations" : {
@@ -627,7 +715,20 @@
       }
     },
     "图片中未识别到文字" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No text found in image."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "图片中未识别到文字"
+          }
+        }
+      }
     },
     "在现有提示词的基础之上施加额外的规则。" : {
       "localizations" : {
@@ -674,7 +775,20 @@
       }
     },
     "好的" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "好的"
+          }
+        }
+      }
     },
     "如何提取日程" : {
       "localizations" : {
@@ -919,24 +1033,18 @@
         }
       }
     },
-    "提取日程时将自动使用以下列表进行分类。添加描述有助于让分类更加准确。" : {
+    "提取日程时将自动使用以下列表进行分类。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "These lists are used automatically for event classification. Adding descriptions helps improve accuracy."
+            "value" : "Extracted events will be saved into one of these lists."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "提取日程时将自动使用以下列表进行分类。添加描述有助于让分类更加准确。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "擷取行程時將自動使用以下列表進行分類。加入描述有助於讓分類更加準確。"
+            "value" : "提取日程时将自动使用以下列表进行分类。"
           }
         }
       }
@@ -1052,7 +1160,20 @@
       }
     },
     "无法保存服务商配置，请检查磁盘空间或文件权限。" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to save service provider configuration. Please check disk space or file permissions."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法保存服务商配置，请检查磁盘空间或文件权限。"
+          }
+        }
+      }
     },
     "无法创建自动计划日历: %@" : {
       "localizations" : {
@@ -1253,29 +1374,6 @@
         }
       }
     },
-    "显示名称" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Display Name"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "显示名称"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "顯示名稱"
-          }
-        }
-      }
-    },
     "暂无可用模型配置。" : {
       "localizations" : {
         "en" : {
@@ -1343,7 +1441,20 @@
       }
     },
     "服务商「%@」的 API Key 未配置" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "API Key for service provider \"%@\" is not configured."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "服务商「%@」的 API Key 未配置"
+          }
+        }
+      }
     },
     "服务商信息" : {
       "localizations" : {
@@ -1434,7 +1545,20 @@
       }
     },
     "服务器内部错误，请稍后再试" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Internal server error, please try again later."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "服务器内部错误，请稍后再试"
+          }
+        }
+      }
     },
     "服务器报错 (代码: %lld)" : {
       "localizations" : {
@@ -1481,10 +1605,36 @@
       }
     },
     "未找到模型「%@」的配置" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configuration for model \"%@\" not found."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未找到模型「%@」的配置"
+          }
+        }
+      }
     },
     "未能识别到任何日程或提醒事项" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to recognize any events or reminders."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未能识别到任何日程或提醒事项"
+          }
+        }
+      }
     },
     "本 App 的作用" : {
       "comment" : "app 介绍页",
@@ -1539,6 +1689,12 @@
             "state" : "translated",
             "value" : "Models"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "模型"
+          }
         }
       }
     },
@@ -1560,28 +1716,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "模型名稱"
-          }
-        }
-      }
-    },
-    "模型名称 (API 请求用)" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Model Name (for API requests)"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "模型名称 (API 请求用)"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "模型名稱 (API 請求用)"
           }
         }
       }
@@ -1764,6 +1898,22 @@
         }
       }
     },
+    "添加描述有助于让分类更加准确。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adding descriptions helps improve the accuracy of classification."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加描述有助于让分类更加准确。"
+          }
+        }
+      }
+    },
     "添加服务商" : {
       "localizations" : {
         "en" : {
@@ -1808,29 +1958,6 @@
         }
       }
     },
-    "添加模型，按回车确认" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add model, press Enter to confirm"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "添加模型，按回车确认"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "加入模型，按 Enter 確認"
-          }
-        }
-      }
-    },
     "清除" : {
       "localizations" : {
         "en" : {
@@ -1854,7 +1981,20 @@
       }
     },
     "点击更换 Logo" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Click to change logo."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "点击更换 Logo"
+          }
+        }
+      }
     },
     "点击查看详细说明" : {
       "localizations" : {
@@ -1879,7 +2019,20 @@
       }
     },
     "点击添加模型，按回车确认" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Click to add model, press Enter to confirm."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "点击添加模型，按回车确认"
+          }
+        }
+      }
     },
     "版本 %@" : {
       "comment" : "介绍页",
@@ -1972,7 +2125,20 @@
       }
     },
     "管理..." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "管理..."
+          }
+        }
+      }
     },
     "继续编辑" : {
       "localizations" : {
@@ -2087,39 +2253,68 @@
       }
     },
     "自定义提示词读取失败，已回退到默认" : {
-
-    },
-    "获取 Api Key" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Get API Key"
+            "value" : "Failed to read custom prompt, falling back to default."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "获取 Api Key"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "取得 Api Key"
+            "value" : "自定义提示词读取失败，已回退到默认"
           }
         }
       }
     },
     "获取 API Key" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get an API Key…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "获取 API Key"
+          }
+        }
+      }
     },
-    "请先选择一个模型" : {
-
+    "请先在 App 设置中选择一个模型" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please select a model in app settings."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请先在 App 设置中选择一个模型"
+          }
+        }
+      }
     },
     "请求过于频繁，请稍后再试" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Too many requests, please try again later."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请求过于频繁，请稍后再试"
+          }
+        }
+      }
     },
     "读取日历数据失败: %@" : {
       "localizations" : {
@@ -2161,29 +2356,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "輸入 API Key"
-          }
-        }
-      }
-    },
-    "输入模型名称，按回车添加" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enter model name, press Enter to add"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "输入模型名称，按回车添加"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "輸入模型名稱，按 Enter 加入"
           }
         }
       }
@@ -2234,50 +2406,17 @@
       }
     },
     "配置保存失败" : {
-
-    },
-    "重命名" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rename"
+            "value" : "Failed to save configuration."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "重命名"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "重新命名"
-          }
-        }
-      }
-    },
-    "重命名服务商" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rename Provider"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "重命名服务商"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "重新命名服務商"
+            "value" : "配置保存失败"
           }
         }
       }
@@ -2356,6 +2495,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Advanced"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "高级"
           }
         }
       }

@@ -385,7 +385,7 @@ struct AddModelSheet: View {
                 .padding()
 
             Form {
-                TextField("模型名称 (API 请求用)", text: $name)
+                TextField("模型名称", text: $name)
 
                 Picker("所属服务商", selection: $selectedProviderName) {
                     ForEach(providers) { provider in
@@ -414,7 +414,7 @@ struct AddModelSheet: View {
             }
             .padding()
         }
-        .frame(width: 380, height: 280)
+        .frame(width: 380, height: 240)
         .alert("放弃编辑？", isPresented: $showCancelConfirm) {
             Button("放弃", role: .destructive) { dismiss() }
             Button("继续编辑", role: .cancel) {}

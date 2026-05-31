@@ -247,7 +247,8 @@ struct ExtractorView: View {
                 HStack {
                     VStack(alignment: .leading) {
                         Text("列表管理").subtitle()
-                        Text("提取日程时将自动使用以下列表进行分类。添加描述有助于让分类更加准确。").note()
+                        Text("提取日程时将自动使用以下列表进行分类。").note()
+                        Text("添加描述有助于让分类更加准确。").note()
                     }
                     
                     Spacer()

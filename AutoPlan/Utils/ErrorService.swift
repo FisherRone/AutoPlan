@@ -74,6 +74,7 @@ extension WarningMessage {
 
 // MARK: - Example
 // 具体警告实例的定义（任意代码文件开头，集中管理）
+/*
 enum ExampleWarning {
     case Example1
     case Example2
@@ -92,4 +93,4 @@ enum ExampleWarning {
         }
     }
 }
-
+*/

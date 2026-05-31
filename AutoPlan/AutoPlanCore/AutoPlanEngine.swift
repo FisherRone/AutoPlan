@@ -17,7 +17,7 @@ public enum AutoPlanError: Error, LocalizedError {
         case .saveFailed(let itemTitle):
             return String(localized: "保存「\(itemTitle)」失败")
         case .modelNameNotSelected:
-            return String(localized: "请先选择一个模型")
+            return String(localized: "请先在 App 设置中选择一个模型")
         case .modelConfigNotFound(let name):
             return String(localized: "未找到模型「\(name)」的配置")
         case .apiKeyNotConfigured(let providerID):
