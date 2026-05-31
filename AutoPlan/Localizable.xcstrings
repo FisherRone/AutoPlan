@@ -258,29 +258,6 @@
         }
       }
     },
-    "JSON 解码失败: %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "JSON decoding failed: %@"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "JSON 解码失败: %@"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "JSON 解碼失敗: %@"
-          }
-        }
-      }
-    },
     "LLM Providers" : {
       "localizations" : {
         "en" : {
@@ -2382,6 +2359,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "需要確認"
+          }
+        }
+      }
+    },
+    "高级" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Advanced"
           }
         }
       }

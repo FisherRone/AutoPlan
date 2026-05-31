@@ -61,7 +61,7 @@ struct SettingsTabView: View {
                 ModelConfigView()
             }
 
-            Tab("日程提取", systemImage: "list.bullet") {
+            Tab("高级", systemImage: "slider.horizontal.3") {
                 ExtractorView(viewModel: extractorViewModel)
             }
 

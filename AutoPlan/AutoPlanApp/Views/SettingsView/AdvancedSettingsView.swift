@@ -1,5 +1,5 @@
 //
-//  ExtractorView.swift
+//  AdvancedSettingsView.swift
 //  AutoPlan
 //
 //  Created by 荣子鱼 on 2026/5/10.
@@ -153,6 +153,7 @@ struct ExtractorView: View {
     @State private var showTemplate = false
     @State private var showPromptVariables = false
     @State private var userInstruction: String = AppSettings.shared.userInstruction
+    @State private var customPromptFallback = false
 
     init(viewModel: ExtractorViewModel) {
         self.viewModel = viewModel
@@ -161,6 +162,85 @@ struct ExtractorView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
+                
+                Text("提示词").subtitle()
+                // 自定义提示词开关
+                HStack {
+                    Text("自定义提示词")
+                        .font(.body)
+
+                    Button("编辑...") {
+                        openExtractionPromptInEditor()
+                    }
+                    .buttonStyle(.borderless)
+                    .foregroundColor(.accentColor)
+
+                    Button("查看示例") {
+                        showTemplate = true
+                    }
+                    .buttonStyle(.borderless)
+                    .foregroundColor(.accentColor)
+
+                    Button("占位符说明") {
+                        showPromptVariables = true
+                    }
+                    .buttonStyle(.borderless)
+                    .foregroundColor(.accentColor)
+
+                    Spacer()
+
+                    Toggle("", isOn: Binding(
+                        get: { AppSettings.shared.useCustomExtractionPrompt },
+                        set: { newValue in
+                            if newValue {
+                                PromptBuilder.ensureCustomPromptFileExists()
+                                checkCustomPromptFallback()
+                            } else {
+                                customPromptFallback = false
+                            }
+                            AppSettings.shared.useCustomExtractionPrompt = newValue
+                        }
+                    ))
+                    .toggleStyle(.switch)
+                    .labelsHidden()
+                    .controlSize(.small)
+                }
+                .alert("无法打开文件", isPresented: $openFailed) {
+                    Button("好", role: .cancel) {}
+                } message: {
+                    Text("无法用默认应用打开自定义提示词文件。")
+                }
+                
+                if customPromptFallback {
+                    PromptBuilderWarning.customPromptReadFailed.message.uiNote()
+                        .padding(.leading, 4)
+                }
+                
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading) {
+                        Text("用户规则")
+                        Text("在现有提示词的基础之上施加额外的规则。")
+                            .note()
+                            .frame(maxWidth: 140)
+                    }
+                    
+                    TextEditor(text: $userInstruction)
+                        .font(.body)
+                        .frame(minHeight: 80, maxHeight: 80)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 6)
+                                .stroke(Color.secondary.opacity(0.3), lineWidth: 1)
+                        )
+                        .onChange(of: userInstruction) { _, newValue in
+                            AppSettings.shared.userInstruction = newValue
+                        }
+                }
+                
+
+
+
+                Divider()
+                    .padding(.vertical, 4)
                 
 
                 // 标题栏
@@ -236,6 +316,11 @@ struct ExtractorView: View {
             }
             .padding(20)
         }
+        .onAppear {
+            if AppSettings.shared.useCustomExtractionPrompt {
+                checkCustomPromptFallback()
+            }
+        }
         .sheet(isPresented: $iconPickerPresented, onDismiss: {
             guard let target = iconPickerTarget else { return }
             viewModel.setUserIcon(for: target, iconName: iconPickerSymbol)
@@ -278,6 +363,19 @@ struct ExtractorView: View {
         }
         if !NSWorkspace.shared.open(url) {
             openFailed = true
+        }
+    }
+    
+    private func checkCustomPromptFallback() {
+        guard let url = PromptBuilder.customPromptFileURL else {
+            customPromptFallback = true
+            return
+        }
+        if let content = try? String(contentsOf: url, encoding: .utf8),
+           !content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            customPromptFallback = false
+        } else {
+            customPromptFallback = true
         }
     }
 }

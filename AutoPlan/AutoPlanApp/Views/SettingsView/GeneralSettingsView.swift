@@ -185,11 +185,6 @@ struct ModelConfigView: View {
     @State private var showAddLLMConfig = false
     @State private var managingProvider: LLMServiceProvider?
     @State private var providerToDelete: LLMServiceProvider?
-    @State private var openFailed = false
-    @State private var showTemplate = false
-    @State private var showPromptVariables = false
-    @State private var userInstruction: String = AppSettings.shared.userInstruction
-    @State private var customPromptFallback = false
 
     
     var body: some View {
@@ -244,84 +239,7 @@ struct ModelConfigView: View {
                 Divider()
                     .padding(.vertical, 4)
                 
-                Text("提示词").subtitle()
-                // 自定义提示词开关
-                HStack {
-                    Text("自定义提示词")
-                        .font(.body)
-
-                    Button("编辑...") {
-                        openExtractionPromptInEditor()
-                    }
-                    .buttonStyle(.borderless)
-                    .foregroundColor(.accentColor)
-
-                    Button("查看示例") {
-                        showTemplate = true
-                    }
-                    .buttonStyle(.borderless)
-                    .foregroundColor(.accentColor)
-
-                    Button("占位符说明") {
-                        showPromptVariables = true
-                    }
-                    .buttonStyle(.borderless)
-                    .foregroundColor(.accentColor)
-
-                    Spacer()
-
-                    Toggle("", isOn: Binding(
-                        get: { AppSettings.shared.useCustomExtractionPrompt },
-                        set: { newValue in
-                            if newValue {
-                                PromptBuilder.ensureCustomPromptFileExists()
-                                checkCustomPromptFallback()
-                            } else {
-                                customPromptFallback = false
-                            }
-                            AppSettings.shared.useCustomExtractionPrompt = newValue
-                        }
-                    ))
-                    .toggleStyle(.switch)
-                    .labelsHidden()
-                    .controlSize(.small)
-                }
-                .alert("无法打开文件", isPresented: $openFailed) {
-                    Button("好", role: .cancel) {}
-                } message: {
-                    Text("无法用默认应用打开自定义提示词文件。")
-                }
                 
-                if customPromptFallback {
-                    PromptBuilderWarning.customPromptReadFailed.message.uiNote()
-                        .padding(.leading, 4)
-                }
-                
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading) {
-                        Text("用户规则")
-                        Text("在现有提示词的基础之上施加额外的规则。")
-                            .note()
-                            .frame(maxWidth: 140)
-                    }
-                    
-                    TextEditor(text: $userInstruction)
-                        .font(.body)
-                        .frame(minHeight: 80, maxHeight: 80)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 6)
-                                .stroke(Color.secondary.opacity(0.3), lineWidth: 1)
-                        )
-                        .onChange(of: userInstruction) { _, newValue in
-                            AppSettings.shared.userInstruction = newValue
-                        }
-                }
-                
-
-
-
-                Divider()
-                    .padding(.vertical, 4)
                 
                 HStack {
                     Text("LLM Providers").subtitle()
@@ -377,9 +295,6 @@ struct ModelConfigView: View {
         }
         .onAppear {
             viewModel.loadAPIKeys()
-            if AppSettings.shared.useCustomExtractionPrompt {
-                checkCustomPromptFallback()
-            }
         }
         .sheet(item: $managingProvider) { provider in
             ManageModelsSheet(provider: provider, viewModel: viewModel)
@@ -406,29 +321,7 @@ struct ModelConfigView: View {
             }
         }
     }
-    private func openExtractionPromptInEditor() {
-        PromptBuilder.ensureCustomPromptFileExists()
-        guard let url = PromptBuilder.customPromptFileURL else {
-            openFailed = true
-            return
-        }
-        if !NSWorkspace.shared.open(url) {
-            openFailed = true
-        }
-    }
-    
-    private func checkCustomPromptFallback() {
-        guard let url = PromptBuilder.customPromptFileURL else {
-            customPromptFallback = true
-            return
-        }
-        if let content = try? String(contentsOf: url, encoding: .utf8),
-           !content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            customPromptFallback = false
-        } else {
-            customPromptFallback = true
-        }
-    }
+
 }
 
 
@@ -588,7 +481,7 @@ struct ProviderAPIKeyRow: View {
             .overlay(
                 RoundedRectangle(cornerRadius: 8)
                     .fill(isHovering ? Color.accentColor.opacity(0.12) : Color.clear)
-                    .padding(-8)      // 背景向四周各扩展 4pt（可按需调整）
+                    .padding(-8)
                     .allowsHitTesting(false)   // 避免挡住右侧按钮 / 输入框的点击
             )
             .help(provider.apiPlatfromURL != nil ? "获取 Api Key" : "")
