@@ -372,11 +372,10 @@ struct ProviderAPIKeyRow: View {
                         Button(action: { NSWorkspace.shared.open(url) }) {
                             Image(systemName: "arrow.up.right")
                                 .frame(width: 20, height: 20)
-                                .foregroundStyle(.secondary)
                                 
                         }
-                        .buttonStyle(.plain)
-                        .hoverHandWithShadow()
+                        .buttonStyle(.borderless)
+                        .hoverShadow()
                         .help("获取 API Key")
                     }
                     
@@ -384,11 +383,10 @@ struct ProviderAPIKeyRow: View {
                     Button(action: onManageModels) {
                         Image(systemName: "slider.horizontal.3")
                             .frame(width: 20, height: 20)
-                            .foregroundStyle(.secondary)
                             
                     }
-                    .buttonStyle(.plain)
-                    .hoverHandWithShadow()
+                    .buttonStyle(.borderless)
+                    .hoverShadow()
                     .help("管理...")
                 }
                 .frame(width: 50, alignment: .trailing)
@@ -430,7 +428,7 @@ struct ProviderAPIKeyRow: View {
                 .font(.body)
 
                 Button(action: { showKey.toggle() }) {
-                    Image(systemName: showKey ? "eye.slash" : "eye")
+                    Image(systemName: showKey ? "eye" : "eye.slash")
                 }
                 .buttonStyle(.borderless)
                 .help(showKey ? "隐藏" : "显示")

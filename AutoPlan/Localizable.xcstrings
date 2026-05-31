@@ -26,28 +26,6 @@
         }
       }
     },
-    "%@ 的模型" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Models of %@"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ 的模型"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ 的模型"
-          }
-        }
-      }
-    },
     "%lld 条保存失败" : {
       "localizations" : {
         "en" : {
@@ -1551,6 +1529,16 @@
         }
       }
     },
+    "模型" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Models"
+          }
+        }
+      }
+    },
     "模型名称" : {
       "localizations" : {
         "en" : {
@@ -1818,6 +1806,7 @@
       }
     },
     "添加模型，按回车确认" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1882,6 +1871,9 @@
           }
         }
       }
+    },
+    "点击添加模型，按回车确认" : {
+
     },
     "版本 %@" : {
       "comment" : "介绍页",
@@ -1975,29 +1967,6 @@
     },
     "管理..." : {
 
-    },
-    "管理模型" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Manage Models"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "管理模型"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "管理模型"
-          }
-        }
-      }
     },
     "继续编辑" : {
       "localizations" : {
@@ -2261,6 +2230,7 @@
 
     },
     "重命名" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2306,7 +2276,6 @@
       }
     },
     "重命名模型" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

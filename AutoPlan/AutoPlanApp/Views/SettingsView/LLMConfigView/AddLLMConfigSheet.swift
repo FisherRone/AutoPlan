@@ -69,8 +69,7 @@ struct AddLLMConfigSheet: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("添加 LLM 配置")
-                    .font(.headline)
+                Text("添加 LLM 配置").font(.headline)
                 Spacer()
                 Button("关闭") {
                     dismiss()
