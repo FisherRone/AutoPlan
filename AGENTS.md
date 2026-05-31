@@ -128,6 +128,8 @@ rm -rf ~/Library/Developer/Xcode/DerivedData/AutoPlan*
 ## 【重要】工具使用
 1. 修改代码（增删改）必须用系统（qoder）给你的工具。
 2. 搜索代码、读代码必须用 xcode mcp 的工具，目前系统的 grep_code  有严重 bug。
+⛔️ 禁止使用 xcode 工具编辑代码
+
 
 ### 【重要】Xcode MCP 工具使用
 - XcodeListWindows：列出当前 Xcode 窗口信息，可获取 `tabIdentifier`

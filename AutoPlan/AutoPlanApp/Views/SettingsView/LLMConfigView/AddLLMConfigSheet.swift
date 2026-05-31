@@ -1,13 +1,14 @@
 //
-//  UserProviderManagement.swift
+//  AddLLMConfigSheetView.swift
 //  AutoPlan
 //
-//  Created by 荣子鱼 on 2026/5/30.
+//  Created by 荣子鱼 on 2026/5/31.
 //
 
 import SwiftUI
 import SwiftyBeaver
 import UniformTypeIdentifiers
+
 
 extension UTType {
     static var svg: UTType {
@@ -15,7 +16,7 @@ extension UTType {
     }
 }
 
-// MARK: - Add Provider Warning Enum
+// MARK: - Warning Enum
 enum AddProviderWarning {
     case providerNameTaken
     case urlHasChatCompletions
@@ -49,6 +50,101 @@ enum AddProviderWarning {
     
     var uiText: Text {
         message.uiNote()
+    }
+}
+
+
+// MARK: - Add LLM config sheet view
+
+struct AddLLMConfigSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var store = UserLLMConfigStore.shared
+    @State private var showAddProvider = false
+    @State private var showAddModel = false
+
+    var allProviders: [LLMServiceProvider] {
+        SystemLLMConfig.providers + store.userProviders.map { store.toServiceProvider($0) }
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Text("添加 LLM 配置")
+                    .font(.headline)
+                Spacer()
+                Button("关闭") {
+                    dismiss()
+                }
+                .keyboardShortcut(.cancelAction)
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 20)
+            .padding(.bottom, 12)
+
+            Divider()
+                .padding(.horizontal, 20)
+
+            VStack(spacing: 12) {
+                Button {
+                    showAddProvider = true
+                } label: {
+                    HStack(spacing: 14) {
+                        Image(systemName: "server.rack")
+                            .font(.title2)
+                            .frame(width: 32, height: 32)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("添加服务商")
+                                .font(.body)
+                            Text("自定义 API 地址的 LLM 服务商")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.secondary)
+                            .font(.caption)
+                    }
+                    .padding()
+                    .background(Color.secondary.opacity(0.08), in: RoundedRectangle(cornerRadius: 8))
+                }
+                .buttonStyle(.plain)
+
+                Button {
+                    showAddModel = true
+                } label: {
+                    HStack(spacing: 14) {
+                        Image(systemName: "cube.box")
+                            .font(.title2)
+                            .frame(width: 32, height: 32)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("添加模型")
+                                .font(.body)
+                            Text("为已有服务商添加新模型")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.secondary)
+                            .font(.caption)
+                    }
+                    .padding()
+                    .background(Color.secondary.opacity(0.08), in: RoundedRectangle(cornerRadius: 8))
+                }
+                .buttonStyle(.plain)
+                .disabled(allProviders.isEmpty)
+            }
+            .padding(20)
+
+            Spacer()
+        }
+        .frame(width: 400, height: 280)
+        .sheet(isPresented: $showAddProvider) {
+            AddProviderSheet(store: store)
+        }
+        .sheet(isPresented: $showAddModel) {
+            AddModelSheet(store: store, providers: allProviders)
+        }
     }
 }
 
@@ -337,201 +433,5 @@ struct AddModelSheet: View {
     }
 }
 
-// MARK: - Rename Provider Sheet
 
-struct RenameProviderSheet: View {
-    let store: UserLLMConfigStore
-    let providerName: String
-    let currentDisplayName: String
-    @Environment(\.dismiss) private var dismiss
 
-    @State private var newDisplayName = ""
-
-    var body: some View {
-        VStack(spacing: 16) {
-            Text("重命名服务商")
-                .font(.headline)
-
-            TextField("显示名称", text: $newDisplayName)
-                .textFieldStyle(.roundedBorder)
-
-            HStack {
-                Button("取消") { dismiss() }
-                    .keyboardShortcut(.cancelAction)
-                Spacer()
-                Button("保存") {
-                    store.updateProvider(name: providerName, displayName: newDisplayName)
-                    dismiss()
-                }
-                .keyboardShortcut(.defaultAction)
-                .disabled(newDisplayName.trimmingCharacters(in: .whitespaces).isEmpty)
-            }
-        }
-        .padding()
-        .frame(width: 300)
-        .onAppear { newDisplayName = currentDisplayName }
-    }
-}
-
-// MARK: - Manage Models Sheet
-
-struct ManageModelsSheet: View {
-    let provider: LLMServiceProvider
-    let viewModel: ModelConfigViewModel
-    @Environment(\.dismiss) private var dismiss
-
-    @State private var showDeleteConfirm: (name: String, providerName: String)?
-    @State private var newModelName = ""
-    @State private var renamingModel: RenameTarget?
-
-    struct RenameTarget: Identifiable {
-        let name: String
-        let providerName: String
-        var id: String { "\(providerName)/\(name)" }
-    }
-
-    var body: some View {
-        VStack(spacing: 0) {
-            Text("\(provider.displayName) 的模型")
-                .font(.headline)
-                .padding()
-
-            List {
-                let providerModels = viewModel.models(for: provider)
-                if providerModels.isEmpty {
-                    Text("暂无模型")
-                        .foregroundColor(.secondary)
-                }
-                ForEach(providerModels) { model in
-                    HStack {
-                        Text(model.name)
-                        Spacer()
-                        if model.origin == .user {
-                            Button {
-                                renamingModel = RenameTarget(name: model.name, providerName: provider.name)
-                            } label: {
-                                Image(systemName: "pencil")
-                            }
-                            .buttonStyle(.borderless)
-                            .help("重命名")
-
-                            Button(role: .destructive) {
-                                showDeleteConfirm = (model.name, provider.name)
-                            } label: {
-                                Image(systemName: "trash")
-                            }
-                            .buttonStyle(.borderless)
-                        }
-                    }
-                }
-
-                HStack {
-                    Image(systemName: "plus.circle.fill")
-                        .foregroundColor(.secondary)
-                    TextField("添加模型，按回车确认", text: $newModelName)
-                        .textFieldStyle(.plain)
-                        .onSubmit {
-                            let trimmed = newModelName.trimmingCharacters(in: .whitespaces)
-                            guard !trimmed.isEmpty else { return }
-                            guard !viewModel.store.isModelNameTaken(trimmed, inProvider: provider.name) else { return }
-                            viewModel.store.addModel(UserLLMModel(name: trimmed, providerName: provider.name))
-                            newModelName = ""
-                        }
-                }
-                .padding(.vertical, 4)
-            }
-
-            HStack {
-                Spacer()
-                Button("完成") { dismiss() }
-                    .keyboardShortcut(.defaultAction)
-            }
-            .padding()
-        }
-        .frame(width: 380, height: 350)
-        .alert("删除模型",
-               isPresented: Binding(
-                   get: { showDeleteConfirm != nil },
-                   set: { if !$0 { showDeleteConfirm = nil } }
-               )
-        ) {
-            Button("删除", role: .destructive) {
-                if let item = showDeleteConfirm {
-                    viewModel.store.deleteModel(name: item.name, providerName: item.providerName)
-                    viewModel.handleSelectionAfterDeletion()
-                    showDeleteConfirm = nil
-                }
-            }
-            Button("取消", role: .cancel) {
-                showDeleteConfirm = nil
-            }
-        } message: {
-            if let item = showDeleteConfirm {
-                Text("确定删除模型「\(item.name)」吗？")
-            }
-        }
-        .sheet(item: $renamingModel) { target in
-            RenameModelSheet(
-                store: viewModel.store,
-                oldName: target.name,
-                providerName: target.providerName
-            )
-        }
-    }
-}
-
-// MARK: - Rename Model Sheet
-
-struct RenameModelSheet: View {
-    let store: UserLLMConfigStore
-    let oldName: String
-    let providerName: String
-    @Environment(\.dismiss) private var dismiss
-
-    @State private var newName = ""
-
-    var body: some View {
-        VStack(spacing: 16) {
-            Text("重命名模型")
-                .font(.headline)
-
-            TextField("模型名称", text: $newName)
-                .textFieldStyle(.roundedBorder)
-
-            if !validationMessage.isEmpty {
-                Text(validationMessage)
-                    .foregroundColor(.red)
-                    .font(.caption)
-            }
-
-            HStack {
-                Button("取消") { dismiss() }
-                    .keyboardShortcut(.cancelAction)
-                Spacer()
-                Button("保存") {
-                    store.renameModel(oldName: oldName, providerName: providerName, newName: newName.trimmingCharacters(in: .whitespaces))
-                    dismiss()
-                }
-                .keyboardShortcut(.defaultAction)
-                .disabled(!isValid)
-            }
-        }
-        .padding()
-        .frame(width: 300)
-        .onAppear { newName = oldName }
-    }
-
-    private var isValid: Bool {
-        let trimmed = newName.trimmingCharacters(in: .whitespaces)
-        return !trimmed.isEmpty && trimmed != oldName && validationMessage.isEmpty
-    }
-
-    private var validationMessage: String {
-        let trimmed = newName.trimmingCharacters(in: .whitespaces)
-        guard !trimmed.isEmpty, trimmed != oldName else { return "" }
-        if store.isModelNameTaken(trimmed, inProvider: providerName) {
-            return "该服务商下已存在同名模型"
-        }
-        return ""
-    }
-}
