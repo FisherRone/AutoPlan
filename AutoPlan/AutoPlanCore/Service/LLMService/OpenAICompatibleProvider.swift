@@ -6,12 +6,11 @@
 //
 
 import Foundation
-import OSLog
+import SwiftyBeaver
 
 /// OpenAI 兼容格式的 LLM API 实现
 struct OpenAICompatibleProvider: LLMAPIProvider {
     private let session: any URLSessionProtocol
-    private let logger = Logger(subsystem: "com.autoplan.client", category: "OpenAI")
 
     init(session: any URLSessionProtocol = URLSession.shared) {
         self.session = session
@@ -35,8 +34,8 @@ struct OpenAICompatibleProvider: LLMAPIProvider {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try JSONEncoder().encode(payload)
 
-        logger.info("📨 发送 LLM 请求，模型: \(payload.model)")
-        logger.debug("📝 提示词内容:\n\(prompt)")
+        logger.info("📨 发送 LLM 请求，模型: \(payload.model)", context: "OpenAI")
+        logger.debug("📝 提示词内容:\n\(prompt)", context: "OpenAI")
 
         let (data, response): (Data, URLResponse)
         do {
@@ -50,7 +49,7 @@ struct OpenAICompatibleProvider: LLMAPIProvider {
         }
 
         guard (200...299).contains(httpResp.statusCode) else {
-            logger.error("API Error: \(String(data: data, encoding: .utf8) ?? "Unknown")")
+            logger.error("API Error: \(String(data: data, encoding: .utf8) ?? "Unknown")", context: "OpenAI")
             throw LLMError.serverError(statusCode: httpResp.statusCode)
         }
 

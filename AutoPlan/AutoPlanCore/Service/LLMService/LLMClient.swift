@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import OSLog
+import SwiftyBeaver
 
 // MARK: - 网络层协议（用于测试注入）
 
@@ -27,7 +27,13 @@ enum LLMError: Error, LocalizedError {
     var errorDescription: String? {
         switch self {
         case .networkError(let err): return String(localized: "网络连接错误: \(err.localizedDescription)")
-        case .serverError(let code): return String(localized: "服务器报错 (代码: \(code))")
+        case .serverError(let code):
+            switch code {
+            case 401: return String(localized: "API Key 无效或已过期")
+            case 429: return String(localized: "请求过于频繁，请稍后再试")
+            case 500...599: return String(localized: "服务器内部错误，请稍后再试")
+            default: return String(localized: "服务器报错 (代码: \(code))")
+            }
         case .noContent: return String(localized: "AI 未返回有效内容")
         case .decodingFailed(let err): return String(localized: "数据解析失败: \(err.localizedDescription)")
         }
@@ -71,7 +77,6 @@ extension LLMClient {
 public struct LLMClient: Sendable {
     public static let shared = LLMClient()
     private let parser = JsonParser()
-    private let logger = Logger(subsystem: "com.autoplan.client", category: "LLM")
     private let openAIProvider: OpenAICompatibleProvider
     private let anthropicProvider: AnthropicProvider
 

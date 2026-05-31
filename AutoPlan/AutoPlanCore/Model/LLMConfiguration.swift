@@ -19,6 +19,7 @@ public struct LLMConfiguration: Codable, Sendable, Identifiable {
     public var extraParameters: [String: CodableValue] = [:]
     public var origin: LLMConfigurationOrigin = .user
     public var display: Bool = true
+    public var isUserCustomModel: Bool = false
 
     /// 获得最终请求用的 baseURL
     public func resolvedBaseURL(using provider: LLMServiceProvider?) -> String {
@@ -63,7 +64,9 @@ public struct LLMServiceProvider: Codable, Sendable, Identifiable {
     public let supportedFeatures: [String]? // 可选功能标签: "streaming", "reasoning", "function_calling"
     public let description: String?    // 简介
     public var apiPlatfromURL: URL? // 该服务商 API Key 管理页面链接
-    public var userExtraModels: [String]?
+    public var isUserCustomProvider: Bool {
+        UserLLMConfigStore.shared.userProviders.contains { $0.name == name }
+    }
     
     /// 缓存已加载的 Logo，避免 SwiftUI 重绘时重复创建 NSImage 导致 SVG 闪烁
     nonisolated(unsafe) private static var logoCache: [String: NSImage] = [:]

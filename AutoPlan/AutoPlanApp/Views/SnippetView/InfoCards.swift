@@ -6,8 +6,6 @@
 //
 
 import SwiftUI
-import OSLog
-import os.log
 
 
 

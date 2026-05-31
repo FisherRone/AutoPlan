@@ -79,18 +79,38 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 - 采取最小化修改策略。
 - 优先检查并使用已实现的服务和资源，不重复造轮子。
 - 必须 100% 相信用户提供的当前状态的描述。并且你的思考方向不能和这些描述冲突。
-- 思考大于 3 轮，且无确凿结论时。尝试进行以下操作之一：
-  - 查文档。
-  - 直接汇报思考结果，并提示用户重启 xcode 并清理缓存，然后重新编译运行。不硬猜。
-  - 直接汇报思考结果，并向用户提出关键问题。
-  - 因为事情往往没你想得那么复杂。
-- 对于你不太了解的东西，必须查文档！！！
+- 写 UI 组件时，或 debug 时，必须用 xcode mcp 查文档！！！
+- 对于你不太了解的东西，必须用 xcode mcp 查文档！！！
 
+⛔️ 禁止直接编辑 AutoPlan/AutoPlan.xcodeproj
 
 - LSP 报的 Internal SourceKit error 是 Swift Package Manager 在 Xcode 外部分析的已知问题，不是代码语法错误。看到它就直接忽略。
 
-### 测试
-- AutoPlanCore 内的测试无法通过 mcp 运行，必须由开发者手动用 Xcode 打开 AutoPlanCore 后运行。
+### 测试 & DEBUG
+- xcode mcp 可编译，查看报错 和 issue
+- 使用 log：
+```swift
+// 任意代码文件中：
+import SwiftyBeaver
+logger.info("任务开始")
+logger.debug("缓存命中", context: "CacheManager")
+anyWarningMessage.log() // WarningMessage 对象直接 log
+```
+
+### 错误处理设计
+
+#### 错误类型定义
+- **Error + LocalizedError**：异常流程，`throw`/`catch` 传播，中断执行。用于网络失败、解码错误等底层/后台代码。
+- **WarningMessage**：用于"保存失败"等上层代码。
+  - 提供了.log() 方法 和 .uiNote()，详见 ErrorService.swift
+  - 设计目的是用于方便地 log 和 UI 展示。
+- **怎么选**：
+  - 后台报错：需要传播/直接中断 ➡️ 用 Error
+  - 前台用户的操作有问题/失败：只需要 log、 UI 展示，➡️ 用 WarningMessage
+
+#### 代码内统一管理
+- 错误定义在所属代码文件的前面统一管理。参考 ErrorService.swift，OCR.swift
+
 
 ### 清理
 - 遇到不明不白的 bug，可能可以通过清理来解决。

@@ -7,7 +7,7 @@
 
 import SwiftUI
 import EventKit
-import OSLog
+import SwiftyBeaver
 
 // MARK: - EventStore 协议（用于测试注入）
 
@@ -100,7 +100,6 @@ final class EventService {
     static let shared = EventService()
     internal let eventStore = EKEventStore()
     private let store: any EventStoreProtocol
-    private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "App", category: "EventService")
     private var appDefaultEventListID: String? {
         get { UserDefaults.standard.string(forKey: "AppDefaultEventListID") }
         set { UserDefaults.standard.set(newValue, forKey: "AppDefaultEventListID") }
@@ -141,10 +140,10 @@ final class EventService {
             case .reminder:
                 identifier = try await saveToReminders(item)
             }
-            logger.info("🚀 Saved successfully: \(item.title, privacy: .public)")
+            logger.info("🚀 Saved successfully: \(item.title)", context: "EventService")
             return identifier
         } catch {
-            logger.error("❌ Save failed: \(error.localizedDescription)")
+            logger.error("❌ Save failed: \(error.localizedDescription)", context: "EventService")
             throw EventServiceError.saveFailed(error)
         }
     }
@@ -203,12 +202,12 @@ final class EventService {
         let cachedID = (type == .event) ? appDefaultEventListID : appDefaultReminderListID
         
         if let id = cachedID, let cachedCal = store.calendar(withIdentifier: id) {
-            logger.info("🔄 Recovered AppDefault calendar: \(cachedCal.title)")
+            logger.info("🔄 Recovered AppDefault calendar: \(cachedCal.title)", context: "EventService")
             return createListInfo(from: cachedCal, type: type)
         }
         
         // 3. 既没有系统默认，缓存的也找不到 (可能被用户删了)，初始化 "AutoPlan"
-        logger.notice("🆕 Creating new 'AutoPlan' calendar for \(type == .event ? "Events" : "Reminders")")
+        logger.warning("🆕 Creating new 'AutoPlan' calendar for \(type == .event ? "Events" : "Reminders")", context: "EventService")
         let newCal = try await createAutoPlanCalendar(for: type)
         
         // 4. 更新缓存

@@ -7,9 +7,40 @@
 
 import Foundation
 import Observation
+import SwiftyBeaver
 #if os(macOS)
 import AppKit
 #endif
+
+enum UserLLMConfigStoreWarning {
+    case loadFailed
+    case saveFailed
+    case directoryCreationFailed(String)
+    
+    var message: WarningMessage {
+        switch self {
+        case .loadFailed:
+            return WarningMessage(
+                id: "userLLMConfig.loadFailed",
+                severity: .error,
+                logText: "UserLLMConfigStore: failed to load config file"
+            )
+        case .saveFailed:
+            return WarningMessage(
+                id: "userLLMConfig.saveFailed",
+                severity: .error,
+                userText: String(localized: "配置保存失败"),
+                logText: "UserLLMConfigStore: failed to save config file"
+            )
+        case .directoryCreationFailed(let path):
+            return WarningMessage(
+                id: "userLLMConfig.directoryCreationFailed",
+                severity: .error,
+                logText: "UserLLMConfigStore: failed to create directory at \(path)"
+            )
+        }
+    }
+}
 
 // MARK: - Data Models
 
@@ -64,6 +95,7 @@ public final class UserLLMConfigStore {
 
     private(set) public var userProviders: [UserLLMProvider] = []
     private(set) public var userModels: [UserLLMModel] = []
+    private(set) public var lastSaveFailed = false
 
     private let fileName = "user_providers_v1.json"
 
@@ -76,7 +108,11 @@ public final class UserLLMConfigStore {
     }
 
     static var appSupportDir: URL {
-        let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        guard let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
+            logger.error("无法获取 Application Support 目录", context: "UserLLMConfigStore")
+            return FileManager.default.homeDirectoryForCurrentUser
+                .appendingPathComponent("Library/Application Support/AutoPlan")
+        }
         return base.appendingPathComponent("AutoPlan")
     }
 
@@ -86,8 +122,16 @@ public final class UserLLMConfigStore {
     }
 
     private func ensureDirectoryExists() {
-        try? FileManager.default.createDirectory(at: Self.appSupportDir, withIntermediateDirectories: true)
-        try? FileManager.default.createDirectory(at: logoDir, withIntermediateDirectories: true)
+        do {
+            try FileManager.default.createDirectory(at: Self.appSupportDir, withIntermediateDirectories: true)
+        } catch {
+            UserLLMConfigStoreWarning.directoryCreationFailed(Self.appSupportDir.path).message.log()
+        }
+        do {
+            try FileManager.default.createDirectory(at: logoDir, withIntermediateDirectories: true)
+        } catch {
+            UserLLMConfigStoreWarning.directoryCreationFailed(logoDir.path).message.log()
+        }
     }
 
     // MARK: - Persistence
@@ -100,17 +144,19 @@ public final class UserLLMConfigStore {
             userProviders = config.userLLMProviders
             userModels = config.userModels
         } catch {
-            // 文件损坏或格式不兼容，保留空数据
+            UserLLMConfigStoreWarning.loadFailed.message.log()
         }
     }
 
     private func save() {
+        lastSaveFailed = false
         let config = UserLLMConfigData(userLLMProviders: userProviders, userModels: userModels)
         do {
             let data = try JSONEncoder().encode(config)
             try data.write(to: fileURL, options: .atomic)
         } catch {
-            // 保存失败
+            lastSaveFailed = true
+            UserLLMConfigStoreWarning.saveFailed.message.log()
         }
     }
 
@@ -151,6 +197,12 @@ public final class UserLLMConfigStore {
 
     public func deleteModels(forProvider providerName: String) {
         userModels.removeAll { $0.providerName == providerName }
+        save()
+    }
+
+    public func renameModel(oldName: String, providerName: String, newName: String) {
+        guard let idx = userModels.firstIndex(where: { $0.name == oldName && $0.providerName == providerName }) else { return }
+        userModels[idx].name = newName
         save()
     }
 
@@ -242,6 +294,7 @@ public final class UserLLMConfigStore {
     public func toModelConfiguration(_ user: UserLLMModel) -> LLMConfiguration {
         var config = LLMConfiguration(name: user.name, origin: .user)
         config.providerID = user.providerName
+        config.isUserCustomModel = true
         return config
     }
 }

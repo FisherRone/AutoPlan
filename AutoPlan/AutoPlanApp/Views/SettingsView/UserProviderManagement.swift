@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftyBeaver
 import UniformTypeIdentifiers
 
 extension UTType {
@@ -15,23 +16,39 @@ extension UTType {
 }
 
 // MARK: - Add Provider Warning Enum
-
-
 enum AddProviderWarning {
     case providerNameTaken
     case urlHasChatCompletions
-
-    var uiText: Text {
+    case logoSaveFailed
+    
+    var message: WarningMessage {
         switch self {
         case .providerNameTaken:
-            return Text("服务商名称已存在")
-                .foregroundColor(.red)
-                .font(.caption)
+            return WarningMessage(
+                id: "addProvider.nameTaken",
+                severity: .error,
+                userText: String(localized: "服务商名称已存在"),
+                logText: "AddProvider: provider name already taken"
+            )
         case .urlHasChatCompletions:
-            return Text("Base URL 中不可以包含 \"/chat/completions\"")
-                .foregroundColor(.orange)
-                .font(.caption)
+            return WarningMessage(
+                id: "addProvider.urlHasChatCompletions",
+                severity: .warning,
+                userText: String(localized: "Base URL 中不可以包含 \"/chat/completions\""),
+                logText: "AddProvider: baseURL contains /chat/completions"
+            )
+        case .logoSaveFailed:
+            return WarningMessage(
+                id: "addProvider.logoSaveFailed",
+                severity: .error,
+                userText: String(localized: "Logo 保存失败"),
+                logText: "AddProvider: logo save failed"
+            )
         }
+    }
+    
+    var uiText: Text {
+        message.uiNote()
     }
 }
 
@@ -52,6 +69,8 @@ struct AddProviderSheet: View {
     @State private var selectedLogoURL: URL?
     @State private var showLogoPicker = false
     @State private var showCancelConfirm = false
+    @State private var logoSaveWarning: AddProviderWarning?
+    @State private var showSaveFailed = false
 
     private var hasContent: Bool {
         !name.isEmpty || !displayName.isEmpty || !baseURL.isEmpty || !apiKey.isEmpty || !apiPlatfromURLString.isEmpty || !models.isEmpty || selectedLogoURL != nil
@@ -91,6 +110,10 @@ struct AddProviderSheet: View {
                         Button("清除") { selectedLogoURL = nil }
                             .foregroundColor(.red)
                     }
+                }
+                
+                if let warning = logoSaveWarning {
+                    warning.uiText
                 }
 
                 Section("添加模型") {
@@ -133,12 +156,17 @@ struct AddProviderSheet: View {
             }
             .padding()
         }
-        .frame(width: 420, height: 580)
+        .frame(width: 420, height: 520)
         .alert("放弃编辑？", isPresented: $showCancelConfirm) {
             Button("放弃", role: .destructive) { dismiss() }
             Button("继续编辑", role: .cancel) {}
         } message: {
             Text("已填写的内容不会被保存。")
+        }
+        .alert(String(localized: "配置保存失败"), isPresented: $showSaveFailed) {
+            Button("好的", role: .cancel) {}
+        } message: {
+            Text(String(localized: "无法保存服务商配置，请检查磁盘空间或文件权限。"))
         }
         .fileImporter(
             isPresented: $showLogoPicker,
@@ -185,11 +213,19 @@ struct AddProviderSheet: View {
         
         // 1. 保存 Provider
         store.addProvider(provider)
+        
+        if store.lastSaveFailed {
+            showSaveFailed = true
+            return
+        }
 
         // 2. 保存 API Key（可选）
         let trimmedAPIKey = apiKey.trimmingCharacters(in: .whitespaces)
         if !trimmedAPIKey.isEmpty {
-            APIKeyStore.save(for: trimmedName, value: trimmedAPIKey)
+            if !APIKeyStore.save(for: trimmedName, value: trimmedAPIKey) {
+                showSaveFailed = true
+                return
+            }
         }
 
         // 3. 保存模型列表（可选，去重）
@@ -201,7 +237,12 @@ struct AddProviderSheet: View {
 
         // 4. 保存 Logo
         if let logoURL = selectedLogoURL {
-            try? store.saveLogo(for: trimmedName, from: logoURL)
+            do {
+                try store.saveLogo(for: trimmedName, from: logoURL)
+            } catch {
+                AddProviderWarning.logoSaveFailed.message.log()
+                logoSaveWarning = .logoSaveFailed
+            }
         }
         dismiss()
     }
@@ -215,8 +256,15 @@ struct AddModelSheet: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var name = ""
-    @State private var selectedProviderName = ""
+    @State private var selectedProviderName: String
     @State private var showCancelConfirm = false
+    @State private var isSaving = false
+
+    init(store: UserLLMConfigStore, providers: [LLMServiceProvider]) {
+        self.store = store
+        self.providers = providers
+        _selectedProviderName = State(initialValue: providers.first?.name ?? "")
+    }
 
     private var hasContent: Bool {
         !name.isEmpty
@@ -238,11 +286,6 @@ struct AddModelSheet: View {
                 }
             }
             .formStyle(.grouped)
-            .onAppear {
-                if selectedProviderName.isEmpty, let first = providers.first {
-                    selectedProviderName = first.name
-                }
-            }
 
             if !validationMessage.isEmpty {
                 Text(validationMessage)
@@ -278,7 +321,7 @@ struct AddModelSheet: View {
     }
 
     private var validationMessage: String {
-        guard !name.isEmpty, !selectedProviderName.isEmpty else { return "" }
+        guard !isSaving, !name.isEmpty, !selectedProviderName.isEmpty else { return "" }
         if store.isModelNameTaken(name, inProvider: selectedProviderName) {
             return "该服务商下已存在同名模型"
         }
@@ -288,6 +331,7 @@ struct AddModelSheet: View {
     private func save() {
         let trimmedName = name.trimmingCharacters(in: .whitespaces)
         guard !store.isModelNameTaken(trimmedName, inProvider: selectedProviderName) else { return }
+        isSaving = true
         store.addModel(UserLLMModel(name: trimmedName, providerName: selectedProviderName))
         dismiss()
     }
@@ -337,6 +381,14 @@ struct ManageModelsSheet: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var showDeleteConfirm: (name: String, providerName: String)?
+    @State private var newModelName = ""
+    @State private var renamingModel: RenameTarget?
+
+    struct RenameTarget: Identifiable {
+        let name: String
+        let providerName: String
+        var id: String { "\(providerName)/\(name)" }
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -355,6 +407,14 @@ struct ManageModelsSheet: View {
                         Text(model.name)
                         Spacer()
                         if model.origin == .user {
+                            Button {
+                                renamingModel = RenameTarget(name: model.name, providerName: provider.name)
+                            } label: {
+                                Image(systemName: "pencil")
+                            }
+                            .buttonStyle(.borderless)
+                            .help("重命名")
+
                             Button(role: .destructive) {
                                 showDeleteConfirm = (model.name, provider.name)
                             } label: {
@@ -364,6 +424,21 @@ struct ManageModelsSheet: View {
                         }
                     }
                 }
+
+                HStack {
+                    Image(systemName: "plus.circle.fill")
+                        .foregroundColor(.secondary)
+                    TextField("添加模型，按回车确认", text: $newModelName)
+                        .textFieldStyle(.plain)
+                        .onSubmit {
+                            let trimmed = newModelName.trimmingCharacters(in: .whitespaces)
+                            guard !trimmed.isEmpty else { return }
+                            guard !viewModel.store.isModelNameTaken(trimmed, inProvider: provider.name) else { return }
+                            viewModel.store.addModel(UserLLMModel(name: trimmed, providerName: provider.name))
+                            newModelName = ""
+                        }
+                }
+                .padding(.vertical, 4)
             }
 
             HStack {
@@ -395,5 +470,68 @@ struct ManageModelsSheet: View {
                 Text("确定删除模型「\(item.name)」吗？")
             }
         }
+        .sheet(item: $renamingModel) { target in
+            RenameModelSheet(
+                store: viewModel.store,
+                oldName: target.name,
+                providerName: target.providerName
+            )
+        }
+    }
+}
+
+// MARK: - Rename Model Sheet
+
+struct RenameModelSheet: View {
+    let store: UserLLMConfigStore
+    let oldName: String
+    let providerName: String
+    @Environment(\.dismiss) private var dismiss
+
+    @State private var newName = ""
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Text("重命名模型")
+                .font(.headline)
+
+            TextField("模型名称", text: $newName)
+                .textFieldStyle(.roundedBorder)
+
+            if !validationMessage.isEmpty {
+                Text(validationMessage)
+                    .foregroundColor(.red)
+                    .font(.caption)
+            }
+
+            HStack {
+                Button("取消") { dismiss() }
+                    .keyboardShortcut(.cancelAction)
+                Spacer()
+                Button("保存") {
+                    store.renameModel(oldName: oldName, providerName: providerName, newName: newName.trimmingCharacters(in: .whitespaces))
+                    dismiss()
+                }
+                .keyboardShortcut(.defaultAction)
+                .disabled(!isValid)
+            }
+        }
+        .padding()
+        .frame(width: 300)
+        .onAppear { newName = oldName }
+    }
+
+    private var isValid: Bool {
+        let trimmed = newName.trimmingCharacters(in: .whitespaces)
+        return !trimmed.isEmpty && trimmed != oldName && validationMessage.isEmpty
+    }
+
+    private var validationMessage: String {
+        let trimmed = newName.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty, trimmed != oldName else { return "" }
+        if store.isModelNameTaken(trimmed, inProvider: providerName) {
+            return "该服务商下已存在同名模型"
+        }
+        return ""
     }
 }

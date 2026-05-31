@@ -1,13 +1,29 @@
 // AutoPlanCore/Sources/AutoPlanEngine.swift
 import Foundation
 import CoreGraphics
-import OSLog
+import SwiftyBeaver
 
-private let logger = Logger(subsystem: "AutoPlanCore", category: "Engine")
-
-public enum AutoPlanError: Error {
+public enum AutoPlanError: Error, LocalizedError {
     case noItemsRecognized
     case saveFailed(itemTitle: String)
+    case modelNameNotSelected
+    case modelConfigNotFound(String)
+    case apiKeyNotConfigured(String)
+    
+    public var errorDescription: String? {
+        switch self {
+        case .noItemsRecognized:
+            return String(localized: "未能识别到任何日程或提醒事项")
+        case .saveFailed(let itemTitle):
+            return String(localized: "保存「\(itemTitle)」失败")
+        case .modelNameNotSelected:
+            return String(localized: "请先选择一个模型")
+        case .modelConfigNotFound(let name):
+            return String(localized: "未找到模型「\(name)」的配置")
+        case .apiKeyNotConfigured(let providerID):
+            return String(localized: "服务商「\(providerID)」的 API Key 未配置")
+        }
+    }
 }
 
 public struct AutoPlanEngine {
@@ -20,7 +36,7 @@ public struct AutoPlanEngine {
     
     
     public static func process(_ input: String = "", cgImages: [CGImage]? = nil, context: LLMRequestContext? = nil) async throws -> [EventItem] {
-        logger.info("▶️ process 开始, input.len=\(input.count), images=\(cgImages?.count ?? 0)")
+        logger.info("▶️ process 开始, input.len=\(input.count), images=\(cgImages?.count ?? 0)", context: "Engine")
         
         // 1. OCR: 对每张图片执行文字识别
         var ocrResults: [Int: String] = [:]
@@ -30,15 +46,15 @@ public struct AutoPlanEngine {
                     let text = try await ocr(cgImage: image)
                     ocrResults[index] = text
                 } catch {
-                    ocrResults[index] = "[OCR failed: \(error.localizedDescription)]"
+                    logger.error("❌ OCR failed for image \(index): \(error.localizedDescription)", context: "Engine")
                 }
             }
         }
         
         // 2. 构建配置（获取用户可写日历/提醒列表，合并持久化设置）
-        logger.info("📋 获取系统列表...")
+        logger.info("📋 获取系统列表...", context: "Engine")
         let settings = try await ListStore.refresh()
-        logger.info("✅ 获取到 \(settings.userCalendarLists.count) 个日历列表, \(settings.userReminderLists.count) 个提醒列表")
+        logger.info("✅ 获取到 \(settings.userCalendarLists.count) 个日历列表, \(settings.userReminderLists.count) 个提醒列表", context: "Engine")
         
         // 3. 构造提示词（传入列表描述供 LLM 参考）
         let systemPrompt = PromptBuilder.buildSystemPrompt(
@@ -52,44 +68,41 @@ public struct AutoPlanEngine {
         let requestContext: LLMRequestContext
         if let ctx = context {
             requestContext = ctx
-        } else if let ctx = resolveRequestContext() {
-            requestContext = ctx
         } else {
-            throw AutoPlanError.noItemsRecognized
+            requestContext = try resolveRequestContext()
         }
         
-        logger.info("📤 调用 LLM...")
+        logger.info("📤 调用 LLM...", context: "Engine")
         let eventItems = try await getEventItem(prompt: fullPrompt, settings: settings, context: requestContext)
-        logger.info("✅ LLM 返回 \(eventItems.count) 个日程项")
+        logger.info("✅ LLM 返回 \(eventItems.count) 个日程项", context: "Engine")
         
         return eventItems
     }
     
     /// 从 UserDefaults 读取用户选中的模型，构建 LLMRequestContext
-    private static func resolveRequestContext() -> LLMRequestContext? {
+    private static func resolveRequestContext() throws -> LLMRequestContext {
         let selectedModelName = UserDefaults.standard.string(forKey: "selectedModelName") ?? ""
         guard !selectedModelName.isEmpty else {
-            logger.error("❌ resolveRequestContext 失败: selectedModelName 为空")
-            return nil
+            logger.error("resolveRequestContext 失败: selectedModelName 为空", context: "Engine")
+            throw AutoPlanError.modelNameNotSelected
         }
-        logger.debug("selectedModelName = \(selectedModelName)")
+        logger.debug("selectedModelName = \(selectedModelName)", context: "Engine")
         
-        // 从系统配置中查找匹配的模型
         let matchedModel = SystemLLMConfig.models.first { $0.name == selectedModelName }
         guard let model = matchedModel else {
             let availableNames = SystemLLMConfig.models.map { $0.name }
-            logger.error("❌ resolveRequestContext 失败: 未找到模型 \(selectedModelName), 可用模型: \(availableNames)")
-            return nil
+            logger.error("resolveRequestContext 失败: 未找到模型 \(selectedModelName), 可用模型: \(availableNames)", context: "Engine")
+            throw AutoPlanError.modelConfigNotFound(selectedModelName)
         }
-        logger.debug("找到模型: \(model.name), providerID: \(model.providerID ?? "nil")")
+        logger.debug("找到模型: \(model.name), providerID: \(model.providerID ?? "nil")", context: "Engine")
         
         let service = LLMService(
             systemProviders: SystemLLMConfig.providers,
             userModels: { [] }
         )
-        let context = service.requestContext(for: model)
-        if context == nil {
-            logger.error("❌ resolveRequestContext 失败: LLMService.requestContext 返回 nil (API Key 可能未配置)")
+        guard let context = service.requestContext(for: model) else {
+            logger.error("resolveRequestContext 失败: API Key 未配置, providerID=\(model.providerID ?? "nil")", context: "Engine")
+            throw AutoPlanError.apiKeyNotConfigured(model.providerID ?? selectedModelName)
         }
         return context
     }
@@ -103,16 +116,16 @@ public struct AutoPlanEngine {
     
     private static func getEventItem(prompt: String, settings: CoreConfiguration, context: LLMRequestContext) async throws -> [EventItem] {
         // 4. 调用 LLM，解析 JSON 为日程项
-        logger.info("🤖 LLM 解析中...")
+        logger.info("🤖 LLM 解析中...", context: "Engine")
         let tempItems: [TempEventItem] = try await LLMClient.shared.generate(
             prompt: prompt,
             context: context,
             as: [TempEventItem].self
         )
-        logger.info("📦 LLM 原始返回 \(tempItems.count) 项")
+        logger.info("📦 LLM 原始返回 \(tempItems.count) 项", context: "Engine")
         
         guard !tempItems.isEmpty else {
-            logger.warning("⚠️ LLM 返回了空数组")
+            logger.warning("⚠️ LLM 返回了空数组", context: "Engine")
             throw AutoPlanError.noItemsRecognized
         }
         

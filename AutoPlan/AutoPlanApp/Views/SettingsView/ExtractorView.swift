@@ -7,6 +7,23 @@
 
 import SwiftUI
 import SymbolPicker
+import SwiftyBeaver
+
+enum ExtractorViewWarning {
+    case refreshFailed
+    
+    var message: WarningMessage {
+        switch self {
+        case .refreshFailed:
+            return WarningMessage(
+                id: "extractor.refreshFailed",
+                severity: .error,
+                userText: String(localized: "刷新失败，请检查日历权限"),
+                logText: "ExtractorView: list refresh failed"
+            )
+        }
+    }
+}
 
 // MARK: - List Managing Protocol
 
@@ -50,6 +67,7 @@ final class ExtractorViewModel {
     var calendarLists: [ListInfo] = []
     var reminderLists: [ListInfo] = []
     var isLoading = false
+    var lastRefreshFailed = false
 
     private let service: ListManaging
 
@@ -59,13 +77,15 @@ final class ExtractorViewModel {
     
     func refresh() async {
         isLoading = true
+        lastRefreshFailed = false
         defer { isLoading = false }
         do {
             let result = try await service.fetchLists()
             calendarLists = result.calendarLists
             reminderLists = result.reminderLists
         } catch {
-            // 静默失败，保持现有列表
+            ExtractorViewWarning.refreshFailed.message.log()
+            lastRefreshFailed = true
         }
     }
     
@@ -141,87 +161,7 @@ struct ExtractorView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Text("提示词").subtitle()
-                // 自定义提示词开关
-                HStack {
-                    Text("自定义提示词")
-                        .font(.body)
-
-                    Button("编辑...") {
-                        openExtractionPromptInEditor()
-                    }
-                    .buttonStyle(.borderless)
-                    .foregroundColor(.accentColor)
-
-                    Button("查看示例") {
-                        showTemplate = true
-                    }
-                    .buttonStyle(.borderless)
-                    .foregroundColor(.accentColor)
-
-                    Button("占位符说明") {
-                        showPromptVariables = true
-                    }
-                    .buttonStyle(.borderless)
-                    .foregroundColor(.accentColor)
-
-                    Spacer()
-
-                    Toggle("", isOn: Binding(
-                        get: { AppSettings.shared.useCustomExtractionPrompt },
-                        set: { newValue in
-                            if newValue {
-                                PromptBuilder.ensureCustomPromptFileExists()
-                            }
-                            AppSettings.shared.useCustomExtractionPrompt = newValue
-                        }
-                    ))
-                    .toggleStyle(.switch)
-                    .labelsHidden()
-                    .controlSize(.small)
-                }
-                .alert("无法打开文件", isPresented: $openFailed) {
-                    Button("好", role: .cancel) {}
-                } message: {
-                    Text("无法用默认应用打开自定义提示词文件。")
-                }
-
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading) {
-                        Text("用户规则")
-                        Text("在现有提示词的基础之上").font(.footnote).foregroundStyle(.secondary)
-                        Text("施加额外的规则。").font(.footnote).foregroundStyle(.secondary)
-                    }.frame(maxWidth: 120)
-                    
-                    TextEditor(text: $userInstruction)
-                        .font(.body)
-                        .frame(minHeight: 80, maxHeight: 80)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 6)
-                                .stroke(Color.secondary.opacity(0.3), lineWidth: 1)
-                        )
-                        .onChange(of: userInstruction) { _, newValue in
-                            AppSettings.shared.userInstruction = newValue
-                        }
-                }
                 
-                Text("工作模式").subtitle()
-
-                // 需要确认开关
-                HStack {
-                    Text("需要确认")
-                    Spacer()
-                    Toggle("", isOn: Binding(
-                        get: { AppSettings.shared.needsConfirmation },
-                        set: { AppSettings.shared.needsConfirmation = $0 }
-                    ))
-                    .toggleStyle(.switch)
-                    .labelsHidden()
-                    .controlSize(.small)
-                }
-
-                Divider()
-                    .padding(.vertical, 4)
 
                 // 标题栏
                 HStack {
@@ -284,9 +224,14 @@ struct ExtractorView: View {
                 }
                 
                 if viewModel.calendarLists.isEmpty && viewModel.reminderLists.isEmpty && !viewModel.isLoading {
-                    Text("未找到可用列表，请检查日历权限后刷新。")
-                        .foregroundColor(.secondary)
-                        .padding()
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("未找到可用列表，请检查日历权限后刷新。")
+                            .foregroundColor(.secondary)
+                        if viewModel.lastRefreshFailed {
+                            ExtractorViewWarning.refreshFailed.message.uiNote()
+                        }
+                    }
+                    .padding()
                 }
             }
             .padding(20)

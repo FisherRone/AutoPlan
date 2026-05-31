@@ -7,7 +7,6 @@
 
 import SwiftUI
 import AppIntents
-import OSLog
 
 // MARK: - Preview Snippet View
 

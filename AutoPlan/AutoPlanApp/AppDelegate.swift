@@ -1,8 +1,6 @@
 import Cocoa
 import SwiftUI
-import OSLog
-
-nonisolated private let appLogger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "AutoPlan", category: "AppDelegate")
+import SwiftyBeaver
 
 // MARK: - App Delegate
 
@@ -144,7 +142,7 @@ final class MenuBarController: NSObject {
                         let (_, savedEvents) = try await AutoPlanEngine.saveItems(selected)
                         showSavedPopover(events: savedEvents)
                     } catch {
-                        appLogger.error("❌ 保存失败: \(error.localizedDescription)")
+                        logger.error("❌ 保存失败: \(error.localizedDescription)", context: "AppDelegate")
                         showErrorPopover(message: "保存失败: \(error.localizedDescription)")
                     }
                 } else {
@@ -153,7 +151,7 @@ final class MenuBarController: NSObject {
             } catch AutoPlanError.noItemsRecognized {
                 showErrorPopover(message: "未识别到任何日程或提醒事项。")
             } catch {
-                appLogger.error("❌ 提取失败: \(error.localizedDescription)")
+                logger.error("❌ 提取失败: \(error.localizedDescription)", context: "AppDelegate")
                 showErrorPopover(message: "提取失败: \(error.localizedDescription)")
             }
         }
@@ -179,7 +177,7 @@ final class MenuBarController: NSObject {
                             self?.showSavedPopover(events: savedEvents)
                         }
                     } catch {
-                        appLogger.error("❌ 保存失败: \(error.localizedDescription)")
+                        logger.error("❌ 保存失败: \(error.localizedDescription)", context: "AppDelegate")
                         await MainActor.run {
                             self?.showErrorPopover(message: "保存失败: \(error.localizedDescription)")
                         }

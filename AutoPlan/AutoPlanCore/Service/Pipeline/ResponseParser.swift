@@ -59,8 +59,8 @@ enum JsonParserError: Error, LocalizedError {
         switch self {
         case .invalidUTF8String:
             return String(localized: "无法将提取的 JSON 字符串转换为 UTF-8 数据")
-        case .decodingFailed(let error):
-            return String(localized: "JSON 解码失败: \(error.localizedDescription)")
+        case .decodingFailed:
+            return String(localized: "AI 返回格式异常，请重试")
         }
     }
 }

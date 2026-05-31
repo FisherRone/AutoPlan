@@ -9,9 +9,7 @@
 // Sources/AutoPlanCore/Service/EventService/ListMatcher.swift
 
 import Foundation
-import OSLog
-
-private let logger = Logger(subsystem: "AutoPlanCore", category: "ListMatcher")
+import SwiftyBeaver
 
 public struct ListMatchResult {
     public let matchedInfo: ListInfo?
@@ -42,13 +40,13 @@ public struct ListMatcher {
         }
 
         if matches.isEmpty {
-            logger.info("未找到匹配列表: \(name), 将使用系统默认")
+            logger.info("未找到匹配列表: \(name), 将使用系统默认", context: "ListMatcher")
             return ListMatchResult(matchedInfo: nil, status: ListMatchStatus.defaulted)
         }
 
         if matches.count > 1 {
             let warning = String(localized: "找到多个名为 '\(name)' 的列表，已选择第一个。")
-            logger.warning("\(warning)")
+            logger.warning("\(warning)", context: "ListMatcher")
             return ListMatchResult(matchedInfo: matches.first, status: ListMatchStatus.multipleMatches)
         }
 

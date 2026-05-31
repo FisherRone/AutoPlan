@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		C00B7D892FB421FF00669DD5 /* 提取日程.shortcut in Resources */ = {isa = PBXBuildFile; fileRef = C00B7D882FB421FF00669DD5 /* 提取日程.shortcut */; };
 		C0311C952FB18AD200E7DD64 /* SymbolPicker in Frameworks */ = {isa = PBXBuildFile; productRef = C0311C942FB18AD200E7DD64 /* SymbolPicker */; };
+		C053465C2FCBE5D000B17E43 /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = C053465B2FCBE5D000B17E43 /* SwiftyBeaver */; };
 		C0616B9A2FC9327F00A3533C /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = C0616B992FC9327F00A3533C /* Localizable.xcstrings */; };
 		C0B9637A2FB3827E0033B675 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = C0B963792FB3827E0033B675 /* AppIcon.icon */; };
 /* End PBXBuildFile section */
@@ -63,6 +64,11 @@
 			path = AutoPlanApp;
 			sourceTree = "<group>";
 		};
+		C05346592FCBDEA300B17E43 /* Utils */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		C0616B9E2FC987B500A3533C /* AutoPlanCore */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = AutoPlanCore;
@@ -81,6 +87,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0311C952FB18AD200E7DD64 /* SymbolPicker in Frameworks */,
+				C053465C2FCBE5D000B17E43 /* SwiftyBeaver in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -97,6 +104,7 @@
 		C00E22322FB0360A008CAB38 = {
 			isa = PBXGroup;
 			children = (
+				C05346592FCBDEA300B17E43 /* Utils */,
 				C0616B9E2FC987B500A3533C /* AutoPlanCore */,
 				C0616B992FC9327F00A3533C /* Localizable.xcstrings */,
 				C00E223D2FB0360A008CAB38 /* AutoPlanApp */,
@@ -142,11 +150,13 @@
 			);
 			fileSystemSynchronizedGroups = (
 				C00E223D2FB0360A008CAB38 /* AutoPlanApp */,
+				C05346592FCBDEA300B17E43 /* Utils */,
 				C0616B9E2FC987B500A3533C /* AutoPlanCore */,
 			);
 			name = AutoPlan;
 			packageProductDependencies = (
 				C0311C942FB18AD200E7DD64 /* SymbolPicker */,
+				C053465B2FCBE5D000B17E43 /* SwiftyBeaver */,
 			);
 			productName = AutoPlanApp;
 			productReference = C0D0248D2FC6081400EF888C /* AutoPlan.app */;
@@ -207,6 +217,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				C0311C932FB18AD200E7DD64 /* XCLocalSwiftPackageReference "Packages/SymbolPicker" */,
+				C053465A2FCBE5C800B17E43 /* XCLocalSwiftPackageReference "Packages/SwiftyBeaver" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C00E223C2FB0360A008CAB38 /* Products */;
@@ -583,12 +594,21 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/SymbolPicker;
 		};
+		C053465A2FCBE5C800B17E43 /* XCLocalSwiftPackageReference "Packages/SwiftyBeaver" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/SwiftyBeaver;
+		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		C0311C942FB18AD200E7DD64 /* SymbolPicker */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SymbolPicker;
+		};
+		C053465B2FCBE5D000B17E43 /* SwiftyBeaver */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C053465A2FCBE5C800B17E43 /* XCLocalSwiftPackageReference "Packages/SwiftyBeaver" */;
+			productName = SwiftyBeaver;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

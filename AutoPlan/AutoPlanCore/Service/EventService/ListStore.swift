@@ -6,10 +6,8 @@
 //
 
 import Foundation
-import OSLog
 import os
-
-nonisolated private let logger = Logger(subsystem: "AutoPlanCore", category: "ListStore")
+import SwiftyBeaver
 
 // MARK: - 用户对单个列表的设置
 
@@ -48,7 +46,7 @@ public struct ListStore {
 
     nonisolated static func saveSettings(_ settings: [String: ListUserSettings]) {
         guard let data = try? JSONEncoder().encode(settings) else {
-            logger.error("Failed to encode ListUserSettings")
+            logger.error("Failed to encode ListUserSettings", context: "ListStore")
             return
         }
         UserDefaults.standard.set(data, forKey: storageKey)
@@ -86,7 +84,7 @@ public struct ListStore {
 
     nonisolated private static func saveUserIconMapping(_ mapping: [String: String]) {
         guard let data = try? JSONEncoder().encode(mapping) else {
-            logger.error("Failed to encode UserIconMapping")
+            logger.error("Failed to encode UserIconMapping", context: "ListStore")
             return
         }
         UserDefaults.standard.set(data, forKey: iconMappingKey)
@@ -124,7 +122,7 @@ public struct ListStore {
             }
             if !staleToRemove.isEmpty {
                 saveSettings(settings)
-                logger.info("清理了 \(staleToRemove.count) 条失效且无描述的列表设置")
+                logger.info("清理了 \(staleToRemove.count) 条失效且无描述的列表设置", context: "ListStore")
             }
             return settings
         }

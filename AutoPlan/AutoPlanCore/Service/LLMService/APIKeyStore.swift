@@ -7,6 +7,29 @@
 
 import Foundation
 import Security
+import SwiftyBeaver
+
+enum APIKeyStoreWarning {
+    case readDecodingFailed
+    case writeEncodingFailed
+    
+    var message: WarningMessage {
+        switch self {
+        case .readDecodingFailed:
+            return WarningMessage(
+                id: "apiKeyStore.readDecodingFailed",
+                severity: .error,
+                logText: "APIKeyStore: failed to decode stored keys from Keychain"
+            )
+        case .writeEncodingFailed:
+            return WarningMessage(
+                id: "apiKeyStore.writeEncodingFailed",
+                severity: .error,
+                logText: "APIKeyStore: failed to encode keys for Keychain write"
+            )
+        }
+    }
+}
 
 /// 使用 Keychain 存储 API Key，所有 Key 保存在一个条目中。
 public enum APIKeyStore {
@@ -26,16 +49,23 @@ public enum APIKeyStore {
         var result: AnyObject?
         let status = SecItemCopyMatching(query as CFDictionary, &result)
         guard status == errSecSuccess,
-              let data = result as? Data,
-              let dict = try? JSONDecoder().decode([String: String].self, from: data) else {
+              let data = result as? Data else {
+            return [:]
+        }
+        guard let dict = try? JSONDecoder().decode([String: String].self, from: data) else {
+            APIKeyStoreWarning.readDecodingFailed.message.log()
             return [:]
         }
         return dict
     }
 
     /// 向 Keychain 写入所有 API Keys
-    private static func writeAll(_ dict: [String: String]) {
-        guard let data = try? JSONEncoder().encode(dict) else { return }
+    @discardableResult
+    private static func writeAll(_ dict: [String: String]) -> Bool {
+        guard let data = try? JSONEncoder().encode(dict) else {
+            APIKeyStoreWarning.writeEncodingFailed.message.log()
+            return false
+        }
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: keychainService,
@@ -48,13 +78,14 @@ public enum APIKeyStore {
             addQuery[kSecValueData as String] = data
             SecItemAdd(addQuery as CFDictionary, nil)
         }
+        return true
     }
 
-    /// 保存某个 provider 的 API Key
-    public static func save(for providerID: String, value: String) {
+    @discardableResult
+    public static func save(for providerID: String, value: String) -> Bool {
         var dict = readAll()
         dict[providerID] = value
-        writeAll(dict)
+        return writeAll(dict)
     }
 
     /// 读取某个 provider 的 API Key

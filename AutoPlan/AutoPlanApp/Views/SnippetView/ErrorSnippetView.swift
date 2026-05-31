@@ -6,7 +6,6 @@
 //
 
 
-import OSLog
 import SwiftUI
 
 // MARK: - 错误展示视图（简单示例）

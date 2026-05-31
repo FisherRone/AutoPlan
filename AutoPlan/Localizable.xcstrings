@@ -6,6 +6,12 @@
     },
     "{{%@}}" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "{{%@}}"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -21,7 +27,26 @@
       }
     },
     "%@ 的模型" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Models of %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 的模型"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 的模型"
+          }
+        }
+      }
     },
     "%lld 条保存失败" : {
       "localizations" : {
@@ -114,7 +139,32 @@
         }
       }
     },
+    "AAAA" : {
+
+    },
     "AI 未返回有效内容" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI returned no valid content"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI 未返回有效内容"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI 未回傳有效內容"
+          }
+        }
+      }
+    },
+    "AI 返回格式异常，请重试" : {
 
     },
     "API Key" : {
@@ -140,19 +190,146 @@
       }
     },
     "API Key 平台网页链接" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "API Key Platform URL"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "API Key 平台网页链接"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "API Key 平台網頁連結"
+          }
+        }
+      }
+    },
+    "API Key 无效或已过期" : {
 
     },
     "Base URL" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Base URL"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Base URL"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Base URL"
+          }
+        }
+      }
     },
     "Base URL 中不可以包含 \"/chat/completions\"" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Base URL must not contain \"/chat/completions\""
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Base URL 中不可以包含 \"/chat/completions\""
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Base URL 中不可以包含 \"/chat/completions\""
+          }
+        }
+      }
     },
     "JSON 解码失败: %@" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "JSON decoding failed: %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "JSON 解码失败: %@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "JSON 解碼失敗: %@"
+          }
+        }
+      }
+    },
+    "LLM Providers" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LLM Providers"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LLM 服务商"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LLM 服務商"
+          }
+        }
+      }
+    },
+    "Logo 保存失败" : {
+
+    },
+    "OCR 处理失败: %@" : {
 
     },
     "为已有服务商添加新模型" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add a new model to an existing provider"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "为已有服务商添加新模型"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "為已有服務商加入新模型"
+          }
+        }
+      }
     },
     "从文本或图片中提取日程，并保存到系统日历。" : {
       "localizations" : {
@@ -221,8 +398,30 @@
         }
       }
     },
-    "保存事项失败: %@" : {
+    "保存「%@」失败" : {
 
+    },
+    "保存事项失败: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to save item: %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存事项失败: %@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "儲存事項失敗: %@"
+          }
+        }
+      }
     },
     "关于" : {
       "localizations" : {
@@ -291,9 +490,72 @@
       }
     },
     "删除" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刪除"
+          }
+        }
+      }
+    },
+    "删除服务商" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Provider"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除服务商"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刪除服務商"
+          }
+        }
+      }
     },
     "删除模型" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Model"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除模型"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刪除模型"
+          }
+        }
+      }
+    },
+    "刷新失败，请检查日历权限" : {
 
     },
     "占位符说明" : {
@@ -406,11 +668,30 @@
         }
       }
     },
-    "在现有提示词的基础之上" : {
+    "图片中未识别到文字" : {
 
     },
-    "复制名称" : {
-
+    "在现有提示词的基础之上施加额外的规则。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apply additional rules on top of the existing prompt."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在现有提示词的基础之上施加额外的规则。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在現有提示詞的基礎之上施加額外的規則。"
+          }
+        }
+      }
     },
     "好" : {
       "localizations" : {
@@ -433,6 +714,9 @@
           }
         }
       }
+    },
+    "好的" : {
+
     },
     "如何提取日程" : {
       "localizations" : {
@@ -479,26 +763,23 @@
       }
     },
     "完成" : {
-
-    },
-    "工作模式" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mode"
+            "value" : "Done"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "工作模式"
+            "value" : "完成"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "工作模式"
+            "value" : "完成"
           }
         }
       }
@@ -526,7 +807,26 @@
       }
     },
     "已填写的内容不会被保存。" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unsaved content will be discarded."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已填写的内容不会被保存。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已填寫的內容不會被儲存。"
+          }
+        }
+      }
     },
     "已失效" : {
       "localizations" : {
@@ -554,8 +854,20 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
+            "value" : "%1$lld items identified, %2$lld saved successfully:\n%3$@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "已识别 %1$lld 项，成功保存 %2$lld 项：\n%3$@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已識別 %1$lld 項，成功儲存 %2$lld 項：\n%3$@"
           }
         }
       }
@@ -567,14 +879,42 @@
             "state" : "translated",
             "value" : "Required"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "必填"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "必填"
+          }
         }
       }
     },
     "所属服务商" : {
-
-    },
-    "打开文档" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provider"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所属服务商"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所屬服務商"
+          }
+        }
+      }
     },
     "找到 %lld 条日程" : {
       "comment" : "日程提取结果预览弹窗",
@@ -600,7 +940,26 @@
       }
     },
     "找到多个名为 '%@' 的列表，已选择第一个。" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Multiple lists named '%@' found. The first one was selected."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "找到多个名为 '%@' 的列表，已选择第一个。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "找到多個名為 '%@' 的列表，已選擇第一個。"
+          }
+        }
+      }
     },
     "提取日程时将自动使用以下列表进行分类。添加描述有助于让分类更加准确。" : {
       "localizations" : {
@@ -647,25 +1006,139 @@
       }
     },
     "提醒事项访问受限。" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reminders access restricted."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提醒事项访问受限。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提醒事項存取受限。"
+          }
+        }
+      }
     },
     "放弃" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discard"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "放弃"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "放棄"
+          }
+        }
+      }
     },
     "放弃编辑？" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discard changes?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "放弃编辑？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "放棄編輯？"
+          }
+        }
+      }
     },
     "数据解析失败: %@" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data parsing failed: %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "数据解析失败: %@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "資料解析失敗: %@"
+          }
+        }
+      }
     },
-    "施加额外的规则。" : {
+    "无法保存服务商配置，请检查磁盘空间或文件权限。" : {
 
     },
     "无法创建自动计划日历: %@" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to create AutoPlan calendar: %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法创建自动计划日历: %@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法建立自動計畫行事曆: %@"
+          }
+        }
+      }
     },
     "无法将提取的 JSON 字符串转换为 UTF-8 数据" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to convert extracted JSON string to UTF-8 data"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法将提取的 JSON 字符串转换为 UTF-8 数据"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法將擷取的 JSON 字串轉換為 UTF-8 資料"
+          }
+        }
+      }
     },
     "无法打开文件" : {
       "localizations" : {
@@ -690,7 +1163,26 @@
       }
     },
     "无法找到可用的日历账户源（如 iCloud），无法创建新日历。" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No available calendar account source (e.g. iCloud) found. Unable to create a new calendar."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法找到可用的日历账户源（如 iCloud），无法创建新日历。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法找到可用的行事曆帳號來源（如 iCloud），無法建立新行事曆。"
+          }
+        }
+      }
     },
     "无法用默认应用打开自定义提示词文件。" : {
       "localizations" : {
@@ -715,14 +1207,33 @@
       }
     },
     "日历访问受限（可能是家长控制或企业配置）。" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calendar access restricted (possibly due to parental controls or enterprise configuration)."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日历访问受限（可能是家长控制或企业配置）。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "行事曆存取受限（可能是家長控制或企業設定）。"
+          }
+        }
+      }
     },
     "日程提取" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Event extraction"
+            "value" : "Event Extraction"
           }
         },
         "zh-Hans" : {
@@ -785,7 +1296,26 @@
       }
     },
     "显示名称" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Display Name"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示名称"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "顯示名稱"
+          }
+        }
+      }
     },
     "暂无可用模型配置。" : {
       "localizations" : {
@@ -810,25 +1340,164 @@
       }
     },
     "暂无模型" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No models"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暂无模型"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暫無模型"
+          }
+        }
+      }
     },
     "服务商 Logo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provider Logo"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "服务商 Logo"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "服務商 Logo"
+          }
+        }
+      }
+    },
+    "服务商「%@」的 API Key 未配置" : {
 
     },
     "服务商信息" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provider Information"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "服务商信息"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "服務商資訊"
+          }
+        }
+      }
     },
     "服务商别名" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provider Alias"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "服务商别名"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "服務商別名"
+          }
+        }
+      }
     },
     "服务商名称" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provider Name"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "服务商名称"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "服務商名稱"
+          }
+        }
+      }
     },
     "服务商名称已存在" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provider name already exists"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "服务商名称已存在"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "服務商名稱已存在"
+          }
+        }
+      }
+    },
+    "服务器内部错误，请稍后再试" : {
 
     },
     "服务器报错 (代码: %lld)" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Server error (code: %lld)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "服务器报错 (代码: %lld)"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "伺服器報錯 (代碼: %lld)"
+          }
+        }
+      }
     },
     "未找到可用列表，请检查日历权限后刷新。" : {
       "localizations" : {
@@ -851,6 +1520,12 @@
           }
         }
       }
+    },
+    "未找到模型「%@」的配置" : {
+
+    },
+    "未能识别到任何日程或提醒事项" : {
+
     },
     "本 App 的作用" : {
       "comment" : "app 介绍页",
@@ -898,30 +1573,49 @@
         }
       }
     },
-    "模型" : {
+    "模型名称" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Model"
+            "value" : "Model Name"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "模型"
+            "value" : "模型名称"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "模型"
+            "value" : "模型名稱"
           }
         }
       }
     },
     "模型名称 (API 请求用)" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Model Name (for API requests)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "模型名称 (API 请求用)"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "模型名稱 (API 請求用)"
+          }
+        }
+      }
     },
     "每周起始日" : {
       "localizations" : {
@@ -946,10 +1640,48 @@
       }
     },
     "没有提醒事项访问权限，请在设置中开启。" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Reminders access permission. Please enable it in Settings."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有提醒事项访问权限，请在设置中开启。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "沒有提醒事項存取權限，請在設定中開啟。"
+          }
+        }
+      }
     },
     "没有日历访问权限，请在设置中开启。" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Calendar access permission. Please enable it in Settings."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有日历访问权限，请在设置中开启。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "沒有行事曆存取權限，請在設定中開啟。"
+          }
+        }
+      }
     },
     "测试中..." : {
       "comment" : "设置界面 - 测试 llm 服务连通性",
@@ -998,7 +1730,26 @@
       }
     },
     "添加 LLM 服务商或模型" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add LLM Provider or Model"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加 LLM 服务商或模型"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加入 LLM 服務商或模型"
+          }
+        }
+      }
     },
     "添加 LLM 配置" : {
       "localizations" : {
@@ -1006,6 +1757,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add LLM Configuration"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加 LLM 配置"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加入 LLM 設定"
           }
         }
       }
@@ -1039,6 +1802,18 @@
             "state" : "translated",
             "value" : "Add an LLM provider"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加服务商"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加入服務商"
+          }
         }
       }
     },
@@ -1049,11 +1824,64 @@
             "state" : "translated",
             "value" : "Add a model"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加模型"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加入模型"
+          }
+        }
+      }
+    },
+    "添加模型，按回车确认" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add model, press Enter to confirm"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加模型，按回车确认"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加入模型，按 Enter 確認"
+          }
         }
       }
     },
     "清除" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清除"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清除"
+          }
+        }
+      }
     },
     "点击查看详细说明" : {
       "localizations" : {
@@ -1123,11 +1951,93 @@
         }
       }
     },
+    "确定删除服务商「%@」及其所有模型和 API Key 吗？" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to delete provider 「%@」 and all its models and API Key?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定删除服务商「%@」及其所有模型和 API Key 吗？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "確定刪除服務商「%@」及其所有模型和 API Key 嗎？"
+          }
+        }
+      }
+    },
     "确定删除模型「%@」吗？" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to delete model 「%@」?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定删除模型「%@」吗？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "確定刪除模型「%@」嗎？"
+          }
+        }
+      }
+    },
+    "管理模型" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage Models"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "管理模型"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "管理模型"
+          }
+        }
+      }
     },
     "继续编辑" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue Editing"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "继续编辑"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "繼續編輯"
+          }
+        }
+      }
     },
     "编辑..." : {
       "comment" : "设置界面 - （按钮）编辑提示词",
@@ -1153,10 +2063,49 @@
       }
     },
     "网络连接错误: %@" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Network error: %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "网络连接错误: %@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "網路連線錯誤: %@"
+          }
+        }
+      }
     },
     "自定义 API 地址的 LLM 服务商" : {
-      "comment" : "“添加服务商”的脚注"
+      "comment" : "“添加服务商”的脚注",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LLM provider with custom API URL"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自定义 API 地址的 LLM 服务商"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自訂 API 位址的 LLM 服務商"
+          }
+        }
+      }
     },
     "自定义提示词" : {
       "localizations" : {
@@ -1180,8 +2129,58 @@
         }
       }
     },
-    "读取日历数据失败: %@" : {
+    "自定义提示词读取失败，已回退到默认" : {
 
+    },
+    "获取 Api Key" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get API Key"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "获取 Api Key"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取得 Api Key"
+          }
+        }
+      }
+    },
+    "请先选择一个模型" : {
+
+    },
+    "请求过于频繁，请稍后再试" : {
+
+    },
+    "读取日历数据失败: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to read calendar data: %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "读取日历数据失败: %@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "讀取行事曆資料失敗: %@"
+          }
+        }
+      }
     },
     "输入 API Key" : {
       "localizations" : {
@@ -1206,10 +2205,48 @@
       }
     },
     "输入模型名称，按回车添加" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter model name, press Enter to add"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "输入模型名称，按回车添加"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "輸入模型名稱，按 Enter 加入"
+          }
+        }
+      }
     },
     "选择图标" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose Icon"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择图标"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選擇圖示"
+          }
+        }
+      }
     },
     "通用" : {
       "comment" : "通用设置页 tab 标签",
@@ -1234,8 +2271,74 @@
         }
       }
     },
-    "重命名服务商" : {
+    "配置保存失败" : {
 
+    },
+    "重命名" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rename"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重命名"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新命名"
+          }
+        }
+      }
+    },
+    "重命名服务商" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rename Provider"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重命名服务商"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新命名服務商"
+          }
+        }
+      }
+    },
+    "重命名模型" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rename Model"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重命名模型"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新命名模型"
+          }
+        }
+      }
     },
     "隐藏" : {
       "comment" : "api key 密码 - 显示/隐藏按钮 帮助文本",

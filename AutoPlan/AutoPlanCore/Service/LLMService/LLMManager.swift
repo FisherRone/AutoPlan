@@ -6,15 +6,13 @@
 //
 
 import Foundation
-import OSLog
-
+import SwiftyBeaver
 
 struct LLMConfigLoader {
-    private static let logger = Logger(subsystem: "com.autoplan.core", category: "LLMConfig")
     
     static func loadDefaultConfigs() -> (providers: [LLMServiceProvider], models: [LLMConfiguration])? {
         let providers = LLMConfigs.providers
-        logger.info("📦 使用 \(providers.count) 个预置 Provider")
+        logger.info("📦 使用 \(providers.count) 个预置 Provider", context: "LLMConfig")
 
         // 从 Provider 的 models 字段生成系统预置模型配置
         let models = providers.flatMap { provider -> [LLMConfiguration] in
@@ -28,7 +26,7 @@ struct LLMConfigLoader {
                 return config
             }
         }
-        logger.info("📦 生成 \(models.count) 个系统预置 Model")
+        logger.info("📦 生成 \(models.count) 个系统预置 Model", context: "LLMConfig")
         
         return (providers, models)
     }

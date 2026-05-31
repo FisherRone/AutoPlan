@@ -6,6 +6,44 @@
 //
 
 import Foundation
+import SwiftyBeaver
+
+enum PromptBuilderWarning {
+    case systemTemplateReadFailed
+    case systemInstructionReadFailed
+    case customPromptReadFailed
+    case directoryCreationFailed(String)
+    
+    var message: WarningMessage {
+        switch self {
+        case .systemTemplateReadFailed:
+            return WarningMessage(
+                id: "promptBuilder.systemTemplateReadFailed",
+                severity: .warning,
+                logText: "PromptBuilder: failed to read BasePrompt.txt from Bundle"
+            )
+        case .systemInstructionReadFailed:
+            return WarningMessage(
+                id: "promptBuilder.systemInstructionReadFailed",
+                severity: .warning,
+                logText: "PromptBuilder: failed to read BaseInstruction.txt from Bundle"
+            )
+        case .customPromptReadFailed:
+            return WarningMessage(
+                id: "promptBuilder.customPromptReadFailed",
+                severity: .warning,
+                userText: String(localized: "自定义提示词读取失败，已回退到默认"),
+                logText: "PromptBuilder: failed to read custom prompt, falling back to default"
+            )
+        case .directoryCreationFailed(let path):
+            return WarningMessage(
+                id: "promptBuilder.directoryCreationFailed",
+                severity: .error,
+                logText: "PromptBuilder: failed to create directory at \(path)"
+            )
+        }
+    }
+}
 
 public enum PromptBuilder {
     
@@ -18,6 +56,7 @@ public enum PromptBuilder {
     private static let systemTemplate: String = {
         guard let url = Bundle.main.url(forResource: "BasePrompt", withExtension: "txt"),
               let content = try? String(contentsOf: url, encoding: .utf8) else {
+            PromptBuilderWarning.systemTemplateReadFailed.message.log()
             return "{{BASE_INSTRUCTION}}"
         }
         return content
@@ -27,18 +66,26 @@ public enum PromptBuilder {
     private static let systemDefaultInstruction: String = {
         guard let url = Bundle.main.url(forResource: "BaseInstruction", withExtension: "txt"),
               let content = try? String(contentsOf: url, encoding: .utf8) else {
+            PromptBuilderWarning.systemInstructionReadFailed.message.log()
             return "默认兜底的 Prompt"
         }
         return content
     }()
     
     /// 每次调用时动态读取，根据开关决定使用自定义还是系统默认
+    public static var customPromptLoadFailed = false
+    
     private static func baseInstruction() -> String {
         let useCustom = UserDefaults.standard.bool(forKey: useCustomPromptKey)
-        if useCustom, let customURL = customPromptFileURL,
-           let content = try? String(contentsOf: customURL, encoding: .utf8),
-           !content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            return content
+        customPromptLoadFailed = false
+        if useCustom, let customURL = customPromptFileURL {
+            if let content = try? String(contentsOf: customURL, encoding: .utf8),
+               !content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                return content
+            } else {
+                PromptBuilderWarning.customPromptReadFailed.message.log()
+                customPromptLoadFailed = true
+            }
         }
         return systemDefaultInstruction
     }
@@ -65,7 +112,11 @@ public enum PromptBuilder {
     public static func ensureCustomPromptFileExists() {
         guard let url = customPromptFileURL else { return }
         let dir = url.deletingLastPathComponent()
-        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        do {
+            try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        } catch {
+            PromptBuilderWarning.directoryCreationFailed(dir.path).message.log()
+        }
         excludeFromBackup(url: dir)
         if !FileManager.default.fileExists(atPath: url.path) {
             FileManager.default.createFile(atPath: url.path, contents: nil)

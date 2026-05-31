@@ -6,12 +6,11 @@
 //
 
 import Foundation
-import OSLog
+import SwiftyBeaver
 
 /// Anthropic Messages API 实现
 struct AnthropicProvider: LLMAPIProvider {
     private let session: any URLSessionProtocol
-    private let logger = Logger(subsystem: "com.autoplan.client", category: "Anthropic")
 
     init(session: any URLSessionProtocol = URLSession.shared) {
         self.session = session
@@ -37,8 +36,8 @@ struct AnthropicProvider: LLMAPIProvider {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try JSONEncoder().encode(payload)
 
-        logger.info("📨 发送 Anthropic 请求，模型: \(payload.model)")
-        logger.debug("📝 提示词内容:\n\(prompt)")
+        logger.info("📨 发送 Anthropic 请求，模型: \(payload.model)", context: "Anthropic")
+        logger.debug("📝 提示词内容:\n\(prompt)", context: "Anthropic")
 
         let (data, response): (Data, URLResponse)
         do {
@@ -53,7 +52,7 @@ struct AnthropicProvider: LLMAPIProvider {
 
         guard (200...299).contains(httpResp.statusCode) else {
             if let errorBody = String(data: data, encoding: .utf8) {
-                logger.error("Anthropic API Error: \(errorBody)")
+                logger.error("Anthropic API Error: \(errorBody)", context: "Anthropic")
             }
             throw LLMError.serverError(statusCode: httpResp.statusCode)
         }

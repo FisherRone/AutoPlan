@@ -123,6 +123,11 @@ public final class ModelConfigViewModel {
         }
     }
 
+    func deleteProvider(_ provider: LLMServiceProvider) {
+        store.deleteProvider(name: provider.name)
+        handleSelectionAfterDeletion()
+    }
+
     // MARK: - 连通性测试
 
     func testResult(for providerID: String) -> ConnectionTestResult? {
@@ -179,11 +184,18 @@ struct ModelConfigView: View {
     @State private var firstWeekday: Int = AppSettings.shared.firstWeekday
     @State private var showAddLLMConfig = false
     @State private var managingProvider: LLMServiceProvider?
+    @State private var providerToDelete: LLMServiceProvider?
+    @State private var openFailed = false
+    @State private var showTemplate = false
+    @State private var showPromptVariables = false
+    @State private var userInstruction: String = AppSettings.shared.userInstruction
+    @State private var customPromptFallback = false
+
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Text("模型").subtitle()
+                Text("日程提取").subtitle()
                 HStack {
                     Text("日程提取模型")
                     Spacer(minLength: 200)
@@ -200,13 +212,119 @@ struct ModelConfigView: View {
                     )
                 }
                 
+                // 需要确认开关
+                HStack {
+                    Text("需要确认")
+                    Spacer()
+                    Toggle("", isOn: Binding(
+                        get: { AppSettings.shared.needsConfirmation },
+                        set: { AppSettings.shared.needsConfirmation = $0 }
+                    ))
+                    .toggleStyle(.switch)
+                    .labelsHidden()
+                    .controlSize(.small)
+                }
+                
+                // 每周起始日
+                HStack {
+                    Text("每周起始日")
+                    Spacer()
+                    Picker("", selection: $firstWeekday) {
+                        Text("周日").tag(1)
+                        Text("周一").tag(2)
+                    }
+                    .pickerStyle(.segmented)
+                    .frame(width: 120)
+                }
+                .onChange(of: firstWeekday) { _, newValue in
+                    AppSettings.shared.firstWeekday = newValue
+                }
+                
                 
                 Divider()
                     .padding(.vertical, 4)
                 
+                Text("提示词").subtitle()
+                // 自定义提示词开关
                 HStack {
-                    Text("API Key")
-                        .subtitle()
+                    Text("自定义提示词")
+                        .font(.body)
+
+                    Button("编辑...") {
+                        openExtractionPromptInEditor()
+                    }
+                    .buttonStyle(.borderless)
+                    .foregroundColor(.accentColor)
+
+                    Button("查看示例") {
+                        showTemplate = true
+                    }
+                    .buttonStyle(.borderless)
+                    .foregroundColor(.accentColor)
+
+                    Button("占位符说明") {
+                        showPromptVariables = true
+                    }
+                    .buttonStyle(.borderless)
+                    .foregroundColor(.accentColor)
+
+                    Spacer()
+
+                    Toggle("", isOn: Binding(
+                        get: { AppSettings.shared.useCustomExtractionPrompt },
+                        set: { newValue in
+                            if newValue {
+                                PromptBuilder.ensureCustomPromptFileExists()
+                                checkCustomPromptFallback()
+                            } else {
+                                customPromptFallback = false
+                            }
+                            AppSettings.shared.useCustomExtractionPrompt = newValue
+                        }
+                    ))
+                    .toggleStyle(.switch)
+                    .labelsHidden()
+                    .controlSize(.small)
+                }
+                .alert("无法打开文件", isPresented: $openFailed) {
+                    Button("好", role: .cancel) {}
+                } message: {
+                    Text("无法用默认应用打开自定义提示词文件。")
+                }
+                
+                if customPromptFallback {
+                    PromptBuilderWarning.customPromptReadFailed.message.uiNote()
+                        .padding(.leading, 4)
+                }
+                
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading) {
+                        Text("用户规则")
+                        Text("在现有提示词的基础之上施加额外的规则。")
+                            .note()
+                            .frame(maxWidth: 140)
+                    }
+                    
+                    TextEditor(text: $userInstruction)
+                        .font(.body)
+                        .frame(minHeight: 80, maxHeight: 80)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 6)
+                                .stroke(Color.secondary.opacity(0.3), lineWidth: 1)
+                        )
+                        .onChange(of: userInstruction) { _, newValue in
+                            AppSettings.shared.userInstruction = newValue
+                        }
+                }
+                
+
+
+
+                Divider()
+                    .padding(.vertical, 4)
+                
+                HStack {
+                    Text("LLM Providers").subtitle()
                     
                     Spacer()
                     
@@ -239,7 +357,9 @@ struct ModelConfigView: View {
                             set: { viewModel.setKeyFieldText($0, for: provider.name) }
                         ),
                         testResult: viewModel.testResult(for: provider.name),
-                        onSaveKey: { viewModel.saveAPIKey(for: provider.name) }
+                        onSaveKey: { viewModel.saveAPIKey(for: provider.name) },
+                        onManageModels: { managingProvider = provider },
+                        onDeleteProvider: { providerToDelete = provider }
                     )
                 }
 
@@ -249,23 +369,7 @@ struct ModelConfigView: View {
                         .padding()
                 }
 
-                Divider().padding(.vertical, 4)
 
-                
-                // 每周起始日
-                HStack {
-                    Text("每周起始日")
-                    Spacer()
-                    Picker("", selection: $firstWeekday) {
-                        Text("周日").tag(1)
-                        Text("周一").tag(2)
-                    }
-                    .pickerStyle(.segmented)
-                    .frame(width: 120)
-                }
-                .onChange(of: firstWeekday) { _, newValue in
-                    AppSettings.shared.firstWeekday = newValue
-                }
 
 
             }
@@ -273,12 +377,141 @@ struct ModelConfigView: View {
         }
         .onAppear {
             viewModel.loadAPIKeys()
+            if AppSettings.shared.useCustomExtractionPrompt {
+                checkCustomPromptFallback()
+            }
         }
         .sheet(item: $managingProvider) { provider in
             ManageModelsSheet(provider: provider, viewModel: viewModel)
         }
+        .alert(
+            "删除服务商",
+            isPresented: Binding(
+                get: { providerToDelete != nil },
+                set: { if !$0 { providerToDelete = nil } }
+            )
+        ) {
+            Button("删除", role: .destructive) {
+                if let provider = providerToDelete {
+                    viewModel.deleteProvider(provider)
+                    providerToDelete = nil
+                }
+            }
+            Button("取消", role: .cancel) {
+                providerToDelete = nil
+            }
+        } message: {
+            if let provider = providerToDelete {
+                Text("确定删除服务商「\(provider.displayName)」及其所有模型和 API Key 吗？")
+            }
+        }
+    }
+    private func openExtractionPromptInEditor() {
+        PromptBuilder.ensureCustomPromptFileExists()
+        guard let url = PromptBuilder.customPromptFileURL else {
+            openFailed = true
+            return
+        }
+        if !NSWorkspace.shared.open(url) {
+            openFailed = true
+        }
+    }
+    
+    private func checkCustomPromptFallback() {
+        guard let url = PromptBuilder.customPromptFileURL else {
+            customPromptFallback = true
+            return
+        }
+        if let content = try? String(contentsOf: url, encoding: .utf8),
+           !content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            customPromptFallback = false
+        } else {
+            customPromptFallback = true
+        }
     }
 }
+
+
+// MARK: - Grouped Popup Selector (NSPopUpButton)
+
+struct GroupedPopupSelector: NSViewRepresentable {
+    let groups: [(title: String, items: [(key: String, label: String)])]
+    let selectedKey: String
+    let onSelect: (String) -> Void
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(onSelect: onSelect)
+    }
+
+    func makeNSView(context: Context) -> NSPopUpButton {
+        let popup = NSPopUpButton(frame: .zero, pullsDown: false)
+        popup.translatesAutoresizingMaskIntoConstraints = false
+        popup.target = context.coordinator
+        popup.action = #selector(Coordinator.selectionChanged(_:))
+        popup.focusRingType = .none
+        popup.autoenablesItems = false
+        rebuildMenu(popup, coordinator: context.coordinator)
+        return popup
+    }
+
+    func updateNSView(_ popup: NSPopUpButton, context: Context) {
+        rebuildMenu(popup, coordinator: context.coordinator)
+    }
+
+    private func rebuildMenu(_ popup: NSPopUpButton, coordinator: Coordinator) {
+        let menu = NSMenu()
+        menu.autoenablesItems = false
+
+        var selectedItem: NSMenuItem?
+        var firstValidItem: NSMenuItem?
+
+        for group in groups where !group.items.isEmpty {
+            let sectionItem = NSMenuItem(title: group.title, action: nil, keyEquivalent: "")
+            sectionItem.isEnabled = false
+            menu.addItem(sectionItem)
+
+            for entry in group.items {
+                let item = NSMenuItem(title: entry.label, action: nil, keyEquivalent: "")
+                item.representedObject = entry.key
+                item.isEnabled = true
+                menu.addItem(item)
+
+                if firstValidItem == nil {
+                    firstValidItem = item
+                }
+
+                if entry.key == selectedKey {
+                    selectedItem = item
+                }
+            }
+
+            menu.addItem(.separator())
+        }
+
+        popup.menu = menu
+
+        if let selected = selectedItem {
+            popup.select(selected)
+        } else if let first = firstValidItem {
+            popup.select(first)
+        }
+    }
+
+    class Coordinator: NSObject {
+        let onSelect: (String) -> Void
+
+        init(onSelect: @escaping (String) -> Void) {
+            self.onSelect = onSelect
+        }
+
+        @objc func selectionChanged(_ sender: NSPopUpButton) {
+            guard let item = sender.selectedItem,
+                  let key = item.representedObject as? String else { return }
+            onSelect(key)
+        }
+    }
+}
+
 
 // MARK: - Provider API Key Row
 
@@ -287,9 +520,9 @@ struct ProviderAPIKeyRow: View {
     @Binding var apiKeyText: String
     var testResult: ConnectionTestResult?
     let onSaveKey: () -> Void
+    var onManageModels: () -> Void = {}
+    var onDeleteProvider: () -> Void = {}
 
-    // 新增：点击 logo/名称 区域时的回调（可选，保持向后兼容）
-    var onTapLogoArea: (() -> Void)? = nil
 
     @State private var showKey: Bool = false
     @FocusState private var isKeyFieldFocused: Bool
@@ -318,29 +551,47 @@ struct ProviderAPIKeyRow: View {
             }
             .contentShape(Rectangle())      // 确保空白区域也响应手势
             .onTapGesture {
-                onTapLogoArea?()            // 由外部决定点击行为
+                if let url = provider.apiPlatfromURL {
+                    NSWorkspace.shared.open(url)
+                }
             }
             .contextMenu {
-                // 一些默认的右键菜单项
-                Button("复制名称") {
-                    NSPasteboard.general.clearContents()
-                    NSPasteboard.general.setString(provider.displayName, forType: .string)
+                Button("管理模型") {
+                    onManageModels()
                 }
                 if let url = provider.apiPlatfromURL {
-                    Button("打开文档") {
+                    Button("获取 Api Key") {
                         NSWorkspace.shared.open(url)
                     }
                 }
+                if provider.isUserCustomProvider {
+                    Button("删除") {
+                        onDeleteProvider()
+                    }
+                }
+                
             }
             .onHover { hovering in
+                // 原有的背景动画（保持不变）
                 withAnimation(.easeInOut(duration: 0.2)) {
                     isHovering = hovering
                 }
+                // 新增：光标变化（仅当 URL 有效时）
+                if provider.apiPlatfromURL != nil {
+                    if hovering {
+                        NSCursor.pointingHand.push()
+                    } else {
+                        NSCursor.pop()
+                    }
+                }
             }
-            .background(
-                RoundedRectangle(cornerRadius: 6)
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
                     .fill(isHovering ? Color.accentColor.opacity(0.12) : Color.clear)
+                    .padding(-8)      // 背景向四周各扩展 4pt（可按需调整）
+                    .allowsHitTesting(false)   // 避免挡住右侧按钮 / 输入框的点击
             )
+            .help(provider.apiPlatfromURL != nil ? "获取 Api Key" : "")
             
 
             Spacer()

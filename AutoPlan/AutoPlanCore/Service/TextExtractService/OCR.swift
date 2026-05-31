@@ -25,9 +25,18 @@ struct OCRConfiguration {
 }
 
 // MARK: - 图像 OCR 服务
-enum OCRError: Error {
+enum OCRError: Error, LocalizedError {
     case processingFailed(String)
     case noTextFound
+    
+    var errorDescription: String? {
+        switch self {
+        case .processingFailed(let reason):
+            return String(localized: "OCR 处理失败: \(reason)")
+        case .noTextFound:
+            return String(localized: "图片中未识别到文字")
+        }
+    }
 }
 
 /// 核心识别函数
