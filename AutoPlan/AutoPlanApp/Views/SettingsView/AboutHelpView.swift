@@ -64,18 +64,26 @@ struct AboutHelpView: View {
             // 帮助说明
             Form {
                 Section(header: Text("使用帮助")) {
-                    LabeledContent("本 App 的作用") {
+                    VStack(alignment: .leading) {
+                        Text("本 App 的作用")
                         Text("从文本或图片中提取日程，并保存到系统日历。")
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .font(.callout).foregroundStyle(.secondary)
                     }
                     
-                    LabeledContent("如何提取日程") {
+                    VStack(alignment: .leading) {
+                        Text("如何提取日程")
                         VStack(alignment: .leading, spacing: 4) {
                             Text("1. 截图保存至剪贴板，或复制文本到剪贴板")
                             Text("2. 点击菜单栏上的 App 图标")
                             Text("3. 点击“从剪贴板提取日程”")
                         }
-                        .font(.callout)
+                        .font(.callout).foregroundStyle(.secondary)
+                    }
+                    
+                    HStack(alignment:.top) {
+                        Text("试一试：")
+                        Text("@猫猫 刚收到通知，下周三之前要把客户满意度调查结果整理成Excel发给我，记得加上环比数据。还有那个合同扫描件也尽快传一下，谢啦。").font(.callout)
                     }
                 }
             }

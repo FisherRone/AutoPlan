@@ -26,6 +26,28 @@
         }
       }
     },
+    "@猫猫 刚收到通知，下周三之前要把客户满意度调查结果整理成Excel发给我，记得加上环比数据。还有那个合同扫描件也尽快传一下，谢啦。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "@Cat, I just got a notice — please compile the customer satisfaction survey results into an Excel file and send it to me by next Wednesday, and don't forget to include the month-over-month data. Also, please upload the scanned copy of the contract as soon as you can. Thanks!"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "@猫猫 刚收到通知，下周三之前要把客户满意度调查结果整理成Excel发给我，记得加上环比数据。还有那个合同扫描件也尽快传一下，谢啦。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "@貓貓 剛收到通知，下星期三之前要把客戶滿意度調查結果整理成Excel檔傳給我，記得加上環比數據。還有那份合約掃描檔也麻煩盡快上傳一下，謝啦。\n"
+          }
+        }
+      }
+    },
     "%lld 条保存失败" : {
       "localizations" : {
         "en" : {
@@ -152,6 +174,12 @@
             "state" : "translated",
             "value" : "AI 返回格式异常，请重试"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI 回傳格式異常，請重試"
+          }
         }
       }
     },
@@ -211,6 +239,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "API Key 无效或已过期"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "API Key 無效或已過期"
           }
         }
       }
@@ -294,6 +328,12 @@
             "state" : "translated",
             "value" : "Logo 保存失败"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logo 儲存失敗"
+          }
         }
       }
     },
@@ -310,6 +350,12 @@
             "state" : "translated",
             "value" : "Logo 文件无法保存，但服务商配置已保存成功。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logo 檔案無法儲存，但服務商配置已儲存成功。"
+          }
         }
       }
     },
@@ -325,6 +371,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "OCR 处理失败: %@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OCR 處理失敗: %@"
           }
         }
       }
@@ -356,18 +408,18 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Extract events from text or images and save them to\nApple Calendar or Reminders."
+            "value" : "Extract events from text or images and save to Apple Calendar or Reminders."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "从文本或图片中提取日程，并保存到系统日历。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "從文字或圖片中擷取行程，並儲存到系統行事曆。"
           }
         }
@@ -430,6 +482,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "保存「%@」失败"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "儲存「%@」失敗"
           }
         }
       }
@@ -510,13 +568,13 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "列表管理"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "列表管理"
           }
         }
@@ -600,6 +658,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "刷新失败，请检查日历权限"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新整理失敗，請檢查行事曆權限"
           }
         }
       }
@@ -727,6 +791,12 @@
             "state" : "translated",
             "value" : "图片中未识别到文字"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "圖片中未識別到文字"
+          }
         }
       }
     },
@@ -783,6 +853,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "好的"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "好的"
@@ -1046,6 +1122,12 @@
             "state" : "translated",
             "value" : "提取日程时将自动使用以下列表进行分类。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提取行程時將自動使用以下列表進行分類。"
+          }
         }
       }
     },
@@ -1171,6 +1253,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无法保存服务商配置，请检查磁盘空间或文件权限。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法儲存服務商配置，請檢查磁碟空間或檔案權限。"
           }
         }
       }
@@ -1453,6 +1541,12 @@
             "state" : "translated",
             "value" : "服务商「%@」的 API Key 未配置"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "服務商「%@」的 API Key 未配置"
+          }
         }
       }
     },
@@ -1557,6 +1651,12 @@
             "state" : "translated",
             "value" : "服务器内部错误，请稍后再试"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "伺服器內部錯誤，請稍後再試"
+          }
         }
       }
     },
@@ -1617,6 +1717,12 @@
             "state" : "translated",
             "value" : "未找到模型「%@」的配置"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未找到模型「%@」的配置"
+          }
         }
       }
     },
@@ -1632,6 +1738,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "未能识别到任何日程或提醒事项"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未能識別到任何行程或提醒事項"
           }
         }
       }
@@ -1691,6 +1803,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "模型"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "模型"
@@ -1911,6 +2029,12 @@
             "state" : "translated",
             "value" : "添加描述有助于让分类更加准确。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加入描述有助於讓分類更加準確。"
+          }
         }
       }
     },
@@ -1993,6 +2117,12 @@
             "state" : "translated",
             "value" : "点击更换 Logo"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "點擊更換 Logo"
+          }
         }
       }
     },
@@ -2030,6 +2160,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "点击添加模型，按回车确认"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "點擊加入模型，按 Enter 確認"
           }
         }
       }
@@ -2133,6 +2269,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "管理..."
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "管理..."
@@ -2265,6 +2407,12 @@
             "state" : "translated",
             "value" : "自定义提示词读取失败，已回退到默认"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自訂提示詞讀取失敗，已回退到預設"
+          }
         }
       }
     },
@@ -2280,6 +2428,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "获取 API Key"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取得 API Key"
+          }
+        }
+      }
+    },
+    "试一试：" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try it："
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "试一试："
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "試一試："
           }
         }
       }
@@ -2297,6 +2473,12 @@
             "state" : "translated",
             "value" : "请先在 App 设置中选择一个模型"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請先在 App 設定中選擇一個模型"
+          }
         }
       }
     },
@@ -2312,6 +2494,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "请求过于频繁，请稍后再试"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請求過於頻繁，請稍後再試"
           }
         }
       }
@@ -2418,6 +2606,12 @@
             "state" : "translated",
             "value" : "配置保存失败"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配置儲存失敗"
+          }
         }
       }
     },
@@ -2501,6 +2695,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "高级"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "進階"
           }
         }
       }
