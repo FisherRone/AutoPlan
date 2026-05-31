@@ -261,6 +261,9 @@
     "Logo 保存失败" : {
 
     },
+    "Logo 文件无法保存，但服务商配置已保存成功。" : {
+
+    },
     "OCR 处理失败: %@" : {
 
     },
@@ -2163,6 +2166,7 @@
       }
     },
     "输入模型名称，按回车添加" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

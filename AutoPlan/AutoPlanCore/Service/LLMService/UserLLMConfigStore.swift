@@ -97,6 +97,11 @@ public final class UserLLMConfigStore {
     private(set) public var userModels: [UserLLMModel] = []
     private(set) public var lastSaveFailed = false
 
+    // MARK: - Transaction
+    private var deferSave = false
+    private var preTransactionProviders: [UserLLMProvider] = []
+    private var preTransactionModels: [UserLLMModel] = []
+
     private let fileName = "user_providers_v1.json"
 
     private var fileURL: URL {
@@ -149,6 +154,7 @@ public final class UserLLMConfigStore {
     }
 
     private func save() {
+        guard !deferSave else { return }
         lastSaveFailed = false
         let config = UserLLMConfigData(userLLMProviders: userProviders, userModels: userModels)
         do {
@@ -158,6 +164,34 @@ public final class UserLLMConfigStore {
             lastSaveFailed = true
             UserLLMConfigStoreWarning.saveFailed.message.log()
         }
+    }
+
+    // MARK: - Transaction
+
+    /// 开启事务，此后 addProvider/addModel 等操作仅修改内存，不写盘
+    public func beginTransaction() {
+        preTransactionProviders = userProviders
+        preTransactionModels = userModels
+        deferSave = true
+    }
+
+    /// 提交事务，将所有变更写入磁盘。返回是否成功
+    @discardableResult
+    public func commitTransaction() -> Bool {
+        deferSave = false
+        save()
+        if lastSaveFailed {
+            rollbackTransaction()
+            return false
+        }
+        return true
+    }
+
+    /// 回滚事务，恢复到 beginTransaction 时的状态
+    public func rollbackTransaction() {
+        deferSave = false
+        userProviders = preTransactionProviders
+        userModels = preTransactionModels
     }
 
     // MARK: - Provider CRUD

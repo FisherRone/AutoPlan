@@ -164,8 +164,8 @@ struct AddProviderSheet: View {
     @State private var selectedLogoURL: URL?
     @State private var showLogoPicker = false
     @State private var showCancelConfirm = false
-    @State private var logoSaveWarning: AddProviderWarning?
     @State private var showSaveFailed = false
+    @State private var showLogoSaveFailed = false
 
     private var hasContent: Bool {
         !name.isEmpty || !displayName.isEmpty || !baseURL.isEmpty || !apiKey.isEmpty || !apiPlatfromURLString.isEmpty || !models.isEmpty || selectedLogoURL != nil
@@ -207,10 +207,6 @@ struct AddProviderSheet: View {
                     }
                 }
                 
-                if let warning = logoSaveWarning {
-                    warning.uiText
-                }
-
                 Section("添加模型") {
                     ForEach(Array(models.enumerated()), id: \ .offset) { index, model in
                         HStack {
@@ -263,6 +259,11 @@ struct AddProviderSheet: View {
         } message: {
             Text(String(localized: "无法保存服务商配置，请检查磁盘空间或文件权限。"))
         }
+        .alert("Logo 保存失败", isPresented: $showLogoSaveFailed) {
+            Button("好的", role: .cancel) {}
+        } message: {
+            Text("Logo 文件无法保存，但服务商配置已保存成功。")
+        }
         .fileImporter(
             isPresented: $showLogoPicker,
             allowedContentTypes: [.image, .svg],
@@ -295,7 +296,6 @@ struct AddProviderSheet: View {
         let trimmedName = name.trimmingCharacters(in: .whitespaces)
         guard !store.isProviderNameTaken(trimmedName) else { return }
 
-        // 不填写 DisplayName 时的兜底
         let trimmedDisplayName = displayName.trimmingCharacters(in: .whitespaces)
         let finalDisplayName = trimmedDisplayName.isEmpty ? trimmedName : trimmedDisplayName
 
@@ -305,40 +305,53 @@ struct AddProviderSheet: View {
             baseURL: baseURL.trimmingCharacters(in: .whitespaces),
             apiPlatfromURL: apiPlatfromURLString.isEmpty ? nil : URL(string: apiPlatfromURLString)
         )
-        
-        // 1. 保存 Provider
-        store.addProvider(provider)
-        
-        if store.lastSaveFailed {
-            showSaveFailed = true
-            return
+
+        // 开启事务
+        store.beginTransaction()
+        var logoSaved = false
+
+        // 1. 保存 Logo（文件系统副作用，先执行）
+        if let logoURL = selectedLogoURL {
+            do {
+                try store.saveLogo(for: trimmedName, from: logoURL)
+                logoSaved = true
+            } catch {
+                AddProviderWarning.logoSaveFailed.message.log()
+            }
         }
 
-        // 2. 保存 API Key（可选）
+        // 2. 保存 API Key（Keychain 副作用）
         let trimmedAPIKey = apiKey.trimmingCharacters(in: .whitespaces)
         if !trimmedAPIKey.isEmpty {
             if !APIKeyStore.save(for: trimmedName, value: trimmedAPIKey) {
+                if logoSaved { store.deleteLogo(for: trimmedName) }
+                store.rollbackTransaction()
                 showSaveFailed = true
                 return
             }
         }
 
-        // 3. 保存模型列表（可选，去重）
+        // 3. 写入 Provider + Model 到内存
+        store.addProvider(provider)
         let uniqueModels = Array(Set(models.map { $0.trimmingCharacters(in: .whitespaces) }))
             .filter { !$0.isEmpty }
         for modelName in uniqueModels {
             store.addModel(UserLLMModel(name: modelName, providerName: trimmedName))
         }
 
-        // 4. 保存 Logo
-        if let logoURL = selectedLogoURL {
-            do {
-                try store.saveLogo(for: trimmedName, from: logoURL)
-            } catch {
-                AddProviderWarning.logoSaveFailed.message.log()
-                logoSaveWarning = .logoSaveFailed
-            }
+        // 4. 提交事务（写入 JSON）
+        if !store.commitTransaction() {
+            if trimmedAPIKey.isEmpty == false { APIKeyStore.delete(for: trimmedName) }
+            if logoSaved { store.deleteLogo(for: trimmedName) }
+            showSaveFailed = true
+            return
         }
+
+        // 5. Logo 失败不阻止保存，仅提示
+        if selectedLogoURL != nil && !logoSaved {
+            showLogoSaveFailed = true
+        }
+
         dismiss()
     }
 }
