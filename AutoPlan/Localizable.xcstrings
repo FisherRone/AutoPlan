@@ -1972,7 +1972,11 @@
         }
       }
     },
+    "管理..." : {
+
+    },
     "管理模型" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2110,6 +2114,7 @@
 
     },
     "获取 Api Key" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2130,6 +2135,9 @@
           }
         }
       }
+    },
+    "获取 API Key" : {
+
     },
     "请先选择一个模型" : {
 

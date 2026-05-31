@@ -74,3 +74,30 @@ extension View {
         modifier(ErrorNoteStyle())
     }
 }
+
+// MARK: - Button Styles
+struct HoverHandShadowModifier: ViewModifier {
+    @State private var isHovered: Bool = false
+
+    func body(content: Content) -> some View {
+        content
+            .background(
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(isHovered ? Color.black.opacity(0.1) : Color.clear)
+            )
+            .onHover { hovering in
+                isHovered = hovering
+                if hovering {
+                    NSCursor.pointingHand.push()
+                } else {
+                    NSCursor.pop()
+                }
+            }
+    }
+}
+
+extension View {
+    func hoverHandWithShadow() -> some View {
+        self.modifier(HoverHandShadowModifier())
+    }
+}

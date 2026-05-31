@@ -325,85 +325,7 @@ struct ModelConfigView: View {
 }
 
 
-// MARK: - Grouped Popup Selector (NSPopUpButton)
 
-struct GroupedPopupSelector: NSViewRepresentable {
-    let groups: [(title: String, items: [(key: String, label: String)])]
-    let selectedKey: String
-    let onSelect: (String) -> Void
-
-    func makeCoordinator() -> Coordinator {
-        Coordinator(onSelect: onSelect)
-    }
-
-    func makeNSView(context: Context) -> NSPopUpButton {
-        let popup = NSPopUpButton(frame: .zero, pullsDown: false)
-        popup.translatesAutoresizingMaskIntoConstraints = false
-        popup.target = context.coordinator
-        popup.action = #selector(Coordinator.selectionChanged(_:))
-        popup.focusRingType = .none
-        popup.autoenablesItems = false
-        rebuildMenu(popup, coordinator: context.coordinator)
-        return popup
-    }
-
-    func updateNSView(_ popup: NSPopUpButton, context: Context) {
-        rebuildMenu(popup, coordinator: context.coordinator)
-    }
-
-    private func rebuildMenu(_ popup: NSPopUpButton, coordinator: Coordinator) {
-        let menu = NSMenu()
-        menu.autoenablesItems = false
-
-        var selectedItem: NSMenuItem?
-        var firstValidItem: NSMenuItem?
-
-        for group in groups where !group.items.isEmpty {
-            let sectionItem = NSMenuItem(title: group.title, action: nil, keyEquivalent: "")
-            sectionItem.isEnabled = false
-            menu.addItem(sectionItem)
-
-            for entry in group.items {
-                let item = NSMenuItem(title: entry.label, action: nil, keyEquivalent: "")
-                item.representedObject = entry.key
-                item.isEnabled = true
-                menu.addItem(item)
-
-                if firstValidItem == nil {
-                    firstValidItem = item
-                }
-
-                if entry.key == selectedKey {
-                    selectedItem = item
-                }
-            }
-
-            menu.addItem(.separator())
-        }
-
-        popup.menu = menu
-
-        if let selected = selectedItem {
-            popup.select(selected)
-        } else if let first = firstValidItem {
-            popup.select(first)
-        }
-    }
-
-    class Coordinator: NSObject {
-        let onSelect: (String) -> Void
-
-        init(onSelect: @escaping (String) -> Void) {
-            self.onSelect = onSelect
-        }
-
-        @objc func selectionChanged(_ sender: NSPopUpButton) {
-            guard let item = sender.selectedItem,
-                  let key = item.representedObject as? String else { return }
-            onSelect(key)
-        }
-    }
-}
 
 
 // MARK: - Provider API Key Row
@@ -421,10 +343,11 @@ struct ProviderAPIKeyRow: View {
     @FocusState private var isKeyFieldFocused: Bool
     @Environment(\.colorScheme) private var colorScheme
     @State private var isHovering = false
+    @State private var showButtons = false
 
     var body: some View {
         HStack(spacing: 12) {
-            // MARK: - 可点击 + 右键菜单区域
+            //MARK: - 左：logo + 名 + 按钮
             HStack(spacing: 8) {
                 if let logo = provider.loadLogo() {
                     Image(nsImage: logo)
@@ -437,59 +360,45 @@ struct ProviderAPIKeyRow: View {
                         .foregroundColor(.secondary)
                         .frame(width: 22, height: 22)
                 }
-
+                
                 Text(provider.displayName)
                     .font(.body)
                     .frame(width: 80, alignment: .leading)
-            }
-            .contentShape(Rectangle())      // 确保空白区域也响应手势
-            .onTapGesture {
-                if let url = provider.apiPlatfromURL {
-                    NSWorkspace.shared.open(url)
-                }
-            }
-            .contextMenu {
-                Button("管理模型") {
-                    onManageModels()
-                }
-                if let url = provider.apiPlatfromURL {
-                    Button("获取 Api Key") {
-                        NSWorkspace.shared.open(url)
+                
+                HStack(spacing: 6) {
+                    
+                    // 按钮：获取 API Key（若存在 URL）
+                    if let url = provider.apiPlatfromURL {
+                        Button(action: { NSWorkspace.shared.open(url) }) {
+                            Image(systemName: "arrow.up.right")
+                                .frame(width: 20, height: 20)
+                                .foregroundStyle(.secondary)
+                                
+                        }
+                        .buttonStyle(.plain)
+                        .hoverHandWithShadow()
+                        .help("获取 API Key")
                     }
-                }
-                if provider.isUserCustomProvider {
-                    Button("删除") {
-                        onDeleteProvider()
+                    
+                    // 按钮：管理模型
+                    Button(action: onManageModels) {
+                        Image(systemName: "slider.horizontal.3")
+                            .frame(width: 20, height: 20)
+                            .foregroundStyle(.secondary)
+                            
                     }
+                    .buttonStyle(.plain)
+                    .hoverHandWithShadow()
+                    .help("管理...")
                 }
+                .frame(width: 50, alignment: .trailing)
                 
             }
-            .onHover { hovering in
-                // 原有的背景动画（保持不变）
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    isHovering = hovering
-                }
-                // 新增：光标变化（仅当 URL 有效时）
-                if provider.apiPlatfromURL != nil {
-                    if hovering {
-                        NSCursor.pointingHand.push()
-                    } else {
-                        NSCursor.pop()
-                    }
-                }
-            }
-            .overlay(
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(isHovering ? Color.accentColor.opacity(0.12) : Color.clear)
-                    .padding(-8)
-                    .allowsHitTesting(false)   // 避免挡住右侧按钮 / 输入框的点击
-            )
-            .help(provider.apiPlatfromURL != nil ? "获取 Api Key" : "")
-            
+            .contentShape(.rect)
 
             Spacer()
 
-            // 测试结果圆点
+            //MARK: - 右：圆点 + Key
             if let result = testResult {
                 Circle()
                     .fill(result.success ? Color.green : Color.red)
