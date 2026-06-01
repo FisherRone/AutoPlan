@@ -5,6 +5,12 @@
     <img src="https://img.shields.io/github/license/FisherRone/AutoPlan" alt="License">
     <img src="https://img.shields.io/badge/platform-macOS%2015.0%2B-blue" alt="Platform">
 </div>
+<p align="center">
+  <img src="https://img.shields.io/badge/license-MIT-blue.svg" />
+  <img src="https://img.shields.io/badge/GPT-openai%20%7C%20deepseek%20%7C%20mimo-ff69b4" />
+  <img src="https://img.shields.io/badge/platform-macOS%2015.0%2B-blue" />
+  <img src="https://img.shields.io/badge/status-active-success" />
+</p>
 
 <br>
 
