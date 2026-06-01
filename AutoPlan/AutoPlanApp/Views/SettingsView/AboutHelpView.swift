@@ -57,6 +57,15 @@ struct AboutHelpView: View {
                 Text("版本 \(appVersion)")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
+                
+                VStack(spacing: 8) {
+                    Link("GitHub 仓库", destination: URL(string: "https://github.com/your-username/your-repo")!)
+                        .font(.body)
+                    
+                    Text("© 2026 你的名字")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
             }
             .padding(.top, 30)
             .padding(.bottom, 20)

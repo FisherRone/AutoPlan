@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ServiceManagement
 
 // MARK: - ViewModel
 
@@ -235,6 +236,31 @@ struct ModelConfigView: View {
                     AppSettings.shared.firstWeekday = newValue
                 }
                 
+                Divider()
+                    .padding(.vertical, 4)
+                
+                // 登录时启动
+                HStack {
+                    Text("登录时启动")
+                    Spacer()
+                    Toggle("", isOn: Binding(
+                        get: { SMAppService.mainApp.status == .enabled },
+                        set: { isEnabled in
+                            do {
+                                if isEnabled {
+                                    try SMAppService.mainApp.register()
+                                } else {
+                                    try SMAppService.mainApp.unregister()
+                                }
+                            } catch {
+                                print("Failed to toggle launch at login: \(error)")
+                            }
+                        }
+                    ))
+                    .toggleStyle(.switch)
+                    .labelsHidden()
+                    .controlSize(.small)
+                }
                 
                 Divider()
                     .padding(.vertical, 4)
