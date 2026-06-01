@@ -50,14 +50,16 @@ public struct UserLLMProvider: Codable, Identifiable, Equatable {
     public var displayName: String    // 显示名称
     public var baseURL: String        // API 基础地址
     public var apiPlatfromURL: URL? // API Key 管理页面链接
+    public var noThinkingModeStyle: NoThinkingModeStyle?
 
     public var id: String { name }
 
-    public init(name: String, displayName: String, baseURL: String, apiPlatfromURL: URL? = nil) {
+    public init(name: String, displayName: String, baseURL: String, apiPlatfromURL: URL? = nil, noThinkingModeStyle: NoThinkingModeStyle? = nil) {
         self.name = name
         self.displayName = displayName
         self.baseURL = baseURL
         self.apiPlatfromURL = apiPlatfromURL
+        self.noThinkingModeStyle = noThinkingModeStyle
     }
 }
 
@@ -201,11 +203,12 @@ public final class UserLLMConfigStore {
         save()
     }
 
-    public func updateProvider(name: String, displayName: String? = nil, baseURL: String? = nil, apiPlatfromURL: URL? = nil) {
+    public func updateProvider(name: String, displayName: String? = nil, baseURL: String? = nil, apiPlatfromURL: URL? = nil, noThinkingModeStyle: NoThinkingModeStyle? = nil) {
         guard let idx = userProviders.firstIndex(where: { $0.name == name }) else { return }
         if let displayName { userProviders[idx].displayName = displayName }
         if let baseURL { userProviders[idx].baseURL = baseURL }
         if let apiPlatfromURL { userProviders[idx].apiPlatfromURL = apiPlatfromURL }
+        if let noThinkingModeStyle { userProviders[idx].noThinkingModeStyle = noThinkingModeStyle }
         save()
     }
 
@@ -320,7 +323,8 @@ public final class UserLLMConfigStore {
             models: nil,
             supportedFeatures: nil,
             description: nil,
-            apiPlatfromURL: user.apiPlatfromURL
+            apiPlatfromURL: user.apiPlatfromURL,
+            noThinkingModeStyle: user.noThinkingModeStyle
         )
     }
 

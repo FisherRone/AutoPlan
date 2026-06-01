@@ -20,7 +20,8 @@ enum LLMConfigs {
             models: ["deepseek-v4-flash", "deepseek-v4-pro"],
             supportedFeatures: nil,
             description: nil,
-            apiPlatfromURL: URL(string: "https://platform.deepseek.com/api_keys")
+            apiPlatfromURL: URL(string: "https://platform.deepseek.com/api_keys"),
+            noThinkingModeStyle: .thinkingType
         ),
         LLMServiceProvider(
             name: "xiaomi",
@@ -32,7 +33,8 @@ enum LLMConfigs {
             models: ["mimo-v2.5", "mimo-v2.5-pro"],
             supportedFeatures: nil,
             description: nil,
-            apiPlatfromURL: URL(string: "https://platform.xiaomimimo.com/console/api-keys")
+            apiPlatfromURL: URL(string: "https://platform.xiaomimimo.com/console/api-keys"),
+            noThinkingModeStyle: .thinkingType
         ),
         LLMServiceProvider(
             name: "openai",
@@ -44,7 +46,8 @@ enum LLMConfigs {
             models: ["gpt-5.4-mini", "gpt-5.5", "gpt-5.4"],
             supportedFeatures: nil,
             description: nil,
-            apiPlatfromURL: URL(string: "https://platform.openai.com/api-keys")
+            apiPlatfromURL: URL(string: "https://platform.openai.com/api-keys"),
+            noThinkingModeStyle: .reasoningEffort
         ),
         LLMServiceProvider(
             name: "anthropic",
@@ -56,7 +59,8 @@ enum LLMConfigs {
             models: ["claude-opus-4-8", "claude-sonnet-4-6", "claude-haiku-4-5"],
             supportedFeatures: nil,
             description: nil,
-            apiPlatfromURL: URL(string: "https://platform.claude.com/settings/keys")
+            apiPlatfromURL: URL(string: "https://platform.claude.com/settings/keys"),
+            noThinkingModeStyle: .noParam
         ),
     ]
 }

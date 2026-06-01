@@ -51,6 +51,13 @@ public enum LLMConfigurationOrigin: String, Sendable, Codable {
     case user        // 用户完全自建
 }
 
+public enum NoThinkingModeStyle: String, Codable, Sendable {
+    case thinkingType
+    case noParam
+    case reasoningEffort
+    case unknown
+}
+
 public struct LLMServiceProvider: Codable, Sendable, Identifiable {
     /// 唯一标识，如 "deepseek", "openai"
     public var id: String { name }
@@ -64,6 +71,7 @@ public struct LLMServiceProvider: Codable, Sendable, Identifiable {
     public let supportedFeatures: [String]? // 可选功能标签: "streaming", "reasoning", "function_calling"
     public let description: String?    // 简介
     public var apiPlatfromURL: URL? // 该服务商 API Key 管理页面链接
+    public var noThinkingModeStyle: NoThinkingModeStyle?
     public var isUserCustomProvider: Bool {
         UserLLMConfigStore.shared.userProviders.contains { $0.name == name }
     }
@@ -151,13 +159,15 @@ public struct LLMRequestContext {
     public var temperature: Double? = 1.0
     public var maxTokens: Int? = 2048
     public let providerName: String
+    public let noThinkingModeStyle: NoThinkingModeStyle?
 
-    public init(baseURL: String, apiKey: String, model: String, temperature: Double? = 1.0, maxTokens: Int? = 2048, providerName: String = "") {
+    public init(baseURL: String, apiKey: String, model: String, temperature: Double? = 1.0, maxTokens: Int? = 2048, providerName: String = "", noThinkingModeStyle: NoThinkingModeStyle? = nil) {
         self.baseURL = baseURL
         self.apiKey = apiKey
         self.model = model
         self.temperature = temperature
         self.maxTokens = maxTokens
         self.providerName = providerName
+        self.noThinkingModeStyle = noThinkingModeStyle
     }
 }

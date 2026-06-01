@@ -77,11 +77,13 @@ extension LLMClient {
 public struct LLMClient: Sendable {
     public static let shared = LLMClient()
     private let parser = JsonParser()
-    private let openAIProvider: OpenAICompatibleProvider
+    private let openAICompatibleProvider: OpenAICompatibleProvider
+    private let openAIResponsesProvider: OpenAIProvider
     private let anthropicProvider: AnthropicProvider
 
     init(session: any URLSessionProtocol = URLSession.shared) {
-        self.openAIProvider = OpenAICompatibleProvider(session: session)
+        self.openAICompatibleProvider = OpenAICompatibleProvider(session: session)
+        self.openAIResponsesProvider = OpenAIProvider(session: session)
         self.anthropicProvider = AnthropicProvider(session: session)
     }
 
@@ -96,11 +98,38 @@ public struct LLMClient: Sendable {
     // MARK: - Private Logic
 
     func getResponse(prompt: String, context: LLMRequestContext) async throws -> String {
-        let provider = resolveProvider(for: context.providerName)
-        return try await provider.generate(prompt: prompt, context: context)
+        var resolvedContext = context
+
+        if context.noThinkingModeStyle == .unknown {
+            let detected = await NoThinkingModeDetector.shared.detect(
+                baseURL: context.baseURL,
+                apiKey: context.apiKey,
+                model: context.model,
+                providerName: context.providerName
+            )
+            resolvedContext = LLMRequestContext(
+                baseURL: context.baseURL,
+                apiKey: context.apiKey,
+                model: context.model,
+                temperature: context.temperature,
+                maxTokens: context.maxTokens,
+                providerName: context.providerName,
+                noThinkingModeStyle: detected
+            )
+            await MainActor.run {
+                UserLLMConfigStore.shared.updateProvider(name: context.providerName, noThinkingModeStyle: detected)
+            }
+        }
+
+        let provider = resolveProvider(for: resolvedContext.providerName)
+        return try await provider.generate(prompt: prompt, context: resolvedContext)
     }
 
     private func resolveProvider(for name: String) -> any LLMAPIProvider {
-        name.lowercased() == "claude" ? anthropicProvider : openAIProvider
+        switch name.lowercased() {
+        case "claude": return anthropicProvider
+        case "openai": return openAIResponsesProvider
+        default: return openAICompatibleProvider
+        }
     }
 }

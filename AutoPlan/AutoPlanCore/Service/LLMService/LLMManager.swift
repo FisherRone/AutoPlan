@@ -122,7 +122,8 @@ struct LLMService {
             model: model.name,
             temperature: temperature,
             maxTokens: maxTokens,
-            providerName: provider?.name ?? ""
+            providerName: provider?.name ?? "",
+            noThinkingModeStyle: provider?.noThinkingModeStyle ?? .unknown
         )
     }
 }

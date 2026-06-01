@@ -22,10 +22,26 @@ struct OpenAICompatibleProvider: LLMAPIProvider {
             throw LLMError.networkError(URLError(.badURL))
         }
 
+        let thinkingParam: ChatRequest.ThinkingParam?
+        let reasoningEffortParam: String?
+        switch context.noThinkingModeStyle {
+        case .thinkingType:
+            thinkingParam = .init()
+            reasoningEffortParam = nil
+        case .reasoningEffort:
+            thinkingParam = nil
+            reasoningEffortParam = "none"
+        case .noParam, .unknown, .none:
+            thinkingParam = nil
+            reasoningEffortParam = nil
+        }
+
         let payload = ChatRequest(
             model: context.model,
             messages: [.init(role: "user", content: prompt)],
-            temperature: context.temperature ?? 1.0
+            temperature: context.temperature ?? 1.0,
+            thinking: thinkingParam,
+            reasoningEffort: reasoningEffortParam
         )
 
         var request = URLRequest(url: url)
@@ -68,10 +84,21 @@ struct OpenAICompatibleProvider: LLMAPIProvider {
         let messages: [Message]
         let temperature: Double
         let stream: Bool = false
+        let thinking: ThinkingParam?
+        let reasoningEffort: String?
+
+        enum CodingKeys: String, CodingKey {
+            case model, messages, temperature, stream, thinking
+            case reasoningEffort = "reasoning_effort"
+        }
 
         struct Message: Encodable {
             let role: String
             let content: String
+        }
+
+        struct ThinkingParam: Encodable {
+            let type: String = "disabled"
         }
     }
 
