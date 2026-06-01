@@ -25,6 +25,15 @@ Copy any text or screenshot to your clipboard, click **Extract from Clipboard** 
 
 AutoPlan is built to fit your workflow. Choose any OpenAI-compatible provider, fine-tune how events are categorized, and even write your own extraction prompt.
 
+<a name="quick-start"></a>
+## Quick Start
+
+1. Download the latest build from [Releases](https://github.com/FisherRone/AutoPlan/releases) or clone and build with Xcode
+2. Launch the app — it appears in your menu bar
+3. Open **Settings** → **Model Config** and add your LLM API key
+4. Copy text or a screenshot to your clipboard, then click **Extract from Clipboard** in the menu bar
+5. Review the extracted events and click **Save** to add them to Calendar / Reminders
+
 ### General Settings & Providers
 
 <div align="center">
@@ -51,23 +60,20 @@ AutoPlan is built to fit your workflow. Choose any OpenAI-compatible provider, f
 - **List Management** — Choose which Calendar and Reminders lists to use; add per-list descriptions to improve categorization accuracy
 - **Prompt Variables** — Use placeholders like `{{date}}`, `{{time}}`, and `{{content}}` to build dynamic prompts
 
-<a name="quick-start"></a>
-## Quick Start
 
-1. Download the latest build from [Releases](https://github.com/FisherRone/AutoPlan/releases) or clone and build with Xcode
-2. Launch the app — it appears in your menu bar
-3. Open **Settings** → **Model Config** and add your LLM API key
-4. Copy text or a screenshot to your clipboard, then click **Extract from Clipboard** in the menu bar
-5. Review the extracted events and click **Save** to add them to Calendar / Reminders
 
-Enable **Skip Confirmation** in Settings to save events instantly without reviewing.
+## Privacy
+
+- **No data collection** — AutoPlan does not collect any information; clipboard content is sent directly to your chosen LLM provider for processing.
+- **Local OCR** — Images from the clipboard are processed on-device using Apple's Vision framework.
+- **Secure key storage** — API keys are stored in the macOS Keychain.
 
 ## Requirements
 
 - macOS 15.0+
 - An API key for an OpenAI-compatible LLM service (OpenAI, DeepSeek, etc.)
 
-> ⚠️ **First Launch Warning**: Because AutoPlan is ad-hoc signed, macOS may block the app on first open with a malware warning. If this happens, please check the `Installation Guide.txt` included in the release ZIP for step-by-step instructions, or view it [here](https://github.com/FisherRone/AutoPlan/blob/main/docs/English/Installation%20Guide.txt).
+> ⚠️ **First Launch Warning**: Because AutoPlan is ad-hoc signed, macOS may block the app on first open with a malware warning. If this happens, please check the `Installation Guide.txt` in the release ZIP for step-by-step instructions, or view it [here](https://github.com/FisherRone/AutoPlan/blob/main/docs/English/Installation%20Guide.txt).
 
 ## Build
 
