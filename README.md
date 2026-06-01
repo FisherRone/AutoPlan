@@ -2,7 +2,8 @@
 
 Extract calendar events and reminders from text or images using LLM — right from the menu bar.
 
-![项目演示](https://github.com/FisherRone/AutoPlan/main/docs/AutoPlan Demo Vedio - Email.gif?raw=true)
+![项目演示](https://github.com/FisherRone/AutoPlan/blob/main/docs/docs/AutoPlan Demo Vedio - Email.gif?raw=true)
+
 ## Features
 
 - **Clipboard Extraction** — Copy any text or screenshot, click "从剪贴板提取日程" in the menu bar, and get parsed calendar events / reminders saved automatically
