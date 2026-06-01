@@ -82,7 +82,8 @@ AutoPlan is built to fit your workflow. Choose any OpenAI-compatible provider, f
 
 - **No data collection** — AutoPlan does not collect any information; clipboard content is sent directly to your chosen LLM provider for processing.
 - **Local OCR** — Images from the clipboard are processed on-device using Apple's Vision framework.
-- **Secure key storage** — API keys are stored in the macOS Keychain.
+- **Calendar & Reminders access** — Write permission is required to save extracted events to Apple Calendar or Reminders. Read permission is used to fetch your lists so events can be auto-categorized.
+- **Secure key storage** — API keys are stored in the macOS Keychain, encrypted with your device passcode.
 
 ## Requirements
 
