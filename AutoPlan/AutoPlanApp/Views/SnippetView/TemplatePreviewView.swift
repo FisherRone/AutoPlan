@@ -16,7 +16,7 @@ struct TemplatePreviewView: View {
     }
 
     private var title: String {
-        return "日程提取提示词模板"
+        return String(localized:"日程提取提示词模板")
     }
 
     var body: some View {
@@ -47,5 +47,6 @@ struct TemplatePreviewView: View {
                     .padding(20)
             }
         }
+        .frame(width: 600, height: 600)
     }
 }

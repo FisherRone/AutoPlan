@@ -362,8 +362,12 @@ struct ExtractorView: View {
             openFailed = true
             return
         }
-        if !NSWorkspace.shared.open(url) {
-            openFailed = true
+        NSWorkspace.shared.open(url, configuration: .init()) { [self] _, error in
+            if error != nil {
+                Task { @MainActor in
+                    self.openFailed = true
+                }
+            }
         }
     }
     

@@ -48,6 +48,28 @@
         }
       }
     },
+    "# 规则的优先级\nBASE_INSTRUCTION > USER_INSTRUCTION > Rules\n\n# 规则\n\n## 输出时 title note 字段的语言\n必须和用户输入的语言相同。\n\n## 规则：多任务处理\n- 如果输入包含多个任务，则将每个任务分别提取为一个 JSON 对象，并将所有对象以 JSON 数组形式返回。\n- 示例：“明天上午9点开会，下午2点去见客户，晚上7点健身” 应生成包含三个对象的数组。\n- 如果某个提醒属于另一个事件或全天事项，建议将其放入该事件或全天事项的标题或备注中，不单独建立事项。\n\n## 类型字段的填写规则\n- 事件：在特定时间点或时间段发生，需准时参与，不属于窗口期或截止时间。如“10点抢票”、“9-11点开会”。\n- 全天事项：有确定的日期，无具体时间，且内容可理解为一天的“状态”或“属性”。\n    - 示例：旅行计划/出差/休假/行业峰会/生日/节日/购物节/纪念日。\n- 提醒：具有以下一个或多个特点。\n    - 无明确的日期或时间。\n    - 窗口期。\n    - 有截止日期或时间。\n    - 有确定日期但没有时间，且不能归属于全天事项。如“周五买菜”、“明天开会”。\n\n“窗口期”的定义：\n    1. 有开始时间和结束时间，且结束时间是截止时间。\n    2. 用户无需全程参与，只需在窗口期内择期完成某件活动。\n    - 示例：“推优计划将于11.3-11.9落实”、“今天10点到后天24点开放报名”、“10号后开始预约”\n\n## 各时间字段的填写规则\n1. **推断时间时，基准时间选取的优先级**：\n   - 优先级1 上下文时间：输入中离待处理的事项文本最近的时间信息。\n   - 优先级2 当前时间。当前时间仅代表用户发起请求的时间。\n2. 涉及“星期几”“下周星期几”等相对时间的填写：使用相对格式扩展。\n3. **确切日期 vs 模糊时段**：\n    a. 确切日期：能精确映射到日历上具体某一天的情况（如“15号”、“下周三”、“本月最后一天”）。\n        -> 处理：填入开始时间/结束时间/提醒时间。（取决于类型）\n    b. 模糊时段：指代一个范围且无法确定具体哪一天（如“月底”、“下周”），或者有多个可选的窗口期。\n        -> 处理：类型：“提醒”；提醒时间：留空\n    c. 模糊的截止日期：如“月底**前**完成”、“月底**截止**”、“本周**内**完成”\n        -> 处理：类型：“提醒”；将该时段的最后一天设为提醒时间。\n    d. 确切的截止时间的提醒时间：“今晚前” -> 今天23:59；“24号前”->“YY-MM-24”（只写日期）\n    e. 窗口期（仅一个）。\n        -> 处理：类型：“提醒”；提醒时间设为截止时间，若无，设为开启时间。\n    - **务必将模糊时间描述保留在标题中**（例：“月底准备活动”、“本周改好论文”）\n4. **结束时间**：若无法确定，则留空。\n5. 除非时间可具体到小时，否则不填写 HH:MM\n\n## 忽略“虚”的动作\n- 忽略“虚”的动作，如：“确认”、“回复收到”、“转发”、“提醒别人”、“组织动员”等。\n- 提取那些真正需要记录的事情。\n    - 如“请各院系做好学生通知工作... 2025年11月26日开放不计绩点申请” ➡️ 忽略“做好学生通知工作”，提取“开放不计绩点申请”\n\n## 其他字段的填写\n- **标题**：字数 < 20。\n    - 不要包含其他字段已有的内容。\n    - 放入动作的对象（若有），如“发邮件” ➡️ “发邮件给xx”\n- **备注**：放入清单、长描述、其他背景信息。字数 < 100\n    - 可用换行符、小标题、数字序号（1.）等方式组织内容，提升易读性。\n    - 纯文本，不使用 Markdown\n- **链接**：若知道 App 名称，需填写。示例：“腾讯会议: 200-211-245”\n\n#### 当前时间\n{{CURRENT_TIME}}\n\n#### 可用清单\n{{LISTS}}\n\n#### 可用标签\n{{TAGS}}" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "# USER_INSTRUCTION\n{{USER_INSTRUCTION}}\n\n# Priority of Rules\nBASE_INSTRUCTION > USER_INSTRUCTION > Rules\n\n## Rules\n\n## Output language for title and note fields\nMust be the same as the user's input language.\n\n## Rule: Multi-Task Processing\n- If input contains multiple tasks, extract each of them to a JSON object separately, return all objects in one JSON array.\n- Example: \"Meeting at 9 AM tomorrow, visit client at 2 PM, gym at 7 PM\" should generate an array containing three objects.\n- If a reminder belongs to another event or all-day item, it is recommended to place it in the title or note of that event/all-day item, not as a separate item.\n\n## Rules for filling the \"type\" field\n- event: Occurs at a specific point in time or time period, requires punctual participation, not a time window or deadline. E.g., \"grab tickets at 10 o'clock\", \"meeting 9-11 AM\"\n- all-day: Has a definite date, no specific time, and the content can be understood as a day-long \"state\" or \"attribute\".\n    - Examples: travel plan / business trip / vacation / industry summit / birthday / holiday / shopping festival / anniversary.\n- reminder: Has one or more of the following characteristics:\n    - No definite date or time.\n    - Time window.\n    - Has a deadline or cutoff time.\n    - Has a definite date but no time, and cannot be classified as all-day. E.g., \"buy groceries on Friday\", \"meeting tomorrow\".\n\nDefinition of \"time window\":\n    1. Has start_time and end_time, and the end_time is a deadline.\n    2. User does not need to participate throughout; just needs to complete an activity within the window.\n    - Examples: \"The recommendation plan will be implemented from Nov 3 to Nov 9\", \"Registration open from 10 AM today to 24:00 the day after tomorrow\", \"Start booking after the 10th\"\n\n## Rules for filling time fields\n1. **Priority for inferring time, reference time selection**:\n   - Priority 1 Context time: time information in the input that is close to the text of the pending item.\n   - Priority 2 Current time. The current time merely represents when the user initiated the request.\n2. For relative times like \"day of the week\" or \"next Monday/Tuesday\", use relative format extensions.\n3. **Exact date vs. fuzzy time period**:\n    a. Exact date: Cases that can be precisely mapped to a specific day on the calendar (e.g., \"15th\", \"next Wednesday\", \"last day of this month\").\n        -> Handling: Fill in start_time / end_time / reminder_time (depends on type).\n    b. Fuzzy time period: Refers to a range where the exact day cannot be determined (e.g., \"end of month\", \"next week\"), or there are multiple optional windows.\n        -> Handling: type: \"reminder\"; reminder_time: leave empty.\n    c. Fuzzy deadline: e.g., \"complete before the end of the month\", \"deadline at month end\", \"complete within this week\".\n        -> Handling: type: \"reminder\"; set reminder_time to the last day of that period.\n    d. Exact deadline time for reminder_time: \"before tonight\" -> 23:59 today; \"before the 24th\" -> \"YY-MM-24\" (date only).\n    e. Time window (only one).\n        -> Handling: type: \"reminder\"; set reminder_time to the deadline, if none, set to the start time.\n    - **Always keep the fuzzy time description in the title** (e.g., \"prepare for event at month end\", \"revise thesis this week\").\n4. **end_time**: Leave empty if cannot be determined.\n5. Unless the time can be specified to the hour, do not fill in HH:MM.\n\n## Ignore \"non-action\" verbs\n- Ignore \"non-action\" verbs such as: \"confirm\", \"reply received\", \"forward\", \"remind someone\", \"organize mobilization\", etc.\n- Extract what truly needs to be recorded.\n    - Example: \"Please ensure all departments notify students... Applications for no-grade-point request open on Nov 26, 2025\" ➡️ ignore \"ensure notifications\", extract \"applications open for no-grade-point request\"\n\n## Other fields\n- **title**: Word count < 20.\n    - Do not include anything already present in other fields.\n    - Include the object of the action (if any), e.g., \"send email\" ➡️ \"send email to xx\"\n- **notes**: For lists, long descriptions, other background info. Word count < 100.\n    - Use line breaks, subheadings, numbered lists (1.) etc. to improve readability.\n    - Plain text, no markdown.\n- **url**: If the app name is known, fill it in. Example: \"Tencent Meeting: 200-211-245\"\n\n#### Current Time\n{{CURRENT_TIME}}\n\n#### Available Lists\n{{LISTS}}\n\n#### Available Tags\n{{TAGS}}"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "# 规则的优先级\nBASE_INSTRUCTION > USER_INSTRUCTION > Rules\n\n# 规则\n\n## 输出时 title note 字段的语言\n必须和用户输入的语言相同。\n\n## 规则：多任务处理\n- 如果输入包含多个任务，则将每个任务分别提取为一个 JSON 对象，并将所有对象以 JSON 数组形式返回。\n- 示例：“明天上午9点开会，下午2点去见客户，晚上7点健身” 应生成包含三个对象的数组。\n- 如果某个提醒属于另一个事件或全天事项，建议将其放入该事件或全天事项的标题或备注中，不单独建立事项。\n\n## 类型字段的填写规则\n- 事件：在特定时间点或时间段发生，需准时参与，不属于窗口期或截止时间。如“10点抢票”、“9-11点开会”。\n- 全天事项：有确定的日期，无具体时间，且内容可理解为一天的“状态”或“属性”。\n    - 示例：旅行计划/出差/休假/行业峰会/生日/节日/购物节/纪念日。\n- 提醒：具有以下一个或多个特点。\n    - 无明确的日期或时间。\n    - 窗口期。\n    - 有截止日期或时间。\n    - 有确定日期但没有时间，且不能归属于全天事项。如“周五买菜”、“明天开会”。\n\n“窗口期”的定义：\n    1. 有开始时间和结束时间，且结束时间是截止时间。\n    2. 用户无需全程参与，只需在窗口期内择期完成某件活动。\n    - 示例：“推优计划将于11.3-11.9落实”、“今天10点到后天24点开放报名”、“10号后开始预约”\n\n## 各时间字段的填写规则\n1. **推断时间时，基准时间选取的优先级**：\n   - 优先级1 上下文时间：输入中离待处理的事项文本最近的时间信息。\n   - 优先级2 当前时间。当前时间仅代表用户发起请求的时间。\n2. 涉及“星期几”“下周星期几”等相对时间的填写：使用相对格式扩展。\n3. **确切日期 vs 模糊时段**：\n    a. 确切日期：能精确映射到日历上具体某一天的情况（如“15号”、“下周三”、“本月最后一天”）。\n        -> 处理：填入开始时间/结束时间/提醒时间。（取决于类型）\n    b. 模糊时段：指代一个范围且无法确定具体哪一天（如“月底”、“下周”），或者有多个可选的窗口期。\n        -> 处理：类型：“提醒”；提醒时间：留空\n    c. 模糊的截止日期：如“月底**前**完成”、“月底**截止**”、“本周**内**完成”\n        -> 处理：类型：“提醒”；将该时段的最后一天设为提醒时间。\n    d. 确切的截止时间的提醒时间：“今晚前” -> 今天23:59；“24号前”->“YY-MM-24”（只写日期）\n    e. 窗口期（仅一个）。\n        -> 处理：类型：“提醒”；提醒时间设为截止时间，若无，设为开启时间。\n    - **务必将模糊时间描述保留在标题中**（例：“月底准备活动”、“本周改好论文”）\n4. **结束时间**：若无法确定，则留空。\n5. 除非时间可具体到小时，否则不填写 HH:MM\n\n## 忽略“虚”的动作\n- 忽略“虚”的动作，如：“确认”、“回复收到”、“转发”、“提醒别人”、“组织动员”等。\n- 提取那些真正需要记录的事情。\n    - 如“请各院系做好学生通知工作... 2025年11月26日开放不计绩点申请” ➡️ 忽略“做好学生通知工作”，提取“开放不计绩点申请”\n\n## 其他字段的填写\n- **标题**：字数 < 20。\n    - 不要包含其他字段已有的内容。\n    - 放入动作的对象（若有），如“发邮件” ➡️ “发邮件给xx”\n- **备注**：放入清单、长描述、其他背景信息。字数 < 100\n    - 可用换行符、小标题、数字序号（1.）等方式组织内容，提升易读性。\n    - 纯文本，不使用 Markdown\n- **链接**：若知道 App 名称，需填写。示例：“腾讯会议: 200-211-245”\n\n#### 当前时间\n{{CURRENT_TIME}}\n\n#### 可用清单\n{{LISTS}}\n\n#### 可用标签\n{{TAGS}}"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "{{BASE_INSTRUCTION}}\n\n# USER_INSTRUCTION\n{{USER_INSTRUCTION}}\n\n# 規則的優先級\nBASE_INSTRUCTION > USER_INSTRUCTION > Rules\n\n## Rules\n\n## 輸出時 title note 欄位的語言\n必須與使用者輸入的語言相同。\n\n## Rule: 多任務處理\n- 若輸入內容包含多個任務，請將每個任務分別提取為一個 JSON 物件，並以 JSON 陣列回傳所有物件。\n- 範例：「明天上午9點開會，下午2點去見客戶，晚上7點健身」應產生包含三個物件的陣列。\n- 若某個 reminder 屬於另一個 event 或 all-day，建議將其放入 event 或 all-day 的 title 或 note 中，不要建立獨立事項。\n\n## type 欄位的填寫規則\n- event：在特定時間點或時間段發生，需準時參與，不屬於窗口期或截止期限。例如：「10 點搶票」、「9-11 點開會」\n- all-day：有確定的日期，無具體時間，且內容可理解為一天的「狀態」或「屬性」。\n    - 範例：旅行計劃 / 出差 / 休假 / 行業峰會 / 生日 / 節日 / 購物節 / 紀念日。\n- reminder：具有以下一個或多個特點：\n    - 無明確的日期或時間。\n    - 窗口期。\n    - 有截止日期或時間。\n    - 有確定日期但沒有時間，且不能歸屬於 all-day。例如：「週五買菜」、「明天開會」。\n\n「窗口期」的定義：\n    1. 具有開始時間與結束時間，且結束時間是一個截止期限。\n    2. 使用者無需全程參與，只需在窗口期內擇期完成某項活動。\n    - 範例：「推優計劃將於 11.3-11.9 落實」、「今天 10 點到後天 24 點開放報名」、「10 號後開始預約」\n\n## 各時間欄位的填寫規則\n1. **推斷時間時，基準時間選取的優先級**：\n   - 優先級 1 上下文時間：輸入內容中，距離待處理事項文字較近的時間資訊。\n   - 優先級 2 當前時間。當前時間僅代表使用者發起請求的時間。\n2. 涉及「星期幾」、「下週星際幾」等相對時間的填寫：使用相對格式擴充。\n3. **確切日期 vs 模糊時段**：\n    a. 確切日期：能精確映射到日曆上具體某一天的情況（如「15號」、「下週三」、「本月最後一天」）。\n        -> 處理：填入 start_time / end_time / reminder_time（取決於 type）\n    b. 模糊時段：指一個範圍且無法確定具體哪一天（如「月底」、「下週」），或者有多個可選的窗口期。\n        -> 處理：type: \"reminder\"; reminder_time: 留空\n    c. 模糊的截止日期：如「月底**前**完成」、「月底**截止**」、「本週**內**完成」\n        -> 處理：type: \"reminder\"; 將該時段的最後一天設為 reminder_time。\n    d. 確切的截止時間的 reminder_time：「今晚前」 -> 今天 23:59；「24號前」 -> \"YY-MM-24\"（只填日期）\n    e. 窗口期（僅一個）。\n        -> 處理：type: \"reminder\"; reminder_time 設為截止時間，若無則設為開始時間。\n    - **務必將模糊時間描述保留在 title 中**（例如：「月底準備活動」、「本週改好論文」）\n4. **end_time**：若無法確定，則留空。\n5. 除非時間可具體到小時，否則不填寫 HH:MM\n\n## 忽略「虛」的動作\n- 忽略「虛」的動作，如：「確認」、「回覆收到」、「轉發」、「提醒別人」、「組織動員」等。\n- 提取那些真正需要記錄的事情。\n    - 例如：「請各院系做好學生通知工作... 2025年11月26日開放不計績點申請」 ➡️ 忽略「做好學生通知工作」，提取「開放不計績點申請」\n\n## 其他欄位的填寫\n- **title**：字數 < 20\n    - 不要包含已存在於其他欄位的內容\n    - 放入動作的對象（若有），如「發郵件」 ➡️ 「發郵件給 xx」\n- **notes**：放入清單、長描述、其他背景資訊。字數 < 100\n    - 可用換行符、小標題、數字序號 (1.) 等方式組織內容，提升易讀性。\n    - 純文字，不使用 Markdown\n- url：若知道 App 名稱，需填寫。範例：「騰訊會議: 200-211-245」\n\n#### 當前時間\n{{CURRENT_TIME}}\n\n#### 可用的清單\n{{LISTS}}\n\n#### 可用的標籤\n{{TAGS}}\n\n"
+          }
+        }
+      }
+    },
     "%lld 条保存失败" : {
       "localizations" : {
         "en" : {
@@ -403,6 +425,28 @@
         }
       }
     },
+    "从 BaseInstruction.txt 或用户自定义提示词文件读取。定义 LLM 的核心角色和任务说明。\n\n**实际填充内容示例**：\n```\n你是一个智能日程助理。\n输入的内容是用户收到的一条信息，该用户想要记录该信息中的日程或提醒事项。\n你的任务：分析用户的输入和意图，提取日程或提醒事项。并输出为符合以下定义的 JSON 列表 (Array) 格式。\n\n# 输出字段定义 (JSON列表中每个对象的结构)\n## 必填项\n- title: String.\n- type: String. \"event\" | \"all-day\" | \"reminder\"\n## 可选项\n- start_time: String?\n    - YYYY-MM-DD HH:MM (only for event)\n    - YYYY-MM-DD (only for all-day)\n- end_time: String?\n    - YYYY-MM-DD HH:MM (only for event)\n    - YYYY-MM-DD (only for all-day)\n- reminder_time: String?（only for reminder）YYYY-MM-DD HH:MM 或 YYYY-MM-DD\n- url: String? (meeting links, meeting IDs, or web URLs)\n- location: String?\n- list: String? 对象所属的列表，必须从之后给定的选项中选择。\n...\n# Output Format\n1. Strict JSON only. No explanatory text.\n2. Must wrap in a JSON array [ ].\n3. 直接返回 JSON 数组，不做任何解释或说明。\n```" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read from BaseInstruction.txt or user-customized prompt file. Defines the LLM's core role and task description.\n\n**Example of actual filled content**:\n```\nYou are a smart schedule assistant.\nThe input is a message received by the user, who wants to record the events or reminders in this message.\nYour task: Analyze the user's input and intent, extract events or reminders, and output them in the JSON list (Array) format defined below.\n\n# Output Field Definitions (structure of each object in the JSON list)\n## Required fields\n- title: String.\n- type: String. \"event\" | \"all-day\" | \"reminder\"\n## Optional fields\n- start_time: String?\n    - YYYY-MM-DD HH:MM (only for event)\n    - YYYY-MM-DD (only for all-day)\n- end_time: String?\n    - YYYY-MM-DD HH:MM (only for event)\n    - YYYY-MM-DD (only for all-day)\n- reminder_time: String? (only for reminder) YYYY-MM-DD HH:MM or YYYY-MM-DD\n- url: String? (meeting links, meeting IDs, or web URLs)\n- location: String?\n- list: String? The list the object belongs to, must be selected from the options given later.\n...\n# Output Format\n1. Strict JSON only. No explanatory text.\n2. Must wrap in a JSON array [ ].\n3. Return the JSON array directly, without any explanation or description.\n```"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从 BaseInstruction.txt 或用户自定义提示词文件读取。定义 LLM 的核心角色和任务说明。\n\n**实际填充内容示例**：\n```\n你是一个智能日程助理。\n输入的内容是用户收到的一条信息，该用户想要记录该信息中的日程或提醒事项。\n你的任务：分析用户的输入和意图，提取日程或提醒事项。并输出为符合以下定义的 JSON 列表 (Array) 格式。\n\n# 输出字段定义 (JSON列表中每个对象的结构)\n## 必填项\n- title: String.\n- type: String. \"event\" | \"all-day\" | \"reminder\"\n## 可选项\n- start_time: String?\n    - YYYY-MM-DD HH:MM (only for event)\n    - YYYY-MM-DD (only for all-day)\n- end_time: String?\n    - YYYY-MM-DD HH:MM (only for event)\n    - YYYY-MM-DD (only for all-day)\n- reminder_time: String?（only for reminder）YYYY-MM-DD HH:MM 或 YYYY-MM-DD\n- url: String? (meeting links, meeting IDs, or web URLs)\n- location: String?\n- list: String? 对象所属的列表，必须从之后给定的选项中选择。\n...\n# Output Format\n1. Strict JSON only. No explanatory text.\n2. Must wrap in a JSON array [ ].\n3. 直接返回 JSON 数组，不做任何解释或说明。\n```"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "從 BaseInstruction.txt 或使用者自訂提示詞檔案讀取。定義 LLM 的核心角色和任務說明。\n\n**實際填充內容範例**：\n```\n你是一個智慧行程助理。\n輸入的內容是使用者收到的一則訊息，該使用者想要記錄該訊息中的行程或提醒事項。\n你的任務：分析使用者的輸入和意圖，擷取行程或提醒事項。並輸出為符合以下定義的 JSON 列表 (Array) 格式。\n\n# 輸出欄位定義 (JSON列表中每個物件的結構)\n## 必填項\n- title: String.\n- type: String. \"event\" | \"all-day\" | \"reminder\"\n## 可選項\n- start_time: String?\n    - YYYY-MM-DD HH:MM (only for event)\n    - YYYY-MM-DD (only for all-day)\n- end_time: String?\n    - YYYY-MM-DD HH:MM (only for event)\n    - YYYY-MM-DD (only for all-day)\n- reminder_time: String?（only for reminder）YYYY-MM-DD HH:MM 或 YYYY-MM-DD\n- url: String? (meeting links, meeting IDs, or web URLs)\n- location: String?\n- list: String? 物件所屬的列表，必須從之後給定的選項中選擇。\n...\n# Output Format\n1. Strict JSON only. No explanatory text.\n2. Must wrap in a JSON array [ ].\n3. 直接回傳 JSON 陣列，不做任何解釋或說明。\n```"
+          }
+        }
+      }
+    },
     "从文本或图片中提取日程，并保存到系统日历。" : {
       "localizations" : {
         "en" : {
@@ -421,6 +465,50 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "從文字或圖片中擷取行程，並儲存到系統行事曆。"
+          }
+        }
+      }
+    },
+    "从日历中提取的所有唯一标签。\nLLM 从中选择合适的标签填入 `tags` 字段。\n\n**实际填充内容示例**：\n```\n[\"工作\", \"生活\", \"重要\", \"会议\"]\nSelect matching items from the list above for the 'tags' field.\nIf none match, leave it blank.\n```" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All unique tags extracted from calendars.\nThe LLM selects appropriate tags from these to fill the `tags` field.\n\n**Example of actual filled content**:\n```\n[\"Work\", \"Life\", \"Important\", \"Meeting\"]\nSelect matching items from the list above for the 'tags' field.\nIf none match, leave it blank.\n```"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从日历中提取的所有唯一标签。\nLLM 从中选择合适的标签填入 `tags` 字段。\n\n**实际填充内容示例**：\n```\n[\"工作\", \"生活\", \"重要\", \"会议\"]\nSelect matching items from the list above for the 'tags' field.\nIf none match, leave it blank.\n```"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "從行事曆中擷取的所有唯一標籤。\nLLM 從中選擇合適的標籤填入 `tags` 欄位。\n\n**實際填充內容範例**：\n```\n[\"工作\", \"生活\", \"重要\", \"會議\"]\nSelect matching items from the list above for the 'tags' field.\nIf none match, leave it blank.\n```"
+          }
+        }
+      }
+    },
+    "以当前日期为中心的前后 15 天日期-星期映射表。帮助 LLM 将\"星期几\"、\"下周三\"等相对时间转换为准确日期。\n\n**实际填充内容示例**：\n```\n2026-05-09 星期六\n2026-05-10 星期日\n2026-05-11 星期一\n...\n2026-05-23 星期五\n2026-05-24 星期六(current request)\n2026-05-25 星期日\n...\n2026-06-08 星期一\n```" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A date-weekday mapping table for 15 days before and after the current date. Helps the LLM convert relative times like \"Monday\", \"next Wednesday\" into exact dates.\n\n**Example of actual filled content**:\n```\n2026-05-09 Saturday\n2026-05-10 Sunday\n2026-05-11 Monday\n...\n2026-05-23 Friday\n2026-05-24 Saturday(current request)\n2026-05-25 Sunday\n...\n2026-06-08 Monday\n```"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "以当前日期为中心的前后 15 天日期-星期映射表。帮助 LLM 将\"星期几\"、\"下周三\"等相对时间转换为准确日期。\n\n**实际填充内容示例**：\n```\n2026-05-09 星期六\n2026-05-10 星期日\n2026-05-11 星期一\n...\n2026-05-23 星期五\n2026-05-24 星期六(current request)\n2026-05-25 星期日\n...\n2026-06-08 星期一\n```"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "以當前日期為中心的前後 15 天日期-星期映射表。幫助 LLM 將「星期幾」、「下週三」等相對時間轉換為準確日期。\n\n**實際填充內容範例**：\n```\n2026-05-09 星期六\n2026-05-10 星期日\n2026-05-11 星期一\n...\n2026-05-23 星期五\n2026-05-24 星期六(current request)\n2026-05-25 星期日\n...\n2026-06-08 星期一\n```"
           }
         }
       }
@@ -712,6 +800,50 @@
         }
       }
     },
+    "可用的日历和提醒事项列表" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Available calendar and reminder lists"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可用的日历和提醒事项列表"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可用的行事曆和提醒事項列表"
+          }
+        }
+      }
+    },
+    "可用的标签列表" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Available tags list"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可用的标签列表"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可用的標籤列表"
+          }
+        }
+      }
+    },
     "同名列表" : {
       "localizations" : {
         "en" : {
@@ -818,6 +950,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "在現有提示詞的基礎之上施加額外的規則。"
+          }
+        }
+      }
+    },
+    "基础指令内容" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Base instruction content"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "基础指令内容"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "基礎指令內容"
           }
         }
       }
@@ -976,6 +1130,28 @@
         }
       }
     },
+    "已复制" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copied."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已复制"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已複製"
+          }
+        }
+      }
+    },
     "已失效" : {
       "localizations" : {
         "en" : {
@@ -1016,6 +1192,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "已識別 %1$lld 項，成功儲存 %2$lld 項：\n%3$@"
+          }
+        }
+      }
+    },
+    "当前请求时间" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Current request time"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当前请求时间"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "當前請求時間"
           }
         }
       }
@@ -1395,6 +1593,28 @@
         }
       }
     },
+    "日期与星期几对照表" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date-weekday lookup table"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日期与星期几对照表"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日期與星期幾對照表"
+          }
+        }
+      }
+    },
     "日程提取" : {
       "localizations" : {
         "en" : {
@@ -1413,6 +1633,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "行程擷取"
+          }
+        }
+      }
+    },
+    "日程提取提示词占位符说明" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schedule Extraction Prompt Variables"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日程提取提示词占位符说明"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "行程擷取提示詞佔位符說明"
+          }
+        }
+      }
+    },
+    "日程提取提示词模板" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Template Prompt"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日程提取提示词模板"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日程提取提示詞模板"
           }
         }
       }
@@ -1502,6 +1766,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "暫無模型"
+          }
+        }
+      }
+    },
+    "暂未使用（值为空）。预留用于注入用户个性化信息。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not yet used (value is empty). Reserved for injecting user personalization information."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暂未使用（值为空）。预留用于注入用户个性化信息。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暫未使用（值為空）。預留用於注入使用者個人化資訊。"
           }
         }
       }
@@ -1790,6 +2076,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "檢視範例"
+          }
+        }
+      }
+    },
+    "格式：ISO 8601 (YYYY-MM-DD HH:MM:SS)\n用于推断相对时间和判断时间合理性。\n\n**实际填充内容示例**：\n```\n2026-05-24 16:30:00. Only indicates the times of current request.\n```" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Format: ISO 8601 (YYYY-MM-DD HH:MM:SS)\nUsed to infer relative times and judge time reasonableness.\n\n**Example of actual filled content**:\n```\n2026-05-24 16:30:00. Only indicates the times of current request.\n```"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "格式：ISO 8601 (YYYY-MM-DD HH:MM:SS)\n用于推断相对时间和判断时间合理性。\n\n**实际填充内容示例**：\n```\n2026-05-24 16:30:00. Only indicates the times of current request.\n```"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "格式：ISO 8601 (YYYY-MM-DD HH:MM:SS)\n用於推斷相對時間和判斷時間合理性。\n\n**實際填充內容範例**：\n```\n2026-05-24 16:30:00. Only indicates the times of current request.\n```"
           }
         }
       }
@@ -2193,6 +2501,28 @@
         }
       }
     },
+    "用户授权的所有日历和提醒事项列表。\nLLM 从中选择匹配的列表名称填入 `list` 字段。\n\n**实际填充内容示例**：\n```\nCalendar Lists (for type: \"event\" or \"all-day\"):\n- \"工作\"\n- \"个人\"\n\nReminder Lists (for type: \"reminder\"):\n- \"待办\"\n- \"购物清单\"\n\nSelect a matching list from the choices above for the 'list' field. If none match, leave it blank.\n```" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All calendar and reminder lists authorized by the user.\nThe LLM selects a matching list name from these to fill the `list` field.\n\n**Example of actual filled content**:\n```\nCalendar Lists (for type: \"event\" or \"all-day\"):\n- \"Work\"\n- \"Personal\"\n\nReminder Lists (for type: \"reminder\"):\n- \"To-Do\"\n- \"Shopping List\"\n\nSelect a matching list from the choices above for the 'list' field. If none match, leave it blank.\n```"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用户授权的所有日历和提醒事项列表。\nLLM 从中选择匹配的列表名称填入 `list` 字段。\n\n**实际填充内容示例**：\n```\nCalendar Lists (for type: \"event\" or \"all-day\"):\n- \"工作\"\n- \"个人\"\n\nReminder Lists (for type: \"reminder\"):\n- \"待办\"\n- \"购物清单\"\n\nSelect a matching list from the choices above for the 'list' field. If none match, leave it blank.\n```"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用者授權的所有行事曆和提醒事項列表。\nLLM 從中選擇匹配的列表名稱填入 `list` 欄位。\n\n**實際填充內容範例**：\n```\nCalendar Lists (for type: \"event\" or \"all-day\"):\n- \"工作\"\n- \"個人\"\n\nReminder Lists (for type: \"reminder\"):\n- \"待辦\"\n- \"購物清單\"\n\nSelect a matching list from the choices above for the 'list' field. If none match, leave it blank.\n```"
+          }
+        }
+      }
+    },
     "用户规则" : {
       "comment" : "提示词内的一个填充变量",
       "localizations" : {
@@ -2212,6 +2542,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "用戶規則"
+          }
+        }
+      }
+    },
+    "用户身份信息" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "User identity information"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用户身份信息"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用者身分資訊"
           }
         }
       }

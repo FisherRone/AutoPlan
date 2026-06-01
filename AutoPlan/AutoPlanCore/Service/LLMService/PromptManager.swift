@@ -101,11 +101,7 @@ public enum PromptBuilder {
     
     /// 读取模板提示词（供 UI 预览）
     public static var templatePrompt: String {
-        guard let url = Bundle.main.url(forResource: "TemplatePrompt", withExtension: "txt"),
-              let content = try? String(contentsOf: url, encoding: .utf8) else {
-            return systemDefaultInstruction
-        }
-        return content
+        return Prompts.templatePrompt
     }
     
     /// 确保自定义提示词文件存在，不存在则用系统默认内容创建

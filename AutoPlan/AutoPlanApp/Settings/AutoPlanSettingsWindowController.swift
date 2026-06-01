@@ -69,6 +69,6 @@ struct SettingsTabView: View {
                 AboutHelpView()
             }
         }
-        .frame(minWidth: 580, idealWidth: 580, minHeight: 500, idealHeight: 600)
+        .frame(minWidth: 580, idealWidth: 580, minHeight: 520, idealHeight: 520)
     }
 }

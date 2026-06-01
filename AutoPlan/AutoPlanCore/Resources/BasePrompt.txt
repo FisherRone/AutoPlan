@@ -1,7 +1,15 @@
 {{BASE_INSTRUCTION}}
+
+# USER_INSTRUCTION
 {{USER_INSTRUCTION}}
 
+# 规则的优先级
+BASE_INSTRUCTION > USER_INSTRUCTION > Rules
+
 # Rules
+
+## 输出时 title note 字段的语言
+必须和用户输入的语言相同。
 
 ## Rule: Multi-Task Processing
 - If input contains multiple tasks, extract each of them to a json object separately, return all objects in one JSON array.
