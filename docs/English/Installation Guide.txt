@@ -1,0 +1,23 @@
+[English] Installation Guide
+📥 Install the app: Drag AutoPlan.app into the Applications folder in Finder.
+
+
+⚠️ If you encounter an error when running
+When opening the app for the first time, you may see a pop-up like this:
+
+“AutoPlan.app” Not OpenedApple could not verify “AutoPlan.app” is free of malware that may harm your Mac or compromise your privacy.[Done] [Move to Trash]
+
+Reason: This happens because I have not paid for an Apple Developer membership, so Apple restricts my app.
+
+Solution:
+1. Click [Done] to close the pop-up.
+2. Go to System Settings → Privacy & Security → Security.
+3. In the section that says [“AutoPlan.app” was blocked to protect your Mac.], click [Open Anyway].
+4. After that, opening AutoPlan.app will no longer trigger the warning.
+
+
+❓ How to use
+
+1. After opening the app, a calendar-shaped icon will appear in the menu bar. This is the app's menu bar icon.
+2. Click the menu bar icon, go to Settings, and enter your API Key.
+3. Then click the menu bar icon again, then you can trigger the [Extract Schedule] or [Generate Weekly Report] functions.

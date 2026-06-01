@@ -67,11 +67,11 @@ Enable **Skip Confirmation** in Settings to save events instantly without review
 - macOS 15.0+
 - An API key for an OpenAI-compatible LLM service (OpenAI, DeepSeek, etc.)
 
+> ⚠️ **First Launch Warning**: Because AutoPlan is ad-hoc signed, macOS may block the app on first open with a malware warning. If this happens, please check the `Installation Guide.txt` included in the release ZIP for step-by-step instructions, or view it [here](https://github.com/FisherRone/AutoPlan/blob/main/docs/English/Installation%20Guide.txt).
+
 ## Build
 
 Open `AutoPlan/AutoPlan.xcodeproj` in Xcode, select the **AutoPlan** scheme, and build.
-
-> The app uses ad-hoc signing and runs without a sandbox.
 
 ## License
 
