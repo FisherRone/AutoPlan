@@ -2,7 +2,7 @@
 
 Extract calendar events and reminders from text or images using LLM — right from the menu bar.
 
-![项目演示](https://github.com/FisherRone/AutoPlan/blob/main/docs/docs/AutoPlan Demo Vedio - Email.gif?raw=true)
+![demo](https://github.com/FisherRone/AutoPlan/blob/main/docs/docs/AutoPlanDemoVedio-Email.gif?raw=true)
 
 ## Features
 
