@@ -54,9 +54,9 @@ AutoPlan 专为适配你的工作流而设计。选择任何 OpenAI 兼容的服
 ### 通用设置与服务商
 
 <div align="center">
-    <img src="Media/ScreenshotGeneralSetting.png" width="380" height="auto">
+    <img src="Media/ScreenshotGeneralSetting-Chinese.png" width="380" height="auto">
     &nbsp;&nbsp;
-    <img src="Media/ScreenshotAddLLMProvider.png" width="380" height="auto">
+    <img src="Media/ScreenshotAddLLMProvider-Chinese.png" width="380" height="auto">
 </div>
 
 - **模型配置** — 为 OpenAI、DeepSeek 或任何 OpenAI 兼容端点添加你自己的 API Key；一键测试连通性
@@ -67,9 +67,9 @@ AutoPlan 专为适配你的工作流而设计。选择任何 OpenAI 兼容的服
 ### 高级设置与提示词变量
 
 <div align="center">
-    <img src="Media/ScreenshotAdvancedSettingsPage.png" width="380" height="auto">
+    <img src="Media/ScreenshotAdvancedSettingsPage-Chinese.png" width="380" height="auto">
     &nbsp;&nbsp;
-    <img src="Media/ScreenshotAdvancedSettingsPromptVariables.png" width="380" height="auto">
+    <img src="Media/ScreenshotAdvancedSettingsPromptVariables-Chinese.png" width="380" height="auto">
 </div>
 
 - **自定义提示词** — 用你自己的提示词覆盖默认提取提示词；可在任意文本编辑器中编辑
