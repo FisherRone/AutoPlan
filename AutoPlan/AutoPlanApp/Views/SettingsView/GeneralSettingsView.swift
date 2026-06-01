@@ -402,6 +402,7 @@ struct ProviderAPIKeyRow: View {
                         }
                         .buttonStyle(.borderless)
                         .hoverShadow()
+                        .handPointer()
                         .help("获取 API Key")
                     }
                     

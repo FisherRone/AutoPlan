@@ -472,6 +472,29 @@
         }
       }
     },
+    "从剪贴板提取日程" : {
+      "comment" : "菜单栏选项",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extract events from clipboard"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从剪贴板提取日程"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "從剪貼板提取日程"
+          }
+        }
+      }
+    },
     "从文本或图片中提取日程，并保存到系统日历。" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -2839,6 +2862,29 @@
         }
       }
     },
+    "设置..." : {
+      "comment" : "菜单栏选项",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设置..."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定…"
+          }
+        }
+      }
+    },
     "试一试：" : {
       "localizations" : {
         "en" : {
@@ -2945,6 +2991,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "輸入 API Key"
+          }
+        }
+      }
+    },
+    "退出 AutoPlan" : {
+      "comment" : "菜单栏选项",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quit AutoPlan"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "退出 AutoPlan"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "退出 AutoPlan"
           }
         }
       }

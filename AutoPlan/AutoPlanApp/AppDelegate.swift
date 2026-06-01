@@ -42,9 +42,21 @@ final class MenuBarController: NSObject {
     private func buildMenu() -> NSMenu {
         let menu = NSMenu()
 
+        
+
+        let extractItem = NSMenuItem(
+            title: String(localized: "从剪贴板提取日程", comment: "菜单栏选项"),
+            action: #selector(extractFromClipboard),
+            keyEquivalent: "v"
+        )
+        extractItem.target = self
+        menu.addItem(extractItem)
+
+        menu.addItem(.separator())
+
         let settingsItem = NSMenuItem(
-            title: "设置...",
-            action: #selector(openSettings),
+            title: String(localized: "设置...", comment: "菜单栏选项"),
+            action: #selector(openAutoPlanSettings),
             keyEquivalent: ","
         )
         settingsItem.target = self
@@ -52,22 +64,9 @@ final class MenuBarController: NSObject {
 
         menu.addItem(.separator())
 
-        let extractItem = NSMenuItem(
-            title: "从剪贴板提取日程",
-            action: #selector(extractFromClipboard),
-            keyEquivalent: ""
-        )
-        extractItem.target = self
-        menu.addItem(extractItem)
-
-        menu.addItem(.separator())
-
-        
-
-        menu.addItem(.separator())
 
         let quitItem = NSMenuItem(
-            title: "退出 AutoPlan",
+            title: String(localized: "退出 AutoPlan", comment: "菜单栏选项"),
             action: #selector(quitApp),
             keyEquivalent: "q"
         )
@@ -95,7 +94,7 @@ final class MenuBarController: NSObject {
 
     // MARK: - Actions
 
-    @objc private func openSettings() {
+    @objc private func openAutoPlanSettings() {
         statusItem.menu?.cancelTracking()
         // 延迟到下一个 run loop，确保菜单跟踪完全结束后再显示窗口
         DispatchQueue.main.async { [weak self] in

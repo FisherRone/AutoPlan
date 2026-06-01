@@ -97,3 +97,18 @@ extension View {
         self.modifier(HoverShadowModifier())
     }
 }
+
+// MARK: - Pointer Styles
+struct HandPointerModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .pointerStyle(.link)
+    }
+}
+
+extension View {
+    func handPointer() -> some View {
+        self.modifier(HandPointerModifier())
+    }
+}
+

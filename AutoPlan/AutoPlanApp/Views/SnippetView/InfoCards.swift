@@ -270,7 +270,7 @@ extension ReminderCard {
             }
             self.rightText = formatter.string(from: time)
         } else {
-            self.rightText = "提醒"
+            self.rightText = ""
         }
     }
 }

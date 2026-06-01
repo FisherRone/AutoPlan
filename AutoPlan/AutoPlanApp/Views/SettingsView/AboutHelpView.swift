@@ -61,6 +61,7 @@ struct AboutHelpView: View {
                 VStack(spacing: 8) {
                     Link("GitHub 仓库", destination: URL(string: "https://github.com/your-username/your-repo")!)
                         .font(.body)
+                        .handPointer()
                     
                     Text("© 2026 Ziyu Rong. All rights reserved.")
                         .font(.caption)
@@ -102,16 +103,7 @@ struct AboutHelpView: View {
                                 .cornerRadius(6)
                         }
                         .buttonStyle(.plain)
-                        .onHover { hovering in
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                isHovering = hovering
-                            }
-                            if hovering {
-                                NSCursor.pointingHand.push()
-                            } else {
-                                NSCursor.pop()
-                            }
-                        }
+                        .handPointer()
                         .overlay {
                             if showCopiedToast {
                                 Text("已复制")
