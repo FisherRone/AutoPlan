@@ -2,26 +2,18 @@
     <img src="docs/AppIcon-iOS-Default-1024x1024@1x.png" width="180" height="auto">
     <h1>AutoPlan</h1>
     <p>Extract calendar events and reminders from text or images using LLM — right from the menu bar.</p>
-</div>
-
-<div align="center">
-    <table>
-        <th><a href="https://github.com/FisherRone/AutoPlan/releases">Releases ↗</a></th>
-        <td><a href="#features">Features</a></td>
-        <td><a href="#customization">Customization</a></td>
-        <td><a href="#quick-start">Quick Start</a></td>
-    </table>
+    <img src="https://img.shields.io/github/license/FisherRone/AutoPlan" alt="License">
+    <img src="https://img.shields.io/badge/platform-macOS%2015.0%2B-blue" alt="Platform">
 </div>
 
 <br>
-![demo](https://github.com/FisherRone/AutoPlan/blob/main/docs/AutoPlanDemoVedio-Email.gif?raw=true)
 
 <a name="features"></a>
 ## Features
 
 Copy any text or screenshot to your clipboard, click **Extract from Clipboard** in the menu bar, and AutoPlan parses it into structured calendar events or reminders using your preferred LLM.
 
-![Demo](docs/Demos/AutoPlanDemoVedio-Email.gif)
+![Demo](https://github.com/FisherRone/AutoPlan/blob/main/docs/Demos/AutoPlanDemoVedio-Email.gif?raw=true)
 
 - **Clipboard Extraction** — Works with plain text, emails, chat messages, or screenshots
 - **Smart Recognition** — LLM-powered parsing understands dates, times, locations, and context; images are processed via OCR automatically
@@ -36,9 +28,9 @@ AutoPlan is built to fit your workflow. Choose any OpenAI-compatible provider, f
 ### General Settings & Providers
 
 <div align="center">
-    <img src="docs/Demos/ScreenshotGeneralSetting.png" width="420" height="auto">
+    <img src="https://github.com/FisherRone/AutoPlan/blob/main/docs/Demos/ScreenshotGeneralSetting.png?raw=true" width="420" height="auto">
     &nbsp;&nbsp;
-    <img src="docs/Demos/ScreenshotAddLLMProvider.png" width="420" height="auto">
+    <img src="https://github.com/FisherRone/AutoPlan/blob/main/docs/Demos/ScreenshotAddLLMProvider.png?raw=true" width="420" height="auto">
 </div>
 
 - **Model Config** — Add your own API keys for OpenAI, DeepSeek, or any OpenAI-compatible endpoint; test connectivity with one click
@@ -49,9 +41,9 @@ AutoPlan is built to fit your workflow. Choose any OpenAI-compatible provider, f
 ### Advanced Settings & Prompt Variables
 
 <div align="center">
-    <img src="docs/Demos/ScreenshotAdvancedSettingsPage.png" width="420" height="auto">
+    <img src="https://github.com/FisherRone/AutoPlan/blob/main/docs/Demos/ScreenshotAdvancedSettingsPage.png?raw=true" width="420" height="auto">
     &nbsp;&nbsp;
-    <img src="docs/Demos/ScreenshotAdvancedSettingsPromptVariables.png" width="420" height="auto">
+    <img src="https://github.com/FisherRone/AutoPlan/blob/main/docs/Demos/ScreenshotAdvancedSettingsPromptVariables.png?raw=true" width="420" height="auto">
 </div>
 
 - **Custom Prompts** — Override the default extraction prompt with your own; edit in any text editor
