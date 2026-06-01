@@ -92,6 +92,9 @@
         }
       }
     },
+    "© 2026 Ziyu Rong. All rights reserved." : {
+
+    },
     "1. 截图保存至剪贴板，或复制文本到剪贴板" : {
       "comment" : "介绍页 - 如何提取日程",
       "localizations" : {
@@ -315,6 +318,28 @@
         }
       }
     },
+    "GitHub 仓库" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Github Repository"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GitHub 仓库"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GitHub 儲存庫"
+          }
+        }
+      }
+    },
     "LLM Providers" : {
       "localizations" : {
         "en" : {
@@ -448,6 +473,7 @@
       }
     },
     "从文本或图片中提取日程，并保存到系统日历。" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2036,6 +2062,7 @@
     },
     "本 App 的作用" : {
       "comment" : "app 介绍页",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2564,6 +2591,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "使用者身分資訊"
+          }
+        }
+      }
+    },
+    "登录时启动" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Launch at login"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登录时启动"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登入時啟動"
           }
         }
       }

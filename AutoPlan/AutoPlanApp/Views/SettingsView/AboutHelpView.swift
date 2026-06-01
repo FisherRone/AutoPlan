@@ -62,7 +62,7 @@ struct AboutHelpView: View {
                     Link("GitHub 仓库", destination: URL(string: "https://github.com/your-username/your-repo")!)
                         .font(.body)
                     
-                    Text("© 2026 你的名字")
+                    Text("© 2026 Ziyu Rong. All rights reserved.")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -76,12 +76,7 @@ struct AboutHelpView: View {
             // 帮助说明
             Form {
                 Section(header: Text("使用帮助")) {
-                    VStack(alignment: .leading) {
-                        Text("本 App 的作用")
-                        Text("从文本或图片中提取日程，并保存到系统日历。")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .font(.callout).foregroundStyle(.secondary)
-                    }
+                    
                     
                     VStack(alignment: .leading) {
                         Text("如何提取日程")
@@ -100,6 +95,7 @@ struct AboutHelpView: View {
                         } label: {
                             Text("@猫猫 刚收到通知，下周三之前要把客户满意度调查结果整理成Excel发给我，记得加上环比数据。还有那个合同扫描件也尽快传一下，谢啦。")
                                 .font(.callout)
+                                .foregroundStyle(.secondary)
                                 .padding(8)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .background(isHovering ? Color.accentColor.opacity(0.15) : Color.gray.opacity(0.1))
