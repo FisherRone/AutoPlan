@@ -14,6 +14,7 @@
 </div>
 
 <br>
+![demo](https://github.com/FisherRone/AutoPlan/blob/main/docs/AutoPlanDemoVedio-Email.gif?raw=true)
 
 <a name="features"></a>
 ## Features
