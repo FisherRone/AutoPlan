@@ -59,7 +59,7 @@ struct AboutHelpView: View {
                     .foregroundColor(.secondary)
                 
                 VStack(spacing: 8) {
-                    Link("GitHub 仓库", destination: URL(string: "https://github.com/your-username/your-repo")!)
+                    Link("GitHub 仓库", destination: URL(string: "https://github.com/FisherRone/AutoPlan")!)
                         .font(.body)
                         .handPointer()
                     

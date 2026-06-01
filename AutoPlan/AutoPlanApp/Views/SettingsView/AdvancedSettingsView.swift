@@ -331,7 +331,7 @@ struct ExtractorView: View {
                     Text("选择图标")
                         .font(.headline)
                     Spacer()
-                    Button("关闭") {
+                    Button(String(localized:"关闭")) {
                         iconPickerPresented = false
                     }
                     .keyboardShortcut(.cancelAction)
@@ -345,7 +345,6 @@ struct ExtractorView: View {
 
                 SymbolPicker(symbol: $iconPickerSymbol)
             }
-            .frame(width: 400, height: 480)
         }
         .sheet(isPresented: $showTemplate) {
             TemplatePreviewView()
