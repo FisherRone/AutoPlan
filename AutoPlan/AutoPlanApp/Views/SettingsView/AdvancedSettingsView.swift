@@ -487,8 +487,10 @@ struct ListRowView: View {
                         promptText = newValue ?? ""
                     }
                 }
-                .onSubmit {
-                    onUpdatePrompt(promptText)
+                .onChange(of: promptText) { _, newValue in
+                    if newValue != (list.prompt ?? "") {
+                        onUpdatePrompt(newValue)
+                    }
                 }
             
             // 忽略开关：打开 = 不忽略，关闭 = 忽略
