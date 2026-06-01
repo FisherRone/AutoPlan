@@ -13,7 +13,7 @@
 
 Copy any text or screenshot to your clipboard, click **Extract from Clipboard** in the menu bar, and AutoPlan parses it into structured calendar events or reminders using your preferred LLM.
 
-![Demo](https://github.com/FisherRone/AutoPlan/blob/main/docs/Demos/AutoPlanDemoVedio-Email.gif?raw=true)
+![Demo](https://github.com/FisherRone/AutoPlan/blob/main/docs/English/Media/AutoPlanDemoVedio-Email.gif?raw=true)
 
 - **Clipboard Extraction** — Works with plain text, emails, chat messages, or screenshots
 - **Smart Recognition** — LLM-powered parsing understands dates, times, locations, and context; images are processed via OCR automatically
@@ -28,9 +28,9 @@ AutoPlan is built to fit your workflow. Choose any OpenAI-compatible provider, f
 ### General Settings & Providers
 
 <div align="center">
-    <img src="https://github.com/FisherRone/AutoPlan/blob/main/docs/Demos/ScreenshotGeneralSetting.png?raw=true" width="420" height="auto">
+    <img src="https://github.com/FisherRone/AutoPlan/blob/main/docs/English/Media/ScreenshotGeneralSetting.png?raw=true" width="420" height="auto">
     &nbsp;&nbsp;
-    <img src="https://github.com/FisherRone/AutoPlan/blob/main/docs/Demos/ScreenshotAddLLMProvider.png?raw=true" width="420" height="auto">
+    <img src="https://github.com/FisherRone/AutoPlan/blob/main/docs/English/Media/ScreenshotAddLLMProvider.png?raw=true" width="420" height="auto">
 </div>
 
 - **Model Config** — Add your own API keys for OpenAI, DeepSeek, or any OpenAI-compatible endpoint; test connectivity with one click
@@ -41,9 +41,9 @@ AutoPlan is built to fit your workflow. Choose any OpenAI-compatible provider, f
 ### Advanced Settings & Prompt Variables
 
 <div align="center">
-    <img src="https://github.com/FisherRone/AutoPlan/blob/main/docs/Demos/ScreenshotAdvancedSettingsPage.png?raw=true" width="420" height="auto">
+    <img src="https://github.com/FisherRone/AutoPlan/blob/main/docs/English/Media/ScreenshotAdvancedSettingsPage.png?raw=true" width="420" height="auto">
     &nbsp;&nbsp;
-    <img src="https://github.com/FisherRone/AutoPlan/blob/main/docs/Demos/ScreenshotAdvancedSettingsPromptVariables.png?raw=true" width="420" height="auto">
+    <img src="https://github.com/FisherRone/AutoPlan/blob/main/docs/English/Media/ScreenshotAdvancedSettingsPromptVariables.png?raw=true" width="420" height="auto">
 </div>
 
 - **Custom Prompts** — Override the default extraction prompt with your own; edit in any text editor
