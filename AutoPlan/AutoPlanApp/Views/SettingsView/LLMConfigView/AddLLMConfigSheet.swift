@@ -198,7 +198,7 @@ struct AddProviderSheet: View {
                 HStack {
                     Text("服务商 Logo")
                     Spacer()
-                    Button(selectedLogoURL?.lastPathComponent ?? "选择图片") {
+                    Button(selectedLogoURL?.lastPathComponent ?? String(localized: "选择图片")) {
                         showLogoPicker = true
                     }
                     if selectedLogoURL != nil {

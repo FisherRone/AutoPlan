@@ -3040,6 +3040,28 @@
         }
       }
     },
+    "选择图片" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "选择图片"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "選擇圖片"
+          }
+        }
+      }
+    },
     "通用" : {
       "comment" : "通用设置页 tab 标签",
       "localizations" : {

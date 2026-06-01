@@ -150,10 +150,6 @@ struct ReminderCard: View {
                 Circle()
                     .strokeBorder(categoryColor, lineWidth: InfoCardStyle.circleLineWidth)
                     .frame(width: InfoCardStyle.indicatorSize, height: InfoCardStyle.indicatorSize)
-                
-                Image(systemName: iconName)
-                    .font(.system(size: InfoCardStyle.indicatorIconSize, weight: .bold))
-                    .foregroundStyle(Color(nsColor: .windowBackgroundColor))
             }
             
             Text(title)
