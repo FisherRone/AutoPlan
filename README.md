@@ -2,8 +2,6 @@
     <img src="docs/AppIcon-iOS-Default-1024x1024@1x.png" width="180" height="auto">
     <h1>AutoPlan</h1>
     <p>Extract calendar events and reminders from text or images using LLM — right from the menu bar.</p>
-    <img src="https://img.shields.io/github/license/FisherRone/AutoPlan" alt="License">
-    <img src="https://img.shields.io/badge/platform-macOS%2015.0%2B-blue" alt="Platform">
 </div>
 <p align="center">
   <img src="https://img.shields.io/badge/license-MIT-blue.svg" />
