@@ -36,10 +36,7 @@ Copy any text or screenshot to your clipboard, click **Extract from Clipboard** 
 - **Calendar & Reminders** — Saves directly to Apple Calendar and Reminders with one click
 - **Menu-Bar Native** — Lives in your status bar; no dock icon, no window clutter
 
-<a name="customization"></a>
-## Customization
 
-AutoPlan is built to fit your workflow. Choose any OpenAI-compatible provider, fine-tune how events are categorized, and even write your own extraction prompt.
 
 <a name="quick-start"></a>
 ## Quick Start
@@ -49,6 +46,11 @@ AutoPlan is built to fit your workflow. Choose any OpenAI-compatible provider, f
 3. Open **Settings** → **Model Config** and add your LLM API key
 4. Copy text or a screenshot to your clipboard, then click **Extract from Clipboard** in the menu bar
 5. Review the extracted events and click **Save** to add them to Calendar / Reminders
+
+<a name="customization"></a>
+## Customization
+
+AutoPlan is built to fit your workflow. Choose any OpenAI-compatible provider, fine-tune how events are categorized, and even write your own extraction prompt.
 
 ### General Settings & Providers
 
@@ -74,7 +76,7 @@ AutoPlan is built to fit your workflow. Choose any OpenAI-compatible provider, f
 - **Custom Prompts** — Override the default extraction prompt with your own; edit in any text editor
 - **User Rules** — Layer extra instructions on top of the default prompt without replacing it
 - **List Management** — Choose which Calendar and Reminders lists to use; add per-list descriptions to improve categorization accuracy
-- **Prompt Variables** — Use placeholders like `{{date}}`, `{{time}}`, and `{{content}}` to build dynamic prompts
+- **Prompt Variables** — Use placeholders like `{{BASE_INSTRUCTION}}`, `{{CURRENT_TIME}}`, and `{{LISTS}}` to build dynamic prompts
 
 
 
