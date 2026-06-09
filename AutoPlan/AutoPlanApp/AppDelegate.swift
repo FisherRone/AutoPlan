@@ -107,11 +107,15 @@ final class MenuBarController: NSObject {
 
         let pasteboard = NSPasteboard.general
         let clipboardText = pasteboard.string(forType: .string) ?? ""
+        logger.debug("📋 剪贴板类型: \(pasteboard.types?.map(\.rawValue) ?? [])", context: "AppDelegate")
+        logger.debug("📋 clipboardText: \(clipboardText.prefix(100))", context: "AppDelegate")
 
         let imageObjects = pasteboard.readObjects(forClasses: [NSImage.self], options: nil) as? [NSImage] ?? []
+        logger.debug("📋 NSImage 读取数: \(imageObjects.count), 尺寸: \(imageObjects.map { "\(Int($0.size.width))x\(Int($0.size.height))" })", context: "AppDelegate")
         let cgImages: [CGImage] = imageObjects.compactMap { nsImage in
             nsImage.cgImage(forProposedRect: nil, context: nil, hints: nil)
         }
+        logger.debug("📋 CGImage 读取数: \(cgImages.count), 尺寸: \(cgImages.map { "\($0.width)x\($0.height)" })", context: "AppDelegate")
 
         guard !clipboardText.isEmpty || !cgImages.isEmpty else {
             showErrorPopover(message: "剪贴板中没有可识别的文本或图片。")
